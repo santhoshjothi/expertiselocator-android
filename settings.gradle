@@ -1,1 +1,1 @@
-include ':app', ':libs:bottomnavigation', ':libs:sidenavigation'
+include ':app', ':libs:bottomnavigation'

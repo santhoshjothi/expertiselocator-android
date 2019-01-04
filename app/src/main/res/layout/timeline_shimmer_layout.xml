@@ -31,14 +31,14 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:layout_margin="@dimen/marginThree"
-                android:background="@color/nliveo_grey"
+                android:background="@color/nliveo_gray"
                 android:textSize="@dimen/textSizeLarge"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/marginThree"
-                android:background="@color/nliveo_grey"
+                android:background="@color/nliveo_gray"
                 android:textSize="@dimen/textSizeMedium"/>
 
         </LinearLayout>
@@ -48,7 +48,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/nliveo_grey"
+        android:background="@color/nliveo_gray"
         android:textSize="@dimen/textSizeMedium"
         android:layout_margin="@dimen/marginThree"
         android:maxLines="3"

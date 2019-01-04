@@ -36,7 +36,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     // Bottom Navigation - Project Module
     implementation project(':libs:bottomnavigation')
-    implementation project(':libs:sidenavigation')
     // Material Dialog - create basic, list, single/multi choice, progress, input
     implementation 'com.github.afollestad.material-dialogs:core:0.8.5.7@aar'
     // Material Dialog - ColorChooserDialog, FolderChooserDialog, Material Preference classes and MaterialSimpleListAdapter/MaterialSimpleListItem
