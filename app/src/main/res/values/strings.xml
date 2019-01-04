@@ -1,0 +1,73 @@
+<resources>
+
+    <string name="app_name">ExpertiseLocator</string>
+    <string name="image_content_description">Image Content</string>
+    <string name="count">0</string>
+    <string name="no_data">No Data</string>
+
+    <!-- Bottom Navigation -->
+
+    <string name="bottom_post">Post</string>
+    <string name="bottom_about">About</string>
+    <string name="bottom_events">Events</string>
+    <string name="bottom_members">Members</string>
+
+    <!-- Material Dialog Temp -->
+
+    <string name="dialog_temp_title">Material Dialog</string>
+    <string name="dialog_temp_positive">Agree</string>
+    <string name="dialog_temp_negative">Disagree</string>
+    <string name="dialog_temp_content">Material Dialog With Positive And Negative Buttons</string>
+
+    <!-- Login Screen -->
+
+    <string name="edit_user_name">Enter Username</string>
+    <string name="edit_pass_word">Enter Password</string>
+    <string name="button_login">LOGIN</string>
+
+    <!-- Timeline Actions -->
+
+    <string name="timeline_like">Like</string>
+    <string name="timeline_comment">Comment</string>
+    <string name="timeline_share">Share</string>
+    <string name="timeline_username">Username</string>
+    <string name="timeline_message">Message</string>
+    <string name="timeline_post_time">Posted Time</string>
+    <string name="timeline_post_comment_reply">Reply</string>
+
+    <!-- Timeline Menu -->
+
+    <string name="timeline_menu_edit">Edit Post</string>
+    <string name="timeline_menu_delete">Delete Post</string>
+    <string name="timeline_menu_comment_edit">Edit Comment</string>
+    <string name="timeline_menu_comment_delete">Delete Comment</string>
+    <string name="timeline_menu_reply_edit">Edit Reply</string>
+    <string name="timeline_menu_reply_delete">Delete Reply</string>
+
+    <!-- Timeline Hint -->
+
+    <string name="timeline_comment_hint">Add Your Comment..</string>
+    <string name="timeline_reply_hint">Add Your Reply..</string>
+
+    <!-- Timeline Edit Delete - Comment and Reply -->
+
+    <string name="timeline_edit_comment_title">Edit Post Comment</string>
+    <string name="timeline_edit_comment_message">Edit your comments and it will be updated to your followers.</string>
+
+    <string name="timeline_delete_comment_title">Delete Post Comment</string>
+    <string name="timeline_delete_comment_message">Delete your comments and it will be updated to your followers.</string>
+
+    <string name="timeline_edit_reply_title">Edit Post Reply</string>
+    <string name="timeline_edit_reply_message">Edit your reply and it will be updated to your followers.</string>
+
+    <string name="timeline_delete_reply_title">Delete Post Reply</string>
+    <string name="timeline_delete_reply_message">Delete your reply and it will be updated to your followers.</string>
+
+    <string name="timeline_delete_comment_query">Are you sure you want to delete this comment ?</string>
+    <string name="timeline_delete_reply_query">Are you sure you want to delete this reply ?</string>
+
+    <string name="timeline_edit_delete_update">Update</string>
+    <string name="timeline_edit_delete_delete">Delete</string>
+    <string name="timeline_edit_delete_cancel">Cancel</string>
+
+</resources>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvEditDeleteTitle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/timeline_edit_comment_title"
+        android:background="@color/md_material_blue_800"
+        android:textColor="@color/white"
+        android:padding="@dimen/marginFive"
+        android:textSize="@dimen/textSizeMedium"
+        android:gravity="center_vertical"/>
+
+    <TextView
+        android:id="@+id/tvEditDeleteMessage"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/timeline_edit_comment_message"
+        android:background="@color/md_material_blue_600"
+        android:textColor="@color/white"
+        android:padding="@dimen/marginFive"
+        android:textSize="@dimen/textSizeSmall"
+        android:gravity="center_vertical"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/tvEditDeleteQuery"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/timeline_delete_comment_query"
+        android:padding="@dimen/marginFive"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="@dimen/textSizeSmall"
+        android:gravity="center_vertical"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/marginFive"
+        android:background="@drawable/edit_text_oval_shape">
+
+        <EditText
+            android:id="@+id/etEditDeleteMessageContent"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="@string/no_data"
+            android:textSize="@dimen/textSizeMedium"
+            android:inputType="text"
+            android:padding="@dimen/marginFour"
+            android:layout_marginLeft="@dimen/marginFive"
+            android:layout_marginStart="@dimen/marginFive"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="end">
+
+        <TextView
+            android:id="@+id/tvEditDeleteSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/timeline_edit_delete_update"
+            android:background="@color/md_material_blue_600"
+            android:padding="@dimen/marginEight"
+            android:textColor="@color/text_color_white_to_black"
+            android:layout_margin="@dimen/marginFive"/>
+
+        <TextView
+            android:id="@+id/tvEditDeleteCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/timeline_edit_delete_cancel"
+            android:background="@color/md_material_blue_600"
+            android:padding="@dimen/marginEight"
+            android:textColor="@color/text_color_white_to_black"
+            android:layout_margin="@dimen/marginFive"/>
+
+    </LinearLayout>
+
+</LinearLayout>

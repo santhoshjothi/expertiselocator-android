@@ -1,0 +1,295 @@
+package com.example.expertiselocator.adapter;
+
+import android.content.Context;
+import android.net.Uri;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.URLUtil;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.MediaController;
+import android.widget.TextView;
+import android.widget.VideoView;
+
+import com.bumptech.glide.Glide;
+import com.example.expertiselocator.R;
+import com.example.expertiselocator.main.TimelineActivity;
+import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
+import com.example.expertiselocator.utils.CommonMethods;
+
+import java.util.List;
+
+public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private Context context;
+    private CommonMethods commonMethods;
+    private TimelineActivity timelineActivity;
+
+    private List<GetPostedMessagesResponse> getPostedMessagesResponses;
+    private List<GetPostedMessagesResponse.Timeline_Comments> getTimelineComments;
+    private TimelineCommentAdapter timelineCommentAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+
+    private String userProfilePicture, userTimelinePicture, shareProfilePicture, shareTimelinePicture;
+    private MediaController mediaController;
+    private Uri videoUri;
+    private boolean isCommentShow = false;
+    private int currentExpand = 0, previousExpand = 0;
+    private String commentPostId = "", commentPostMessage = "";
+
+    public TimelineAdapter(Context context, List<GetPostedMessagesResponse> getPostedMessagesResponses) {
+        this.context = context;
+        this.getPostedMessagesResponses = getPostedMessagesResponses;
+        commonMethods = new CommonMethods(context);
+        timelineActivity = (TimelineActivity) context;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View timelineView = LayoutInflater.from(context).inflate(R.layout.list_timeline_post, parent, false);
+        return new TimelineViewHolder(timelineView);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        GetPostedMessagesResponse getPostedMessagesResponse = getPostedMessagesResponses.get(position);
+        TimelineViewHolder timelineViewHolder = (TimelineViewHolder) holder;
+
+        timelineViewHolder.includeTimelineShare.setVisibility(View.GONE);
+        timelineViewHolder.includeTimelineImage.setVisibility(View.GONE);
+        timelineViewHolder.includeTimelineVideo.setVisibility(View.GONE);
+        timelineViewHolder.imgTimelineProfileMenu.setVisibility(View.GONE);
+        timelineViewHolder.linearTimelineActionShowComment.setVisibility(View.GONE);
+        timelineViewHolder.includeTimelineAction.setVisibility(View.VISIBLE);
+
+        String profilePicture = getPostedMessagesResponse.getProfilePicture();
+        userProfilePicture = profilePicture.replace("data:image/png;base64,", "");
+        byte[] userProfilePic = Base64.decode(userProfilePicture, Base64.DEFAULT);
+        Glide.with(context).asBitmap().load(userProfilePic)
+                .into(timelineViewHolder.imgTimelineProfilePicture);
+
+        String timelineProfileName = getPostedMessagesResponse.getUserName();
+        timelineViewHolder.tvTimelineProfileName.setText(timelineProfileName);
+
+        String timelineMessage = getPostedMessagesResponse.getMessage();
+        timelineViewHolder.tvTimelineMessage.setText(timelineMessage);
+
+        String timelinePostedTime = getPostedMessagesResponse.getPostedDate();
+        timelineViewHolder.tvTimelinePostedTime.setText(timelinePostedTime);
+
+        if (getPostedMessagesResponse.getPostImage().trim().length() != 0) {
+            commonMethods.showLog("Post Image Adapter 00 : " + getPostedMessagesResponse.getPostImage());
+        }
+
+        if (getPostedMessagesResponse.getPostVideo().trim().length() != 0) {
+            commonMethods.showLog("Post Video Adapter 00 : " + getPostedMessagesResponse.getPostVideo());
+        }
+
+        if (!getPostedMessagesResponse.getSharedPostId().equals("0")) {
+            commonMethods.showLog("Post Share Adapter 00 : " + getPostedMessagesResponse.getSharedPostId());
+        }
+
+        if (getPostedMessagesResponse.getPostImage() != null) {
+            if (getPostedMessagesResponse.getPostImage().trim().length() != 0) {
+                commonMethods.showLog("Post Image Adapter 01 : " + getPostedMessagesResponse.getPostImage());
+                timelineViewHolder.includeTimelineImage.setVisibility(View.VISIBLE);
+                String timelinePicture = getPostedMessagesResponse.getPostImage();
+                userTimelinePicture = timelinePicture.replace("data:image/png;base64,", "");
+                byte[] timelinePic = Base64.decode(userTimelinePicture, Base64.DEFAULT);
+                Glide.with(context).asBitmap().load(timelinePic)
+                        .into(timelineViewHolder.viewTimelineImage);
+            }
+        }
+
+        if (getPostedMessagesResponse.getPostVideo() != null) {
+            if (getPostedMessagesResponse.getPostVideo().trim().length() != 0) {
+                if (URLUtil.isValidUrl(getPostedMessagesResponse.getPostVideo().trim())) {
+                    commonMethods.showLog("Post Video Adapter 01 : " + getPostedMessagesResponse.getPostVideo());
+                    timelineViewHolder.includeTimelineVideo.setVisibility(View.VISIBLE);
+                    videoUri = Uri.parse(getPostedMessagesResponse.getPostVideo());
+                    timelineViewHolder.viewTimelineVideo.setVideoURI(videoUri);
+                    timelineViewHolder.viewTimelineVideo.start();
+                    mediaController = new MediaController(context);
+                    mediaController.setMediaPlayer(timelineViewHolder.viewTimelineVideo);
+                    timelineViewHolder.viewTimelineVideo.setMediaController(mediaController);
+                    timelineViewHolder.viewTimelineVideo.requestFocus();
+                }
+            }
+        }
+
+        if (getPostedMessagesResponse.getSharedPostId() != null) {
+            if (getPostedMessagesResponse.getSharedPostId().trim().length() != 0) {
+                if (!getPostedMessagesResponse.getSharedPostId().trim().equals("0")) {
+                    commonMethods.showLog("Post Share Adapter 01 : " + getPostedMessagesResponse.getSharedPostId());
+                    timelineViewHolder.includeTimelineShare.setVisibility(View.VISIBLE);
+                    timelineViewHolder.viewShareImage.setVisibility(View.GONE);
+                    timelineViewHolder.viewShareVideo.setVisibility(View.GONE);
+
+                    if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage() != null) {
+                        commonMethods.showLog("Share Image Adapter 00 : "
+                                + getPostedMessagesResponse.getTimeline_SharedPost().getPostImage());
+                    }
+
+                    if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo() != null) {
+                        commonMethods.showLog("Share Video Adapter 00 : "
+                                + getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
+                    }
+
+                    String sharePicture = getPostedMessagesResponse.getTimeline_SharedPost().getProfilePicture();
+                    shareProfilePicture = sharePicture.replace("data:image/png;base64,", "");
+                    byte[] shareProfilePic = Base64.decode(shareProfilePicture, Base64.DEFAULT);
+                    Glide.with(context).asBitmap().load(shareProfilePic)
+                            .into(timelineViewHolder.imgShareProfilePicture);
+
+                    String shareProfileName = getPostedMessagesResponse.getTimeline_SharedPost().getUserName();
+                    timelineViewHolder.tvShareProfileName.setText(shareProfileName);
+
+                    String shareMessage = getPostedMessagesResponse.getTimeline_SharedPost().getMessage();
+                    timelineViewHolder.tvShareMessage.setText(shareMessage);
+
+                    if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage() != null) {
+                        if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage().length() != 0) {
+                            commonMethods.showLog("Share Image Adapter 01 : "
+                                    + getPostedMessagesResponse.getTimeline_SharedPost().getPostImage());
+                            timelineViewHolder.viewShareImage.setVisibility(View.VISIBLE);
+                            String shareTimelinePic = getPostedMessagesResponse.getTimeline_SharedPost().getPostImage();
+                            shareTimelinePicture = shareTimelinePic.replace("data:image/png;base64,", "");
+                            byte[] sharetimelinePic = Base64.decode(shareTimelinePicture, Base64.DEFAULT);
+                            Glide.with(context).asBitmap().load(sharetimelinePic)
+                                    .into(timelineViewHolder.viewShareImage);
+                        }
+                    }
+
+                    if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo() != null) {
+                        if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo().length() != 0) {
+                            if (URLUtil.isValidUrl(getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo().trim())) {
+                                commonMethods.showLog("Share Video Adapter 01 : "
+                                        + getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
+                                timelineViewHolder.viewShareVideo.setVisibility(View.VISIBLE);
+                                videoUri = Uri.parse(getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
+                                timelineViewHolder.viewShareVideo.setVideoURI(videoUri);
+                                timelineViewHolder.viewShareVideo.start();
+                                mediaController = new MediaController(context);
+                                mediaController.setMediaPlayer(timelineViewHolder.viewShareVideo);
+                                timelineViewHolder.viewShareVideo.setMediaController(mediaController);
+                                timelineViewHolder.viewShareVideo.requestFocus();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (getPostedMessagesResponse.getPostOwnerId().trim().equalsIgnoreCase("15")) {
+            timelineViewHolder.imgTimelineProfileMenu.setVisibility(View.VISIBLE);
+        }
+
+        timelineViewHolder.imgTimelineProfileMenu.setOnClickListener(View -> {
+            timelineActivity.onItemClick(View, position);
+        });
+
+        timelineViewHolder.linearTimelineActionComment.setOnClickListener(View -> {
+            if (!isCommentShow) {
+                commonMethods.expandTheView(timelineViewHolder.linearTimelineActionShowComment);
+                isCommentShow = true;
+                commonMethods.showLog("Position : " + position);
+            } else {
+                commonMethods.closeTheView(timelineViewHolder.linearTimelineActionShowComment);
+                isCommentShow = false;
+                commonMethods.showLog("Position : " + position);
+            }
+        });
+
+        if (getPostedMessagesResponse.getTimeline_Comments() != null) {
+            getTimelineComments = getPostedMessagesResponse.getTimeline_Comments();
+            timelineCommentAdapter = new TimelineCommentAdapter(context, getTimelineComments);
+            timelineViewHolder.rvTimelineActionComments.setAdapter(timelineCommentAdapter);
+        }
+
+        timelineViewHolder.linearTimelineSendComment.setOnClickListener(View -> {
+            if (timelineViewHolder.etTimelineAddComment.getText().toString().trim().length() != 0) {
+                commentPostId = getPostedMessagesResponse.getId();
+                commentPostMessage = timelineViewHolder.etTimelineAddComment.getText().toString();
+                String[] finalCommentPostData = new String[] {commentPostId, commentPostMessage};
+                timelineActivity.OnCommentItemClick(View, position, finalCommentPostData);
+                timelineViewHolder.etTimelineAddComment.clearFocus();
+                timelineViewHolder.etTimelineAddComment.setText("");
+            } else {
+                commonMethods.showToast("Comment Message Needed");
+                timelineViewHolder.etTimelineAddComment.requestFocus();
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return getPostedMessagesResponses.size();
+    }
+
+    class TimelineViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView imgTimelineProfilePicture, imgTimelineProfileMenu;
+        TextView tvTimelineProfileName, tvTimelineMessage, tvTimelinePostedTime;
+        View includeTimelineShare, includeTimelineImage, includeTimelineVideo, includeTimelineAction;
+
+        ImageView imgShareProfilePicture, viewShareImage;
+        TextView tvShareProfileName, tvShareMessage, tvSharePostedTime;
+        VideoView viewShareVideo;
+
+        ImageView viewTimelineImage;
+        VideoView viewTimelineVideo;
+
+        LinearLayout linearTimelineActionLike, linearTimelineActionComment, linearTimelineActionShare, linearTimelineActionShowComment;
+        TextView tvTimelineActionLike, tvTimelineActionComment, tvTimelineActionShare;
+        RecyclerView rvTimelineActionComments;
+
+        EditText etTimelineAddComment;
+        LinearLayout linearTimelineSendComment;
+
+        TimelineViewHolder(View itemView) {
+            super(itemView);
+
+            imgTimelineProfilePicture = (ImageView) itemView.findViewById(R.id.imgTimelineProfilePicture);
+            imgTimelineProfileMenu = (ImageView) itemView.findViewById(R.id.imgTimelineProfileMenu);
+            tvTimelineProfileName = (TextView) itemView.findViewById(R.id.tvTimelineProfileName);
+            tvTimelinePostedTime = (TextView) itemView.findViewById(R.id.tvTimelinePostedTime);
+            tvTimelineMessage = (TextView) itemView.findViewById(R.id.tvTimelineMessage);
+
+            includeTimelineShare = (View) itemView.findViewById(R.id.includeTimelineShare);
+            includeTimelineImage = (View) itemView.findViewById(R.id.includeTimelineImage);
+            includeTimelineVideo = (View) itemView.findViewById(R.id.includeTimelineVideo);
+            includeTimelineAction = (View) itemView.findViewById(R.id.includeTimelineAction);
+
+            imgShareProfilePicture = (ImageView) includeTimelineShare.findViewById(R.id.imgShareProfilePicture);
+            tvShareProfileName = (TextView) includeTimelineShare.findViewById(R.id.tvShareProfileName);
+            tvShareMessage = (TextView) includeTimelineShare.findViewById(R.id.tvShareMessage);
+            tvSharePostedTime = (TextView) includeTimelineShare.findViewById(R.id.tvSharePostedTime);
+            viewShareImage = (ImageView) includeTimelineShare.findViewById(R.id.viewShareImage);
+            viewShareVideo = (VideoView) includeTimelineShare.findViewById(R.id.viewShareVideo);
+
+            viewTimelineImage = (ImageView) includeTimelineImage.findViewById(R.id.viewTimelineImage);
+            viewTimelineVideo = (VideoView) includeTimelineVideo.findViewById(R.id.viewTimelineVideo);
+
+            linearTimelineActionLike = (LinearLayout) includeTimelineAction.findViewById(R.id.linearTimelineActionLike);
+            linearTimelineActionComment = (LinearLayout) includeTimelineAction.findViewById(R.id.linearTimelineActionComment);
+            linearTimelineActionShare = (LinearLayout) includeTimelineAction.findViewById(R.id.linearTimelineActionShare);
+            linearTimelineActionShowComment = (LinearLayout) includeTimelineAction.findViewById(R.id.linearTimelineActionShowComment);
+
+            tvTimelineActionLike = (TextView) includeTimelineAction.findViewById(R.id.tvTimelineActionLike);
+            tvTimelineActionComment = (TextView) includeTimelineAction.findViewById(R.id.tvTimelineActionComment);
+            tvTimelineActionShare = (TextView) includeTimelineAction.findViewById(R.id.tvTimelineActionShare);
+
+            etTimelineAddComment = (EditText) includeTimelineAction.findViewById(R.id.etTimelineAddComment);
+            linearTimelineSendComment = (LinearLayout) includeTimelineAction.findViewById(R.id.linearTimelineSendComment);
+
+            rvTimelineActionComments = (RecyclerView) includeTimelineAction.findViewById(R.id.rvTimelineActionComments);
+            layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+            rvTimelineActionComments.setLayoutManager(layoutManager);
+        }
+    }
+}

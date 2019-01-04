@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearListMenuItems"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="86dp"
+        android:layout_height="86dp"
+        android:background="@drawable/shape_oval">
+
+        <ImageView
+            android:id="@+id/imgMenuIcon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:contentDescription="@string/image_content_description"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_send_black_png" />
+
+        <TextView
+            android:id="@+id/tvMenuBadgeCount"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="end|top"
+            android:background="@drawable/shape_count_badge"
+            android:gravity="center"
+            android:text="@string/count"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvMenuTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:text="@string/app_name"
+        android:textColor="@color/nliveo_green_colorPrimaryDark"
+        android:textSize="18sp" />
+
+</LinearLayout>

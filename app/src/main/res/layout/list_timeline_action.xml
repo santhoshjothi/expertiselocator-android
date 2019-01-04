@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/marginTwo">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/marginFive"
+        android:weightSum="3"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:id="@+id/linearTimelineActionLike"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tvTimelineActionLike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/timeline_like"
+                android:drawableLeft="@drawable/ic_timeline_like"
+                android:drawableStart="@drawable/ic_timeline_like"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearTimelineActionComment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tvTimelineActionComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/timeline_comment"
+                android:drawableLeft="@drawable/ic_timeline_comment"
+                android:drawableStart="@drawable/ic_timeline_comment"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearTimelineActionShare"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tvTimelineActionShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/timeline_share"
+                android:drawableLeft="@drawable/ic_timeline_share"
+                android:drawableStart="@drawable/ic_timeline_share"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearTimelineActionShowComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/marginThree"
+                android:background="@drawable/edit_text_oval_shape"
+                android:layout_weight="2">
+
+                <EditText
+                    android:id="@+id/etTimelineAddComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/timeline_comment_hint"
+                    android:inputType="text"
+                    android:padding="@dimen/marginFour"
+                    android:layout_marginLeft="@dimen/marginFive"
+                    android:layout_marginStart="@dimen/marginFive"
+                    android:background="@android:color/transparent"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearTimelineSendComment"
+                android:layout_width="@dimen/widthHeightFourty"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_margin="@dimen/marginThree"
+                android:background="@drawable/edit_text_oval_shape">
+
+                <ImageView
+                    android:layout_width="@dimen/widthHeightThirty"
+                    android:layout_height="@dimen/widthHeightThirty"
+                    android:src="@drawable/ic_send_black_png"
+                    android:contentDescription="@string/image_content_description"
+                    android:scaleType="fitXY"
+                    android:padding="@dimen/marginFour"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvTimelineActionComments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginFive"
+        android:layout_marginLeft="@dimen/marginFive"
+        android:layout_marginTop="@dimen/marginFive"/>
+
+</LinearLayout>
