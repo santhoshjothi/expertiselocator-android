@@ -4,6 +4,66 @@
     <string name="image_content_description">Image Content</string>
     <string name="count">0</string>
     <string name="no_data">No Data</string>
+    <string name="no_network">Please check the internet connection </string>
+    <string name="language">en</string>
+    <string name="todo">TODO</string>
+    <string name="cancel">Cancel</string>
+    <string name="submit">Submit</string>
+    <string name="toolbar_name">ToolBar_Name</string>
+
+    <!--Experts Profile-->
+    <string name="download_resume">Download Resume</string>
+    <string name="solution">Solution</string>
+    <string name="collaboration">Collaboration</string>
+    <string name="thank_expert">Thank Expert</string>
+    <string name="submit_request">Submit Request</string>
+
+    <string name="edu_heading">Education </string>
+    <string name="title">Title</string>
+    <string name="proficiency">Proficiency</string>
+    <string name="start_year">Start Year</string>
+    <string name="end_year">End_year</string>
+    <string name="college">College / University</string>
+    <string name="insert_edu_msg">Enter the Education Information..</string>
+
+
+
+    <!-- Navigation Menu -->
+    <string name="about">About</string>
+    <string name="timeline">Timeline</string>
+    <string name="following">Following</string>
+    <string name="thanks">Thanks</string>
+    <string name="messaging">Messaging</string>
+    <string name="solutions">Solutions</string>
+    <string name="collaborations">Collaborations</string>
+    <string name="followers">Followers</string>
+    <string name="credits">Credits</string>
+    <string name="awards">Awards</string>
+    <string name="like">Like</string>
+    <string name="comment">Comment</string>
+    <string name="share">Share</string>
+    <string name="santhosh_kumar">Santhosh kumar</string>
+    <string name="ui_ux_designer">UI/UX Designer</string>
+    <string name="cxm_i_tf">CXM,I TF</string>
+    <string name="about_me">About Me</string>
+
+
+    <!--Post Activity --> <!--Dialogbox-->
+
+    <string name="video_link">Enter the video URL.</string>
+    <string name="here">Enter here.</string>
+    <string name="add_post">Add your post</string>
+    <string name="post">Post</string>
+    <string name="edt_post">Edit Post</string>
+    <string name="delete_post">Delete Post</string>
+    <string name="share_post">Share Post</string>
+    <string name="post_msg">Please Post the Message</string>
+    <string name="delete_post_msg">Are you sure you want to delete this post ?</string>
+    <string name="edit_post_msg">Edit your Post and it will be updated to your followers.</string>
+    <string name="share_post_msg">Share this Post and it can be viewed by your followers.</string>
+    <string name="pst_success">Successfully Posted.</string>
+    <string name="pst_failure">Failed Posted</string>
+
 
     <!-- Bottom Navigation -->
 
@@ -69,5 +129,15 @@
     <string name="timeline_edit_delete_update">Update</string>
     <string name="timeline_edit_delete_delete">Delete</string>
     <string name="timeline_edit_delete_cancel">Cancel</string>
+
+
+    <!--Login Activity-->
+    <string name="username">UserName</string>
+    <string name="password">Password</string>
+    <string name="login">login</string>
+
+
+    <!--Post Activity --> <!--Dialogbox-->
+
 
 </resources>

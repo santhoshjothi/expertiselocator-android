@@ -22,7 +22,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private CommonMethods commonMethods;
     private LoginActivity loginActivity;
-
+    public static final String TAG = MenuAdapter.class.getSimpleName();
     public MenuAdapter(Context context, ArrayList<MenuModel> menuModels) {
         this.context = context;
         this.menuModels = menuModels;
@@ -52,8 +52,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         }
         menuAdapterHolder.linearListMenuItems.setOnClickListener(v -> {
-            commonMethods.showLog("Position Clicked : " + position);
-            loginActivity.onItemClick(v, position);
+            commonMethods.showLog("Position Clicked : " ,TAG+ position);
+           // loginActivity.onItemClick(v, position);
+
         });
     }
 

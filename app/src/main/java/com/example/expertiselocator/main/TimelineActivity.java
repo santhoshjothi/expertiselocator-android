@@ -37,7 +37,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
     RecyclerView rvTimelinePost;
     ShimmerFrameLayout shimmerViewContainerTimeline;
     LinearLayoutManager layoutManager;
-
+    public static final String TAG = TimelineActivity.class.getSimpleName();
     List<GetPostedMessagesResponse> getPostedMessagesResponses;
     TimelineAdapter timelineAdapter;
     private int menuItemClickedPosition = 0, menuItemClickedCommentPosition = 0, menuItemClickedReplyPosition = 0;
@@ -75,22 +75,22 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
         getPostedMessageRequest.setMaxCount("2");
         getPostedMessageRequest.setPostID("");
 
-        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
+        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization("").create(ExpertiseApiInterface.class);
         Call<List<GetPostedMessagesResponse>> getPostedMessage = apiInterface.getPostedMessage(getPostedMessageRequest);
         getPostedMessage.enqueue(new Callback<List<GetPostedMessagesResponse>>() {
             @Override
             public void onResponse(@NonNull Call<List<GetPostedMessagesResponse>> call, @NonNull Response<List<GetPostedMessagesResponse>> response) {
 
-                commonMethods.showLog("URL Success : " + call.request().url());
-                commonMethods.showLog("Response Code : " + response.code());
-                commonMethods.showLog("Response Body : " + response.body());
+                commonMethods.showLog("URL Success : ", TAG+ call.request().url());
+                commonMethods.showLog("Response Code : ",TAG + response.code());
+                commonMethods.showLog("Response Body : " ,TAG+ response.body());
                 List<GetPostedMessagesResponse> getPostedMessagesResponseResult = response.body();
                 assert getPostedMessagesResponseResult != null;
                 for (GetPostedMessagesResponse messages : getPostedMessagesResponseResult) {
-                    commonMethods.showLog("Message : " + messages.getMessage());
-                    commonMethods.showLog("Username : " + messages.getUserName());
-                    commonMethods.showLog("Shared Post Id : " + messages.getSharedPostId());
-                    commonMethods.showLog("Post Image : " + messages.getPostImage());
+                    commonMethods.showLog("Message : " ,TAG+ messages.getMessage());
+                    commonMethods.showLog("Username : " ,TAG+ messages.getUserName());
+                    commonMethods.showLog("Shared Post Id : " ,TAG+ messages.getSharedPostId());
+                    commonMethods.showLog("Post Image : " ,TAG+ messages.getPostImage());
                 }
                 getPostedMessagesResponses = response.body();
                 timelineAdapter = new TimelineAdapter(TimelineActivity.this, getPostedMessagesResponses);
@@ -101,8 +101,8 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
 
             @Override
             public void onFailure(Call<List<GetPostedMessagesResponse>> call, Throwable t) {
-                commonMethods.showLog("URL Failure : " + call.request().url());
-                commonMethods.showLog("Failure : " + t.getMessage());
+                commonMethods.showLog("URL Failure : " ,TAG+ call.request().url());
+                commonMethods.showLog("Failure : " ,TAG+ t.getMessage());
                 shimmerViewContainerTimeline.stopShimmer();
                 shimmerViewContainerTimeline.setVisibility(View.GONE);
             }
@@ -245,7 +245,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
         int commentView = view.getId();
         switch (commentView) {
             case R.id.linearTimelineSendComment:
-                commonMethods.showLog("Comment Post Id : " + commentData[0]
+                commonMethods.showLog("Comment Post Id : " ,TAG+ commentData[0]
                         + " Message : " + commentData[1]
                         + " Position : " + position);
                 break;

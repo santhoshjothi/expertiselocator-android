@@ -1,5 +1,7 @@
 package com.example.expertiselocator.apiclient;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -38,9 +40,11 @@ public class ExpertiseApiClient {
         ExpertiseApiClient.retrofitWithAuthorization = retrofitWithAuthorization;
     }
 
-    public static Retrofit getRetrofitWithAuthorization() {
+    public static Retrofit getRetrofitWithAuthorization(final String tokens) {
         Gson gson = new GsonBuilder().setLenient().create();
-        final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InR1c2VyNiIsIm5iZiI6MTU0NjQyNjM3MiwiZXhwIjoxNTQ3MDMxMTcyLCJpYXQiOjE1NDY0MjYzNzJ9.0X5s5FUHS79Ks69xBR9ytqlpzccEMXl-qyNfqbJHibY";
+       // Log.v("Authorization",""+token);
+       //final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InR1c2VyNiIsIm5iZiI6MTU0NjQyNjM3MiwiZXhwIjoxNTQ3MDMxMTcyLCJpYXQiOjE1NDY0MjYzNzJ9.0X5s5FUHS79Ks69xBR9ytqlpzccEMXl-qyNfqbJHibY";
+        final String token =tokens;
         if (retrofitWithAuthorization == null) {
             retrofitWithAuthorization = new Retrofit.Builder()
                     .client(new OkHttpClient.Builder()

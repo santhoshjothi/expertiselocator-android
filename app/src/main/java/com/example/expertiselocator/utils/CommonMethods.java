@@ -75,7 +75,7 @@ public class CommonMethods {
         Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
     }
 
-    public void showLog(String logMessage) {
-        Log.e("Expertise Locator", logMessage);
+    public void showLog(String TAG,String logMessage) {
+        Log.e("Expertise Locator", TAG + " / " + logMessage);
     }
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.expertiselocator.R;
+import com.example.expertiselocator.main.LoginActivity;
 import com.example.expertiselocator.main.TimelineActivity;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
 import com.example.expertiselocator.utils.CommonMethods;
@@ -27,7 +28,7 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private String userProfilePicture;
     private boolean isReplyShown = false;
     private CommonMethods commonMethods;
-
+    public static final String TAG = TimelineCommentAdapter.class.getSimpleName();
     private LinearLayoutManager linearLayoutManager;
     private List<GetPostedMessagesResponse.Timeline_Replies> getTimelineReplies;
     private TimelineReplyAdapter timelineReplyAdapter;
@@ -88,11 +89,11 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             if (!isReplyShown) {
                 commonMethods.expandTheView(timelineCommentHolder.linearTimelineActionAddReply);
                 isReplyShown = true;
-                commonMethods.showLog("Position : " + position);
+                commonMethods.showLog("Position : " ,TAG+ position);
             } else {
                 commonMethods.closeTheView(timelineCommentHolder.linearTimelineActionAddReply);
                 isReplyShown = false;
-                commonMethods.showLog("Position : " + position);
+                commonMethods.showLog("Position : " ,TAG+ position);
             }
         });
     }

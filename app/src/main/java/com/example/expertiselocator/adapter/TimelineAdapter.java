@@ -18,6 +18,7 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.expertiselocator.R;
+import com.example.expertiselocator.main.LoginActivity;
 import com.example.expertiselocator.main.TimelineActivity;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
 import com.example.expertiselocator.utils.CommonMethods;
@@ -29,7 +30,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
     private CommonMethods commonMethods;
     private TimelineActivity timelineActivity;
-
+    public static final String TAG = TimelineAdapter.class.getSimpleName();
     private List<GetPostedMessagesResponse> getPostedMessagesResponses;
     private List<GetPostedMessagesResponse.Timeline_Comments> getTimelineComments;
     private TimelineCommentAdapter timelineCommentAdapter;
@@ -83,20 +84,20 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         timelineViewHolder.tvTimelinePostedTime.setText(timelinePostedTime);
 
         if (getPostedMessagesResponse.getPostImage().trim().length() != 0) {
-            commonMethods.showLog("Post Image Adapter 00 : " + getPostedMessagesResponse.getPostImage());
+            commonMethods.showLog("Post Image Adapter 00 : " ,TAG + getPostedMessagesResponse.getPostImage());
         }
 
         if (getPostedMessagesResponse.getPostVideo().trim().length() != 0) {
-            commonMethods.showLog("Post Video Adapter 00 : " + getPostedMessagesResponse.getPostVideo());
+            commonMethods.showLog("Post Video Adapter 00 : " , TAG + getPostedMessagesResponse.getPostVideo());
         }
 
         if (!getPostedMessagesResponse.getSharedPostId().equals("0")) {
-            commonMethods.showLog("Post Share Adapter 00 : " + getPostedMessagesResponse.getSharedPostId());
+            commonMethods.showLog("Post Share Adapter 00 : " ,TAG+ getPostedMessagesResponse.getSharedPostId());
         }
 
         if (getPostedMessagesResponse.getPostImage() != null) {
             if (getPostedMessagesResponse.getPostImage().trim().length() != 0) {
-                commonMethods.showLog("Post Image Adapter 01 : " + getPostedMessagesResponse.getPostImage());
+                commonMethods.showLog("Post Image Adapter 01 : " ,TAG + getPostedMessagesResponse.getPostImage());
                 timelineViewHolder.includeTimelineImage.setVisibility(View.VISIBLE);
                 String timelinePicture = getPostedMessagesResponse.getPostImage();
                 userTimelinePicture = timelinePicture.replace("data:image/png;base64,", "");
@@ -109,7 +110,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (getPostedMessagesResponse.getPostVideo() != null) {
             if (getPostedMessagesResponse.getPostVideo().trim().length() != 0) {
                 if (URLUtil.isValidUrl(getPostedMessagesResponse.getPostVideo().trim())) {
-                    commonMethods.showLog("Post Video Adapter 01 : " + getPostedMessagesResponse.getPostVideo());
+                    commonMethods.showLog("Post Video Adapter 01 : " ,TAG+ getPostedMessagesResponse.getPostVideo());
                     timelineViewHolder.includeTimelineVideo.setVisibility(View.VISIBLE);
                     videoUri = Uri.parse(getPostedMessagesResponse.getPostVideo());
                     timelineViewHolder.viewTimelineVideo.setVideoURI(videoUri);
@@ -125,18 +126,18 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (getPostedMessagesResponse.getSharedPostId() != null) {
             if (getPostedMessagesResponse.getSharedPostId().trim().length() != 0) {
                 if (!getPostedMessagesResponse.getSharedPostId().trim().equals("0")) {
-                    commonMethods.showLog("Post Share Adapter 01 : " + getPostedMessagesResponse.getSharedPostId());
+                    commonMethods.showLog("Post Share Adapter 01 : " ,TAG+ getPostedMessagesResponse.getSharedPostId());
                     timelineViewHolder.includeTimelineShare.setVisibility(View.VISIBLE);
                     timelineViewHolder.viewShareImage.setVisibility(View.GONE);
                     timelineViewHolder.viewShareVideo.setVisibility(View.GONE);
 
                     if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage() != null) {
-                        commonMethods.showLog("Share Image Adapter 00 : "
+                        commonMethods.showLog("Share Image Adapter 00 : ",TAG
                                 + getPostedMessagesResponse.getTimeline_SharedPost().getPostImage());
                     }
 
                     if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo() != null) {
-                        commonMethods.showLog("Share Video Adapter 00 : "
+                        commonMethods.showLog("Share Video Adapter 00 : ",TAG
                                 + getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
                     }
 
@@ -154,7 +155,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage() != null) {
                         if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage().length() != 0) {
-                            commonMethods.showLog("Share Image Adapter 01 : "
+                            commonMethods.showLog("Share Image Adapter 01 : ",TAG
                                     + getPostedMessagesResponse.getTimeline_SharedPost().getPostImage());
                             timelineViewHolder.viewShareImage.setVisibility(View.VISIBLE);
                             String shareTimelinePic = getPostedMessagesResponse.getTimeline_SharedPost().getPostImage();
@@ -168,7 +169,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo() != null) {
                         if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo().length() != 0) {
                             if (URLUtil.isValidUrl(getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo().trim())) {
-                                commonMethods.showLog("Share Video Adapter 01 : "
+                                commonMethods.showLog("Share Video Adapter 01 : ",TAG
                                         + getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
                                 timelineViewHolder.viewShareVideo.setVisibility(View.VISIBLE);
                                 videoUri = Uri.parse(getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
@@ -197,11 +198,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (!isCommentShow) {
                 commonMethods.expandTheView(timelineViewHolder.linearTimelineActionShowComment);
                 isCommentShow = true;
-                commonMethods.showLog("Position : " + position);
+                commonMethods.showLog("Position : " ,TAG+ position);
             } else {
                 commonMethods.closeTheView(timelineViewHolder.linearTimelineActionShowComment);
                 isCommentShow = false;
-                commonMethods.showLog("Position : " + position);
+                commonMethods.showLog("Position : " ,TAG+ position);
             }
         });
 
