@@ -1,5 +1,6 @@
 package com.example.expertiselocator.main;
 
+import android.content.Context;
 import android.content.Intent;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -29,6 +31,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.rey.material.widget.ProgressView;
 
 import org.json.JSONObject;
 
@@ -57,6 +60,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
     CommonMethods commonMethods;
     public static final String TAG = LoginActivity.class.getSimpleName();
     String userNameEncryt;
+    ProgressView progress_login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +71,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
         edt_username = (EditText) findViewById(R.id.edt_username_login);
         edt_passd = (EditText) findViewById(R.id.edt_pssd_login);
         btn_submit = (Button) findViewById(R.id.btn_submit_login);
+        progress_login = (ProgressView) findViewById(R.id.progress_login);
+
 
 
 
@@ -77,7 +83,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
                 boolean isConnected = ConnectivityReceiver.isConnected();
                 if (isConnected) {
                     try {
-                         userNameEncryt = AESEncryption.encrypt( edt_username.getText().toString(),"8080808080808080");
+                        InputMethodManager inputManager = (InputMethodManager) LoginActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                        userNameEncryt = AESEncryption.encrypt( edt_username.getText().toString(),"8080808080808080");
                         String PasswordEncrpt = AESEncryption.encrypt( edt_passd.getText().toString(),"8080808080808080");
                         LoginRequest request = new LoginRequest();
                         request.setUserName(userNameEncryt);
@@ -109,8 +117,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
 
 
     public void callGetLogin(LoginRequest loginRequest){
-
-        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization("").create(ExpertiseApiInterface.class);
+        progress_login.setVisibility(View.VISIBLE);
+        ExpertiseApiClient expertiseApiClient=new ExpertiseApiClient(LoginActivity.this);
+        ExpertiseApiInterface apiInterface = expertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
         Call<LoginResponse> getPostedMessage = apiInterface.getLogin(loginRequest);
         getPostedMessage.enqueue(new Callback<LoginResponse>() {
             @Override
@@ -128,7 +137,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
 //                        commonMethods.showLog("Token : " ,TAG + loginResponse.getToken());
 //                        commonMethods.showLog("userNameEncryt : " ,TAG + userNameEncryt);
                         SharedPreferencesWithAES prefs = SharedPreferencesWithAES.getInstance(LoginActivity.this,"expertise_Prefs");
-                        prefs.putString("loginResponse", loginResponse.getToken());
+                        prefs.putString("loginresponse", loginResponse.getToken());
                         prefs.commit();
 
                         UserInfoRequest userInfoRequest = new UserInfoRequest();
@@ -141,11 +150,15 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
 
                     }else{
 
+                        progress_login.setVisibility(View.GONE);
                         commonMethods.showLog("Null Token  : " , TAG + "");
+                        commonMethods.showToast("Login Failure");
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                    progress_login.setVisibility(View.GONE);
+
                 }
             }
 
@@ -153,6 +166,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 commonMethods.showLog("URL Failure : " ,TAG + call.request().url());
                 commonMethods.showLog("Failure : ",TAG  + t.getMessage());
+                progress_login.setVisibility(View.GONE);
+                commonMethods.showToast("Login Failure");
             }
         });
 
@@ -161,11 +176,13 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
 
     public void callGetUserInfo(UserInfoRequest userInfo,String token){
 
-        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization(token).create(ExpertiseApiInterface.class);
+        ExpertiseApiClient expertiseApiClient=new ExpertiseApiClient(LoginActivity.this);
+        ExpertiseApiInterface apiInterface = expertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
         Call<List<GetUserInfoResponse>> getPostedMessage = apiInterface.getUserInfo(userInfo);
         getPostedMessage.enqueue(new Callback<List<GetUserInfoResponse>>() {
             @Override
             public void onResponse(@NonNull Call<List<GetUserInfoResponse>> call, @NonNull Response<List<GetUserInfoResponse>> response) {
+
                String userId=null;
                 String UserNameInfo =null;
                 String firtNameInfo=null;
@@ -205,12 +222,16 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
                     //Storing the username inside shared preferences
                     prefs.putString("user_info", userInfoListJsonString);
                     prefs.commit();
+                    progress_login.setVisibility(View.GONE);
 
-                    Intent postInten=new Intent(LoginActivity.this,PostActivity.class);
+                    Intent postInten=new Intent(LoginActivity.this,HomeScreenActivity.class);
                     startActivity(postInten);
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                    progress_login.setVisibility(View.GONE);
+                    commonMethods.showToast("GetInfo Failure");
+
                 }
 
 
@@ -220,6 +241,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
             public void onFailure(Call<List<GetUserInfoResponse>> call, Throwable t) {
                 commonMethods.showLog("URL Failure : " ,TAG + call.request().url());
                 commonMethods.showLog("Failure : ",TAG  + t.getMessage());
+                progress_login.setVisibility(View.GONE);
+                commonMethods.showToast("GetInfo Failure");
             }
         });
 

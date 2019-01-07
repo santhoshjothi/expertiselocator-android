@@ -1,5 +1,6 @@
 package com.example.expertiselocator.apiclient;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.example.expertiselocator.main.PostActivity;
@@ -20,8 +21,16 @@ public class ExpertiseApiClient {
 
     private static Retrofit retrofit = null;
     private static Retrofit retrofitWithAuthorization = null;
-    SharedPreferencesWithAES prefs;
+    private static  SharedPreferencesWithAES prefs;
+    private Context context;
+
+    public ExpertiseApiClient(Context contex) {
+        this.context=contex;
+        prefs = SharedPreferencesWithAES.getInstance(context,"expertise_Prefs");
+    }
+
     public static Retrofit getRetrofit() {
+
         Gson gson = new GsonBuilder().setLenient().create();
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                 .connectTimeout(2, TimeUnit.MINUTES)
@@ -42,13 +51,11 @@ public class ExpertiseApiClient {
         ExpertiseApiClient.retrofitWithAuthorization = retrofitWithAuthorization;
     }
 
-    public static Retrofit getRetrofitWithAuthorization(final String token) {
-     //   prefs = SharedPreferencesWithAES.getInstance(getContext,"expertise_Prefs");
-        Gson gson = new GsonBuilder().setLenient().create();
-        //final String token=prefs.getString("loginResponse","");
-       // Log.v("Authorization",""+token);
+    public static Retrofit getRetrofitWithAuthorization() {
+          Gson gson = new GsonBuilder().setLenient().create();
+          String token = prefs.getString("loginresponse","");
+      //    Log.v("Authorization",""+token);
        //final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InR1c2VyNiIsIm5iZiI6MTU0NjQyNjM3MiwiZXhwIjoxNTQ3MDMxMTcyLCJpYXQiOjE1NDY0MjYzNzJ9.0X5s5FUHS79Ks69xBR9ytqlpzccEMXl-qyNfqbJHibY";
-        //final String token ="";
         if (retrofitWithAuthorization == null) {
             retrofitWithAuthorization = new Retrofit.Builder()
                     .client(new OkHttpClient.Builder()

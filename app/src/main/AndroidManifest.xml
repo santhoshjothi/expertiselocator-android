@@ -5,6 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".utils.NetworkUtils"
@@ -36,7 +38,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".main.PostActivity" />
+        <activity android:name=".main.PostActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".main.ExpertProfileActivity" />
         <activity android:name=".main.UserProfileActivity"></activity>
         <activity android:name=".main.SearchActivty"></activity>

@@ -54,5 +54,21 @@
 
     </LinearLayout>
 
+    <com.rey.material.widget.ProgressView
+        app:layout_constraintTop_toBottomOf="@+id/login_el"
+        android:id="@+id/progress_login"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        app:pv_autostart="true"
+        app:pv_circular="true"
+        app:pv_progressMode="indeterminate"
+        app:pv_progressStyle="@style/Material.Drawable.CircularProgress"
+        android:visibility="gone"
+        android:layout_margin="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
 
 </android.support.constraint.ConstraintLayout>

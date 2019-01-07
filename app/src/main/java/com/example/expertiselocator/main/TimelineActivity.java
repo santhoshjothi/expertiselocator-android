@@ -1,15 +1,20 @@
 package com.example.expertiselocator.main;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -18,11 +23,16 @@ import com.example.expertiselocator.adapter.TimelineAdapter;
 import com.example.expertiselocator.apiclient.ExpertiseApiClient;
 import com.example.expertiselocator.interfaces.ExpertiseApiInterface;
 import com.example.expertiselocator.interfaces.OnItemClick;
+import com.example.expertiselocator.model.UserInfoModelPref;
 import com.example.expertiselocator.model.request.GetPostedMessageRequest;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
+import com.example.expertiselocator.model.response.GetUserInfoResponse;
 import com.example.expertiselocator.utils.CommonMethods;
+import com.example.expertiselocator.utils.SharedPreferencesWithAES;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -33,7 +43,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
         PopupMenu.OnMenuItemClickListener, OnItemClick.OnItemClickComment {
 
     CommonMethods commonMethods;
-
+    ImageView img_search_toolbar;
     RecyclerView rvTimelinePost;
     ShimmerFrameLayout shimmerViewContainerTimeline;
     LinearLayoutManager layoutManager;
@@ -41,18 +51,48 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
     List<GetPostedMessagesResponse> getPostedMessagesResponses;
     TimelineAdapter timelineAdapter;
     private int menuItemClickedPosition = 0, menuItemClickedCommentPosition = 0, menuItemClickedReplyPosition = 0;
+    LinearLayout lin_post_timeline;
+    SharedPreferencesWithAES prefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         commonMethods = new CommonMethods(TimelineActivity.this);
         shimmerViewContainerTimeline = (ShimmerFrameLayout) findViewById(R.id.shimmerViewContainerTimeline);
         rvTimelinePost = (RecyclerView) findViewById(R.id.rvTimelinePost);
+        lin_post_timeline = (LinearLayout) findViewById(R.id.lin_post_timeline);
+        img_search_toolbar = (ImageView)toolbar.findViewById(R.id.img_search_toolbar);
+
         layoutManager = new LinearLayoutManager(TimelineActivity.this, LinearLayoutManager.VERTICAL, false);
         rvTimelinePost.setLayoutManager(layoutManager);
+        prefs = SharedPreferencesWithAES.getInstance(TimelineActivity.this,"expertise_Prefs");
         getPostedTimelineMsg();
+
+        lin_post_timeline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent postActitity =new Intent(TimelineActivity.this,PostActivity.class);
+                startActivity(postActitity);
+            }
+        });
+        img_search_toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent postActitity =new Intent(TimelineActivity.this,SearchActivty.class);
+                startActivity(postActitity);
+            }
+        });
+
     }
 
     @Override
@@ -70,12 +110,22 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
     public void getPostedTimelineMsg() {
 
         GetPostedMessageRequest getPostedMessageRequest = new GetPostedMessageRequest();
-        getPostedMessageRequest.setUserID("15");
-        getPostedMessageRequest.setStartIndex("1");
-        getPostedMessageRequest.setMaxCount("2");
-        getPostedMessageRequest.setPostID("");
 
-        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization("").create(ExpertiseApiInterface.class);
+        try {
+            String getUserInfo = prefs.getString("user_info", "");
+            ObjectMapper mapper = new ObjectMapper();
+            UserInfoModelPref userResponse = mapper.readValue(getUserInfo, UserInfoModelPref.class);
+            getPostedMessageRequest.setUserID(userResponse.userId);
+            getPostedMessageRequest.setStartIndex("1");
+            getPostedMessageRequest.setMaxCount("2");
+            getPostedMessageRequest.setPostID("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        ExpertiseApiClient expertiseApiClient=new ExpertiseApiClient(TimelineActivity.this);
+        ExpertiseApiInterface apiInterface = expertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
         Call<List<GetPostedMessagesResponse>> getPostedMessage = apiInterface.getPostedMessage(getPostedMessageRequest);
         getPostedMessage.enqueue(new Callback<List<GetPostedMessagesResponse>>() {
             @Override
@@ -251,4 +301,27 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 break;
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                //do whatever
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed(){
+
+        super.onBackPressed();
+
+    }
+
+
+
+
+
 }

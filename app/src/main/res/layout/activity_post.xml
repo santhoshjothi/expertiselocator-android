@@ -199,6 +199,7 @@
             app:pv_progressMode="indeterminate"
             app:pv_progressStyle="@style/Material.Drawable.CircularProgress"
             android:visibility="gone"
+
             />
     </LinearLayout>
 

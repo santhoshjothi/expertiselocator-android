@@ -42,6 +42,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private boolean isCommentShow = false;
     private int currentExpand = 0, previousExpand = 0;
     private String commentPostId = "", commentPostMessage = "";
+    private boolean isliked;
 
     public TimelineAdapter(Context context, List<GetPostedMessagesResponse> getPostedMessagesResponses) {
         this.context = context;
@@ -68,6 +69,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         timelineViewHolder.linearTimelineActionShowComment.setVisibility(View.GONE);
         timelineViewHolder.includeTimelineAction.setVisibility(View.VISIBLE);
 
+         isliked = Boolean.parseBoolean(getPostedMessagesResponse.getIsLiked());
         String profilePicture = getPostedMessagesResponse.getProfilePicture();
         userProfilePicture = profilePicture.replace("data:image/png;base64,", "");
         byte[] userProfilePic = Base64.decode(userProfilePicture, Base64.DEFAULT);
@@ -225,6 +227,31 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 timelineViewHolder.etTimelineAddComment.requestFocus();
             }
         });
+
+//        timelineViewHolder.linearTimelineActionLike.setOnClickListener(View -> {
+//
+//
+//                timelineActivity.OnCommentItemClick(View, position, isliked);
+//
+//
+////                if(!isliked) {
+////                       // Log.v("isliked/"," if "+isliked);
+////
+////                    timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
+////                      //  isliked = true;
+////                    }else{
+////                      //  Log.v("isliked/"," else "+isliked);
+////                       // isliked = false;
+////                        //feedlike.setBackgroundResource(R.drawable.ic_liked);
+////                    timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked,0, 0, 0);
+////
+////                    }
+//
+//                });
+
+
+
+
     }
 
     @Override

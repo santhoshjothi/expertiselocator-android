@@ -12,6 +12,7 @@ import com.example.expertiselocator.adapter.MenuAdapter;
 import com.example.expertiselocator.interfaces.MenuItemClick;
 import com.example.expertiselocator.model.MenuModel;
 import com.example.expertiselocator.utils.CommonMethods;
+import com.example.expertiselocator.utils.SharedPreferencesWithAES;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -30,23 +31,23 @@ public class HomeScreenActivity extends AppCompatActivity implements View.OnClic
     MenuAdapter menuAdapter;
     RecyclerView rvMenu;
     GridLayoutManager gridLayoutManager;
-
+    SharedPreferencesWithAES prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
-        Objects.requireNonNull(getSupportActionBar()).hide();
+//        Objects.requireNonNull(getSupportActionBar()).hide();
 
         commonMethods = new CommonMethods(this);
 
-        menuIcon = new int[]{R.drawable.ic_send_black_png,
-                R.drawable.ic_send_black_png,
-                R.drawable.ic_send_black_png,
-                R.drawable.ic_send_black_png,
-                R.drawable.ic_send_black_png,
-                R.drawable.ic_send_black_png,
-                R.drawable.ic_send_black_png,
-                R.drawable.ic_send_black_png,
+        menuIcon = new int[]{R.drawable.ic_menu_timeline,
+                R.drawable.ic_menu_messaging,
+                R.drawable.ic_menu_thanks,
+                R.drawable.ic_menu_solutions,
+                R.drawable.ic_menu_collaborations,
+                R.drawable.ic_menu_awards,
+                R.drawable.ic_menu_followers,
+                R.drawable.ic_menu_following,
                 R.drawable.ic_send_black_png,
                 R.drawable.ic_send_black_png,
                 R.drawable.ic_send_black_png,
@@ -111,5 +112,12 @@ public class HomeScreenActivity extends AppCompatActivity implements View.OnClic
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+
+        super.onBackPressed();
+
     }
 }

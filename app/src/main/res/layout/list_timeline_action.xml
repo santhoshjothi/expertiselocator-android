@@ -25,8 +25,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/timeline_like"
-                android:drawableLeft="@drawable/ic_timeline_like"
-                android:drawableStart="@drawable/ic_timeline_like"
+                android:drawableLeft="@drawable/ic_like"
+                android:drawableStart="@drawable/ic_like"
                 android:gravity="center" />
 
         </LinearLayout>
@@ -43,8 +43,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/timeline_comment"
-                android:drawableLeft="@drawable/ic_timeline_comment"
-                android:drawableStart="@drawable/ic_timeline_comment"
+                android:drawableLeft="@drawable/ic_comment"
+                android:drawableStart="@drawable/ic_comment"
                 android:gravity="center"/>
 
         </LinearLayout>
@@ -61,8 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/timeline_share"
-                android:drawableLeft="@drawable/ic_timeline_share"
-                android:drawableStart="@drawable/ic_timeline_share"
+                android:drawableLeft="@drawable/ic_share"
+                android:drawableStart="@drawable/ic_share"
                 android:gravity="center"/>
 
         </LinearLayout>

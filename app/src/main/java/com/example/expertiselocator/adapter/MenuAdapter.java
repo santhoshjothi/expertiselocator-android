@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.expertiselocator.R;
+import com.example.expertiselocator.main.HomeScreenActivity;
 import com.example.expertiselocator.main.LoginActivity;
 import com.example.expertiselocator.model.MenuModel;
 import com.example.expertiselocator.utils.CommonMethods;
@@ -21,13 +22,14 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<MenuModel> menuModels;
     private Context context;
     private CommonMethods commonMethods;
-    private LoginActivity loginActivity;
+    private HomeScreenActivity homeScreenActivity;
     public static final String TAG = MenuAdapter.class.getSimpleName();
+
     public MenuAdapter(Context context, ArrayList<MenuModel> menuModels) {
         this.context = context;
         this.menuModels = menuModels;
         commonMethods = new CommonMethods(context);
-        loginActivity = (LoginActivity) context;
+        homeScreenActivity = (HomeScreenActivity) context;
     }
 
     @Override
@@ -47,13 +49,13 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (!menuModel.getMenuBadgeCount().equals("0")) {
                 menuAdapterHolder.tvMenuBadgeCount.setVisibility(View.VISIBLE);
                 menuAdapterHolder.tvMenuBadgeCount.setText(menuModel.getMenuBadgeCount());
-            }else {
+            } else {
                 menuAdapterHolder.tvMenuBadgeCount.setVisibility(View.GONE);
             }
         }
         menuAdapterHolder.linearListMenuItems.setOnClickListener(v -> {
-            commonMethods.showLog("Position Clicked : " ,TAG+ position);
-           // loginActivity.onItemClick(v, position);
+            commonMethods.showLog("Position Clicked : ", TAG + position);
+            homeScreenActivity.onItemClick(v, position);
 
         });
     }
@@ -67,6 +69,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         LinearLayout linearListMenuItems;
         TextView tvMenuTitle, tvMenuBadgeCount;
         ImageView imgMenuIcon;
+
         private MenuAdapterHolder(View itemView) {
             super(itemView);
             linearListMenuItems = (LinearLayout) itemView.findViewById(R.id.linearListMenuItems);
