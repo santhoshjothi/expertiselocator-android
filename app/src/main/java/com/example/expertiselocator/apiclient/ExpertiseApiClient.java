@@ -2,6 +2,8 @@ package com.example.expertiselocator.apiclient;
 
 import android.util.Log;
 
+import com.example.expertiselocator.main.PostActivity;
+import com.example.expertiselocator.utils.SharedPreferencesWithAES;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -18,7 +20,7 @@ public class ExpertiseApiClient {
 
     private static Retrofit retrofit = null;
     private static Retrofit retrofitWithAuthorization = null;
-
+    SharedPreferencesWithAES prefs;
     public static Retrofit getRetrofit() {
         Gson gson = new GsonBuilder().setLenient().create();
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
@@ -40,11 +42,13 @@ public class ExpertiseApiClient {
         ExpertiseApiClient.retrofitWithAuthorization = retrofitWithAuthorization;
     }
 
-    public static Retrofit getRetrofitWithAuthorization(final String tokens) {
+    public static Retrofit getRetrofitWithAuthorization(final String token) {
+     //   prefs = SharedPreferencesWithAES.getInstance(getContext,"expertise_Prefs");
         Gson gson = new GsonBuilder().setLenient().create();
+        //final String token=prefs.getString("loginResponse","");
        // Log.v("Authorization",""+token);
        //final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InR1c2VyNiIsIm5iZiI6MTU0NjQyNjM3MiwiZXhwIjoxNTQ3MDMxMTcyLCJpYXQiOjE1NDY0MjYzNzJ9.0X5s5FUHS79Ks69xBR9ytqlpzccEMXl-qyNfqbJHibY";
-        final String token =tokens;
+        //final String token ="";
         if (retrofitWithAuthorization == null) {
             retrofitWithAuthorization = new Retrofit.Builder()
                     .client(new OkHttpClient.Builder()
