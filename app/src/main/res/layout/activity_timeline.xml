@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".main.TimelineActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:id="@+id/lin"
-       >
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -22,88 +20,90 @@
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <TextView
-                android:id="@+id/usrpfl_title"
+                style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textStyle="bold"
-                android:textColor="@color/white"
                 android:text="@string/timeline"
-                style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
-                />
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
             <ImageView
+                android:id="@+id/img_search_toolbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:paddingRight="5dp"
-                android:src="@drawable/ic_search"
                 android:contentDescription="@string/todo"
                 android:paddingEnd="5dp"
-                android:id="@+id/img_search_toolbar"
-                />
+                android:paddingRight="5dp"
+                android:src="@drawable/ic_search" />
 
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
     <LinearLayout
+        android:id="@+id/lin_post_timeline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:id="@+id/lin_post_timeline"
-        android:orientation="vertical"
-        android:background="#f9f9f9"
-        >
+        android:background="@color/timeline_post_background"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="2"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@color/white"
             android:gravity="center"
-            android:background="@color/white">
+            android:orientation="horizontal"
+            android:weightSum="2">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1.6"
-                android:gravity="center"
                 android:layout_height="wrap_content"
-                >
+                android:layout_weight="1.6"
+                android:gravity="center">
+
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Write a post,Share Photo or Video"/>
+                    android:text="@string/timeline_post_hint" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight=".2"
-                android:gravity="right"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_height="wrap_content">
+                android:layout_weight=".2"
+                android:gravity="end">
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_camera"/>
+                    android:src="@drawable/ic_camera"
+                    android:contentDescription="@string/image_content_description"/>
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight=".2"
-                android:gravity="center"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_height="wrap_content">
+                android:layout_weight=".2"
+                android:gravity="center">
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_link"/>
+                    android:src="@drawable/ic_link" />
             </LinearLayout>
 
         </LinearLayout>
 
-
     </LinearLayout>
+
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmerViewContainerTimeline"
         android:layout_width="match_parent"
@@ -132,6 +132,6 @@
         android:id="@+id/rvTimelinePost"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/nliveo_gray"/>
+        android:background="@color/nliveo_gray" />
 
 </LinearLayout>

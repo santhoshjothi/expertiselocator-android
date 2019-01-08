@@ -15,7 +15,6 @@ import com.example.expertiselocator.utils.CommonMethods;
 import com.example.expertiselocator.utils.SharedPreferencesWithAES;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class HomeScreenActivity extends AppCompatActivity implements View.OnClickListener, MenuItemClick {
 
@@ -32,13 +31,14 @@ public class HomeScreenActivity extends AppCompatActivity implements View.OnClic
     RecyclerView rvMenu;
     GridLayoutManager gridLayoutManager;
     SharedPreferencesWithAES prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
-//        Objects.requireNonNull(getSupportActionBar()).hide();
 
         commonMethods = new CommonMethods(this);
+        prefs = SharedPreferencesWithAES.getInstance(HomeScreenActivity.this, commonMethods.expertisePreference);
 
         menuIcon = new int[]{R.drawable.ic_menu_timeline,
                 R.drawable.ic_menu_messaging,
@@ -115,9 +115,7 @@ public class HomeScreenActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    public void onBackPressed(){
-
+    public void onBackPressed() {
         super.onBackPressed();
-
     }
 }

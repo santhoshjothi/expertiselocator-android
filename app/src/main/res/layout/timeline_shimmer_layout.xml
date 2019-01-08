@@ -63,14 +63,12 @@
         android:baselineAligned="false">
 
         <LinearLayout
-            android:id="@+id/linearTimelineActionLike"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/tvTimelineActionLike"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/timeline_like"
@@ -81,14 +79,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearTimelineActionComment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/tvTimelineActionComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/timeline_comment"
@@ -99,14 +95,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearTimelineActionShare"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/tvTimelineActionShare"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/timeline_share"

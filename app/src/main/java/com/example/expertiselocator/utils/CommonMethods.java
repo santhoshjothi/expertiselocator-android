@@ -13,6 +13,10 @@ public class CommonMethods {
 
     private Context context;
 
+    public String expertisePreference = "expertise_Prefs";
+    public String expertiseLoginToken = "loginresponse";
+    public String expertiseUserInfo = "user_info";
+
     public CommonMethods(Context context) {
         this.context = context;
     }
@@ -75,7 +79,7 @@ public class CommonMethods {
         Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
     }
 
-    public void showLog(String TAG,String logMessage) {
+    public void showLog(String TAG, String logMessage) {
         Log.e("Expertise Locator", TAG + " / " + logMessage);
     }
 }

@@ -1,6 +1,5 @@
 package com.example.expertiselocator.main;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,7 +26,6 @@ import com.example.expertiselocator.interfaces.OnItemClick;
 import com.example.expertiselocator.model.UserInfoModelPref;
 import com.example.expertiselocator.model.request.GetPostedMessageRequest;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
-import com.example.expertiselocator.model.response.GetUserInfoResponse;
 import com.example.expertiselocator.utils.CommonMethods;
 import com.example.expertiselocator.utils.SharedPreferencesWithAES;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -48,52 +46,45 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
     RecyclerView rvTimelinePost;
     ShimmerFrameLayout shimmerViewContainerTimeline;
     LinearLayoutManager layoutManager;
+
     public static final String TAG = TimelineActivity.class.getSimpleName();
     List<GetPostedMessagesResponse> getPostedMessagesResponses;
     TimelineAdapter timelineAdapter;
+
     private int menuItemClickedPosition = 0, menuItemClickedCommentPosition = 0, menuItemClickedReplyPosition = 0;
     LinearLayout lin_post_timeline;
     SharedPreferencesWithAES prefs;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         commonMethods = new CommonMethods(TimelineActivity.this);
         shimmerViewContainerTimeline = (ShimmerFrameLayout) findViewById(R.id.shimmerViewContainerTimeline);
         rvTimelinePost = (RecyclerView) findViewById(R.id.rvTimelinePost);
         lin_post_timeline = (LinearLayout) findViewById(R.id.lin_post_timeline);
-        img_search_toolbar = (ImageView)toolbar.findViewById(R.id.img_search_toolbar);
+        img_search_toolbar = (ImageView) findViewById(R.id.img_search_toolbar);
 
         layoutManager = new LinearLayoutManager(TimelineActivity.this, LinearLayoutManager.VERTICAL, false);
         rvTimelinePost.setLayoutManager(layoutManager);
-        prefs = SharedPreferencesWithAES.getInstance(TimelineActivity.this,"expertise_Prefs");
+        prefs = SharedPreferencesWithAES.getInstance(TimelineActivity.this, commonMethods.expertisePreference);
         getPostedTimelineMsg();
 
-        lin_post_timeline.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent postActitity =new Intent(TimelineActivity.this,PostActivity.class);
-                startActivity(postActitity);
-            }
-        });
-        img_search_toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent postActitity =new Intent(TimelineActivity.this,SearchActivty.class);
-                startActivity(postActitity);
-            }
+        lin_post_timeline.setOnClickListener(view -> {
+            Intent postActitity = new Intent(TimelineActivity.this, PostActivity.class);
+            startActivity(postActitity);
         });
 
+        img_search_toolbar.setOnClickListener(view -> {
+            Intent postActitity = new Intent(TimelineActivity.this, SearchActivty.class);
+            startActivity(postActitity);
+        });
     }
 
     @Override
@@ -109,14 +100,12 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
     }
 
     public void getPostedTimelineMsg() {
-
         GetPostedMessageRequest getPostedMessageRequest = new GetPostedMessageRequest();
-
         try {
-            String getUserInfo = prefs.getString("user_info", "");
+            String getUserInfo = prefs.getString(commonMethods.expertiseUserInfo, "");
             ObjectMapper mapper = new ObjectMapper();
             UserInfoModelPref userResponse = mapper.readValue(getUserInfo, UserInfoModelPref.class);
-            getPostedMessageRequest.setUserID(userResponse.userId);
+            getPostedMessageRequest.setUserID("15");
             getPostedMessageRequest.setStartIndex("1");
             getPostedMessageRequest.setMaxCount("2");
             getPostedMessageRequest.setPostID("");
@@ -124,24 +113,22 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
             e.printStackTrace();
         }
 
-
-        ExpertiseApiClient expertiseApiClient=new ExpertiseApiClient(TimelineActivity.this);
-        ExpertiseApiInterface apiInterface = expertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
+        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
         Call<List<GetPostedMessagesResponse>> getPostedMessage = apiInterface.getPostedMessage(getPostedMessageRequest);
         getPostedMessage.enqueue(new Callback<List<GetPostedMessagesResponse>>() {
             @Override
             public void onResponse(@NonNull Call<List<GetPostedMessagesResponse>> call, @NonNull Response<List<GetPostedMessagesResponse>> response) {
+                commonMethods.showLog("URL Success : ", TAG + call.request().url());
+                commonMethods.showLog("Response Code : ", TAG + response.code());
+                commonMethods.showLog("Response Body : ", TAG + response.body());
 
-                commonMethods.showLog("URL Success : ", TAG+ call.request().url());
-                commonMethods.showLog("Response Code : ",TAG + response.code());
-                commonMethods.showLog("Response Body : " ,TAG+ response.body());
                 List<GetPostedMessagesResponse> getPostedMessagesResponseResult = response.body();
                 assert getPostedMessagesResponseResult != null;
                 for (GetPostedMessagesResponse messages : getPostedMessagesResponseResult) {
-                    commonMethods.showLog("Message : " ,TAG+ messages.getMessage());
-                    commonMethods.showLog("Username : " ,TAG+ messages.getUserName());
-                    commonMethods.showLog("Shared Post Id : " ,TAG+ messages.getSharedPostId());
-                    commonMethods.showLog("Post Image : " ,TAG+ messages.getPostImage());
+                    commonMethods.showLog("Message : ", TAG + messages.getMessage());
+                    commonMethods.showLog("Username : ", TAG + messages.getUserName());
+                    commonMethods.showLog("Shared Post Id : ", TAG + messages.getSharedPostId());
+                    commonMethods.showLog("Post Image : ", TAG + messages.getPostImage());
                 }
                 getPostedMessagesResponses = response.body();
                 timelineAdapter = new TimelineAdapter(TimelineActivity.this, getPostedMessagesResponses);
@@ -152,8 +139,8 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
 
             @Override
             public void onFailure(Call<List<GetPostedMessagesResponse>> call, Throwable t) {
-                commonMethods.showLog("URL Failure : " ,TAG+ call.request().url());
-                commonMethods.showLog("Failure : " ,TAG+ t.getMessage());
+                commonMethods.showLog("URL Failure : ", TAG + call.request().url());
+                commonMethods.showLog("Failure : ", TAG + t.getMessage());
                 shimmerViewContainerTimeline.stopShimmer();
                 shimmerViewContainerTimeline.setVisibility(View.GONE);
             }
@@ -169,6 +156,13 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 PopupMenu popupMenuTimeline = new PopupMenu(TimelineActivity.this, view);
                 popupMenuTimeline.setOnMenuItemClickListener(this);
                 popupMenuTimeline.inflate(R.menu.timeline_popup_menu);
+                if (!getPostedMessagesResponses.get(position).getAssestType().trim().equals("Post")) {
+                    if (getPostedMessagesResponses.get(position).getIsAnswered().trim().equals("1")) {
+                        popupMenuTimeline.getMenu().findItem(R.id.timelineMenuAnswered).setVisible(false);
+                    } else {
+                        popupMenuTimeline.getMenu().findItem(R.id.timelineMenuAnswered).setVisible(true);
+                    }
+                }
                 popupMenuTimeline.show();
                 break;
 
@@ -296,18 +290,16 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
         int commentView = view.getId();
         switch (commentView) {
             case R.id.linearTimelineSendComment:
-                commonMethods.showLog("Comment Post Id : " ,TAG+ commentData[0]
+                commonMethods.showLog("Comment Post Id : ", TAG + commentData[0]
                         + " Message : " + commentData[1]
                         + " Position : " + position);
                 break;
 
             case R.id.linearTimelineActionLike:
-                commonMethods.showLog("Like Action : " ,TAG+ commentData[0]
+                commonMethods.showLog("Like Action : ", TAG + commentData[0]
                         + " Message : " + commentData[1]
                         + " Position : " + position);
-                Log.v("IsLiked",""+commentData[2]);
-
-
+                Log.v("IsLiked", "" + commentData[2]);
                 break;
 
             default:
@@ -327,14 +319,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
     }
 
     @Override
-    public void onBackPressed(){
-
+    public void onBackPressed() {
         super.onBackPressed();
-
     }
-
-
-
-
-
 }
