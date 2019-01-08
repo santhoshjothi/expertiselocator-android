@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -298,6 +299,18 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 commonMethods.showLog("Comment Post Id : " ,TAG+ commentData[0]
                         + " Message : " + commentData[1]
                         + " Position : " + position);
+                break;
+
+            case R.id.linearTimelineActionLike:
+                commonMethods.showLog("Like Action : " ,TAG+ commentData[0]
+                        + " Message : " + commentData[1]
+                        + " Position : " + position);
+                Log.v("IsLiked",""+commentData[2]);
+
+
+                break;
+
+            default:
                 break;
         }
     }

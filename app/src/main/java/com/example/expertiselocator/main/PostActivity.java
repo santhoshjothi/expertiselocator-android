@@ -66,7 +66,6 @@ public class PostActivity extends AppCompatActivity {
     SharedPreferencesWithAES prefs;
     SharedPreferences.Editor editor;
     UserInfoModelPref userResponse;
-    LoginResponse loginResponse;
     ProgressView progress_post;
     String getToken;
     public static final int MULTIPLE_PERMISSIONS = 10;

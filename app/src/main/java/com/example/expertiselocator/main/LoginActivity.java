@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
     public static final String TAG = LoginActivity.class.getSimpleName();
     String userNameEncryt;
     ProgressView progress_login;
+    SharedPreferencesWithAES prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
         edt_passd = (EditText) findViewById(R.id.edt_pssd_login);
         btn_submit = (Button) findViewById(R.id.btn_submit_login);
         progress_login = (ProgressView) findViewById(R.id.progress_login);
-
+         prefs = SharedPreferencesWithAES.getInstance(LoginActivity.this,"expertise_Prefs");
 
 
 
@@ -119,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
     public void callGetLogin(LoginRequest loginRequest){
         progress_login.setVisibility(View.VISIBLE);
         ExpertiseApiClient expertiseApiClient=new ExpertiseApiClient(LoginActivity.this);
-        ExpertiseApiInterface apiInterface = expertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
+        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
         Call<LoginResponse> getPostedMessage = apiInterface.getLogin(loginRequest);
         getPostedMessage.enqueue(new Callback<LoginResponse>() {
             @Override
@@ -136,7 +137,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
 
 //                        commonMethods.showLog("Token : " ,TAG + loginResponse.getToken());
 //                        commonMethods.showLog("userNameEncryt : " ,TAG + userNameEncryt);
-                        SharedPreferencesWithAES prefs = SharedPreferencesWithAES.getInstance(LoginActivity.this,"expertise_Prefs");
+
                         prefs.putString("loginresponse", loginResponse.getToken());
                         prefs.commit();
 
@@ -177,7 +178,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
     public void callGetUserInfo(UserInfoRequest userInfo,String token){
 
         ExpertiseApiClient expertiseApiClient=new ExpertiseApiClient(LoginActivity.this);
-        ExpertiseApiInterface apiInterface = expertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
+        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
         Call<List<GetUserInfoResponse>> getPostedMessage = apiInterface.getUserInfo(userInfo);
         getPostedMessage.enqueue(new Callback<List<GetUserInfoResponse>>() {
             @Override
@@ -218,7 +219,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
                     userDetailPreferences.setProfilepicture(userProfileImage);
                     // Get java object list json format string.
                     String userInfoListJsonString = gson.toJson(userDetailPreferences);
-                    SharedPreferencesWithAES prefs = SharedPreferencesWithAES.getInstance(LoginActivity.this,"expertise_Prefs"); //provide context & preferences name.
+                    //SharedPreferencesWithAES prefs = SharedPreferencesWithAES.getInstance(LoginActivity.this,"expertise_Prefs"); //provide context & preferences name.
                     //Storing the username inside shared preferences
                     prefs.putString("user_info", userInfoListJsonString);
                     prefs.commit();

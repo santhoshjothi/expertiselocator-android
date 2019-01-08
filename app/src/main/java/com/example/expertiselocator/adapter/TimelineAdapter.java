@@ -1,10 +1,12 @@
 package com.example.expertiselocator.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.example.expertiselocator.R;
 import com.example.expertiselocator.main.LoginActivity;
 import com.example.expertiselocator.main.TimelineActivity;
+import com.example.expertiselocator.main.UserProfileActivity;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
 import com.example.expertiselocator.utils.CommonMethods;
 
@@ -70,11 +73,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         timelineViewHolder.includeTimelineAction.setVisibility(View.VISIBLE);
 
          isliked = Boolean.parseBoolean(getPostedMessagesResponse.getIsLiked());
-        String profilePicture = getPostedMessagesResponse.getProfilePicture();
+         String profilePicture = getPostedMessagesResponse.getProfilePicture();
         userProfilePicture = profilePicture.replace("data:image/png;base64,", "");
         byte[] userProfilePic = Base64.decode(userProfilePicture, Base64.DEFAULT);
-        Glide.with(context).asBitmap().load(userProfilePic)
-                .into(timelineViewHolder.imgTimelineProfilePicture);
+        Glide.with(context).asBitmap().load(userProfilePic).into(timelineViewHolder.imgTimelineProfilePicture);
+
+        timelineViewHolder.imgTimelineProfilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent userProfileIntent=new Intent(context, UserProfileActivity.class);
+                context.startActivity(userProfileIntent);
+            }
+        });
 
         String timelineProfileName = getPostedMessagesResponse.getUserName();
         timelineViewHolder.tvTimelineProfileName.setText(timelineProfileName);
@@ -228,30 +239,29 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         });
 
-//        timelineViewHolder.linearTimelineActionLike.setOnClickListener(View -> {
-//
-//
-//                timelineActivity.OnCommentItemClick(View, position, isliked);
-//
-//
-////                if(!isliked) {
-////                       // Log.v("isliked/"," if "+isliked);
-////
-////                    timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
-////                      //  isliked = true;
-////                    }else{
-////                      //  Log.v("isliked/"," else "+isliked);
-////                       // isliked = false;
-////                        //feedlike.setBackgroundResource(R.drawable.ic_liked);
-////                    timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked,0, 0, 0);
-////
-////                    }
-//
-//                });
+        timelineViewHolder.linearTimelineActionLike.setOnClickListener(View -> {
 
+            commentPostId = getPostedMessagesResponse.getId();
+            String isliked = getPostedMessagesResponse.getIsLiked();
+            View view = timelineViewHolder.tvTimelineActionLike;
+            String[] likeDetails = new String[]{commentPostId, isliked, String.valueOf(view)};
+            Log.v("IsLiked", "" + likeDetails);
+            timelineActivity.OnCommentItemClick(View, position, likeDetails);
 
+//            if (!isliked) {
+//                // Log.v("isliked/"," if "+isliked);
+//
+//                timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
+//                //  isliked = true;
+//            } else {
+//                //  Log.v("isliked/"," else "+isliked);
+//                // isliked = false;
+//                //feedlike.setBackgroundResource(R.drawable.ic_liked);
+//                timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
+//
+//            }
 
-
+        });
     }
 
     @Override
