@@ -116,7 +116,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
             String getUserInfo = prefs.getString("user_info", "");
             ObjectMapper mapper = new ObjectMapper();
             UserInfoModelPref userResponse = mapper.readValue(getUserInfo, UserInfoModelPref.class);
-            getPostedMessageRequest.setUserID(userResponse.userId);
+            getPostedMessageRequest.setUserID(userResponse.getUserID());
             getPostedMessageRequest.setStartIndex("1");
             getPostedMessageRequest.setMaxCount("2");
             getPostedMessageRequest.setPostID("");
