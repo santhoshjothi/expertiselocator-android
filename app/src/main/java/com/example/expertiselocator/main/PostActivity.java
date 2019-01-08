@@ -79,7 +79,7 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-        prefs = SharedPreferencesWithAES.getInstance(PostActivity.this, "expertise_Prefs"); //provide context & preferences name.
+        prefs = SharedPreferencesWithAES.getInstance(PostActivity.this, "expertise_Prefs");
         commonMethods = new CommonMethods(PostActivity.this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -100,8 +100,7 @@ public class PostActivity extends AppCompatActivity {
 
 
         try {
-
-            String getUserInfo = prefs.getString("user_info", "");
+            String getUserInfo = prefs.getString(commonMethods.expertiseUserInfo, "");
             ObjectMapper mapper = new ObjectMapper();
             //loginResponse = mapper.readValue(prefs.getString("loginResponse",""), LoginResponse.class);
             getToken = prefs.getString("loginresponse", "");
@@ -203,14 +202,10 @@ public class PostActivity extends AppCompatActivity {
 
                     String postImgPath = prefs.getString("postImgPath", "");
                     String postVideoLink = prefs.getString("videolink", "");
-                   // lin_img_post.setVisibility(View.GONE);
-                    Log.v(TAG, "postImgPathLink" + postImgPath);
+                    // lin_img_post.setVisibility(View.GONE);
+                    //Log.v(TAG, "postImgPathLink" + postImgPath);
                     //System.out.print("postImgPath"+postImgPath);
-                    Log.v(TAG, "postVideoLink" + postVideoLink);
-                    Log.v(TAG, "postVideoEm" + postVideoLink.isEmpty());
-                    Log.v(TAG, "postImgPathLinkEm" + postImgPath.isEmpty());
-
-
+                    // Log.v(TAG, "postVideoLink" + postVideoLink);
 
                     AddPostRequest addPostRequest = new AddPostRequest();
                     addPostRequest.setMessage(edt_msg_pst.getText().toString());
@@ -229,17 +224,20 @@ public class PostActivity extends AppCompatActivity {
 
                     } else if ((postImgPath != null || !postImgPath.trim().equals("")) && (postVideoLink == null || postVideoLink.trim().equals(""))) {
 
-                        Log.v("postImgPath","123");
-                        addPostRequest.setPostImage("");
-                        addPostRequest.setPostVideo(postVideoLink);
-                        callAddPost(addPostRequest);
-                    } else if ((postImgPath == null || postImgPath.trim().equals("")) && (postVideoLink != null || !postVideoLink.trim().equals("")))
-
-                        Log.v("postVideoLink","123");
+                        Log.v("postImgPath", "123");
                         addPostRequest.setPostImage(postImgPath);
                         addPostRequest.setPostVideo("");
                         callAddPost(addPostRequest);
-                } else {
+                    } else if ((postImgPath == null || postImgPath.trim().equals("")) && (postVideoLink != null || !postVideoLink.trim().equals(""))) {
+
+                        Log.v("postVideoLink", "123");
+                        addPostRequest.setPostImage("");
+                        addPostRequest.setPostVideo(postVideoLink);
+                        callAddPost(addPostRequest);
+                    } else {
+
+                    }
+                }else {
 
                     Log.v("Else","");
                     commonMethods.showToast(getResources().getString(R.string.post_msg));
@@ -350,6 +348,9 @@ public class PostActivity extends AppCompatActivity {
                         if (!response.body().equalsIgnoreCase("0")) {
 
                             commonMethods.showToast(getResources().getString(R.string.pst_success));
+
+                            Intent timelineActiivty =new Intent(PostActivity.this,TimelineActivity.class);
+                            startActivity(timelineActiivty);
 
                         } else {
 

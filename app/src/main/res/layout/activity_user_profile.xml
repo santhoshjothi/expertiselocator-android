@@ -25,10 +25,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:text="@string/user_profile"
-                style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
+                style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
                 />
             <ImageView
                 android:layout_width="wrap_content"

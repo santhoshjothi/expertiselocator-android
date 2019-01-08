@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,14 +20,18 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.expertiselocator.R;
 import com.example.expertiselocator.adapter.TimelineAdapter;
 import com.example.expertiselocator.apiclient.ExpertiseApiClient;
 import com.example.expertiselocator.interfaces.ExpertiseApiInterface;
 import com.example.expertiselocator.interfaces.OnItemClick;
 import com.example.expertiselocator.model.UserInfoModelPref;
+import com.example.expertiselocator.model.request.AddPostRequest;
 import com.example.expertiselocator.model.request.GetPostedMessageRequest;
+import com.example.expertiselocator.model.request.GetUserProfileRequest;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
+import com.example.expertiselocator.model.response.GetProfileInfoAboutResponse;
 import com.example.expertiselocator.model.response.GetUserInfoResponse;
 import com.example.expertiselocator.utils.CommonMethods;
 import com.example.expertiselocator.utils.SharedPreferencesWithAES;
@@ -67,6 +72,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
 
 
         commonMethods = new CommonMethods(TimelineActivity.this);
+        prefs = SharedPreferencesWithAES.getInstance(TimelineActivity.this, commonMethods.expertisePreference); //provide context & preferences name.
         shimmerViewContainerTimeline = (ShimmerFrameLayout) findViewById(R.id.shimmerViewContainerTimeline);
         rvTimelinePost = (RecyclerView) findViewById(R.id.rvTimelinePost);
         lin_post_timeline = (LinearLayout) findViewById(R.id.lin_post_timeline);
@@ -106,6 +112,12 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
     protected void onResume() {
         super.onResume();
         shimmerViewContainerTimeline.startShimmer();
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        getPostedTimelineMsg();
     }
 
     public void getPostedTimelineMsg() {
@@ -310,6 +322,32 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
 
                 break;
 
+            case R.id.imgTimelineProfilePicture:
+                commonMethods.showLog("Like Action : " ,TAG+ commentData[0]
+                        + " Position : " + position);
+
+               try {
+                    String getUserInfo = prefs.getString(commonMethods.expertiseUserInfo, "");
+                    ObjectMapper mapper = new ObjectMapper();
+                    UserInfoModelPref userResponse = mapper.readValue(getUserInfo, UserInfoModelPref.class);
+                    // Log.v("Timeline_Fragment",""+loginResponse.getToken());
+                    Log.v("Timeline_Fragment", "" + userResponse.getUserID());
+
+                    GetUserProfileRequest profileRequest = new GetUserProfileRequest();
+                    profileRequest.setUserID(userResponse.getUserID());
+                    profileRequest.setLanguage(getResources().getString(R.string.language));
+                    callUserAbt(profileRequest);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }catch(NullPointerException e){
+                    e.printStackTrace();
+                }
+
+
+
+
+
             default:
                 break;
         }
@@ -333,6 +371,55 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
 
     }
 
+
+    public void callUserAbt(GetUserProfileRequest userInfo) {
+       ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
+        ExpertiseApiInterface apiInterface = expertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
+        Call<List<GetProfileInfoAboutResponse>> getUserProfileAbout= apiInterface.getProfileInfoAbout(userInfo);
+
+        getUserProfileAbout.enqueue(new Callback<List<GetProfileInfoAboutResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<GetProfileInfoAboutResponse>> call, @NonNull Response<List<GetProfileInfoAboutResponse>> response) {
+
+                commonMethods.showLog("URL Success : ", TAG + call.request().url());
+                commonMethods.showLog("Response Code : ", TAG + response.code());
+                commonMethods.showLog("Response Body : ", TAG + response.body());
+
+                try {
+
+                    if (response.code() == 200) {
+
+                        Intent userProfileIntent=new Intent(TimelineActivity.this, UserProfileActivity.class);
+                        startActivity(userProfileIntent);
+
+
+
+
+
+                    } else {
+
+                        commonMethods.showLog("Response code : ", TAG + response.code());
+
+                    }
+
+
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<List<GetProfileInfoAboutResponse>> call, Throwable t) {
+
+                commonMethods.showLog("URL Failure : ", TAG + call.request().url());
+                commonMethods.showLog("Failure : ", TAG + t.getMessage());
+            }
+        });
+
+
+    }
 
 
 

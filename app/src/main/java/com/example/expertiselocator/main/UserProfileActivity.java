@@ -50,7 +50,6 @@ public class UserProfileActivity extends AppCompatActivity {
             Log.v("UserProfileActivity", "" + userResponse.getUserID());
             byte[] imageByte = Base64.decode(userResponse.getProfilePicture(), Base64.DEFAULT);
             Glide.with(getApplicationContext()).asBitmap().load(imageByte).into(img_profile_user);
-
             txt_displayname_profile.setText(userResponse.getDisplayName());
             tx_designation_user.setText(userResponse.getDesignation() + "at" + userResponse.getDepartment());
 

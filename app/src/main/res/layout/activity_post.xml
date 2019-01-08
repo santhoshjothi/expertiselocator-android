@@ -39,7 +39,7 @@
                 android:textColor="@color/white"
                 android:text="Post "
                 android:layout_gravity="center"
-                style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Menu"
 
                 />
 
@@ -227,7 +227,6 @@
                     android:src="@drawable/ic_camera"
                     android:layout_gravity="center"
                     android:gravity="center"
-
                     />
             </LinearLayout>
             <LinearLayout
