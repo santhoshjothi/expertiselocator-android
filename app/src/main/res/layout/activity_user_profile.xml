@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
-        android:id="@+id/lin"
-        android:visibility="gone">
+        android:id="@+id/lin_toolbar"
+        >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -27,7 +27,7 @@
                 android:layout_gravity="center"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:text="@string/toolbar_name"
+                android:text="@string/user_profile"
                 style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
                 />
             <ImageView
@@ -43,10 +43,15 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lin_toolbar">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,7 +84,7 @@
                         android:layout_gravity="center"
                         >
                         <ImageView
-                            android:id="@+id/profilePic"
+                            android:id="@+id/img_profile_user"
                             android:layout_width="@dimen/abt_img_width"
                             android:layout_height="@dimen/abt_img_height"
                             android:paddingBottom="10dp"
@@ -111,9 +116,9 @@
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         style="@android:style/TextAppearance.DeviceDefault.SearchResult.Title"
-                        android:text="Santhosh kumar"/>
+                        android:text="Santhosh kumar"
+                        android:id="@+id/txt_displayname_user"/>
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -127,17 +132,92 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:textColor="@color/white"
-                        style="@android:style/TextAppearance.DeviceDefault.SearchResult.Subtitle"
-                        android:text="UI/UX Designer"/>
+                        style="@android:style/TextAppearance.Small"
+                        android:id="@+id/tx_designation_user"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        style="@android:style/TextAppearance.DeviceDefault.SearchResult.Subtitle"
                         android:textColor="@color/white"
-                        android:text="CXM,I TF"/>
+                        style="@android:style/TextAppearance.Small"
+                        android:text="@string/cxm_i_tf"
+                        android:visibility="gone"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        style="@android:style/TextAppearance.Small"
+                        android:id="@+id/tx_location_user"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        style="@android:style/TextAppearance.Small"
+                        android:id="@+id/tx_email_user"/>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        style="@android:style/TextAppearance.Small"
+                        android:id="@+id/tx_landline_user"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        style="@android:style/TextAppearance.Small"
+                        android:id="@+id/tx_mobile_user"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        style="@android:style/TextAppearance.Small"
+                        android:text="@string/cxm_i_tf"
+                        android:visibility="gone"/>
                 </LinearLayout>
                 <View
                     android:layout_marginLeft="15dp"
@@ -180,7 +260,7 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+           </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -232,5 +312,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
+    </ScrollView>
 </RelativeLayout>

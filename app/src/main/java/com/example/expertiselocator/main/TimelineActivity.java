@@ -116,7 +116,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
             String getUserInfo = prefs.getString("user_info", "");
             ObjectMapper mapper = new ObjectMapper();
             UserInfoModelPref userResponse = mapper.readValue(getUserInfo, UserInfoModelPref.class);
-            getPostedMessageRequest.setUserID(userResponse.userId);
+            getPostedMessageRequest.setUserID(userResponse.getUserID());
             getPostedMessageRequest.setStartIndex("1");
             getPostedMessageRequest.setMaxCount("2");
             getPostedMessageRequest.setPostID("");
@@ -187,6 +187,8 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 popupReplyMenuTimeline.inflate(R.menu.timeline_popup_reply_menu);
                 popupReplyMenuTimeline.show();
                 break;
+
+
 
             default:
                 break;
@@ -307,8 +309,14 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                         + " Position : " + position);
                 Log.v("IsLiked",""+commentData[2]);
 
-
                 break;
+            case R.id.imgTimelineProfilePicture:
+
+                commonMethods.showLog("ProfilePicture: " ,TAG+ commentData[0]
+                                             + " Position : " + position);
+
+                Intent userProfileIntent=new Intent(TimelineActivity.this, UserProfileActivity.class);
+                startActivity(userProfileIntent);
 
             default:
                 break;

@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.expertiselocator.R;
@@ -69,6 +70,7 @@ public class PostActivity extends AppCompatActivity {
     ProgressView progress_post;
     String getToken;
     public static final int MULTIPLE_PERMISSIONS = 10;
+    TextView txt_link_msg;
     String[] permissions = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
 
     @Override
@@ -89,10 +91,12 @@ public class PostActivity extends AppCompatActivity {
         btn_pst_imgdel_post = (Button) findViewById(R.id.btn_pst_imgdel_post);
         edt_msg_pst = (EditText) findViewById(R.id.edt_msg_pst);
         img_link_post = (ImageView) findViewById(R.id.img_link_post);
-        //  lin_link_box=(LinearLayout) findViewById(R.id.lin_link_box);
+         lin_link_box=(LinearLayout) findViewById(R.id.lin_link_box);
         lin_img_post = (FrameLayout) findViewById(R.id.lin_img_post);
         img_toolbar_close_post = (ImageView) findViewById(R.id.img_toolbar_close_post);
         progress_post = (ProgressView) findViewById(R.id.progress_post);
+        txt_link_msg = (TextView) findViewById(R.id.txt_link_msg);
+
 
 
         try {
@@ -103,8 +107,8 @@ public class PostActivity extends AppCompatActivity {
             getToken = prefs.getString("loginresponse", "");
             userResponse = mapper.readValue(getUserInfo, UserInfoModelPref.class);
             // Log.v("Timeline_Fragment",""+loginResponse.getToken());
-            Log.v("Timeline_Fragment", "" + userResponse.getUserId());
-            byte[] imageByte = Base64.decode(userResponse.profilepicture, Base64.DEFAULT);
+            Log.v("Timeline_Fragment", "" + userResponse.getUserID());
+            byte[] imageByte = Base64.decode(userResponse.getProfilePicture(), Base64.DEFAULT);
             Glide.with(getApplicationContext()).asBitmap().load(imageByte).into(img_prof_post);
 
             prefs.putString("postImgPath", "");
@@ -112,6 +116,8 @@ public class PostActivity extends AppCompatActivity {
             prefs.commit();
 
         } catch (IOException e) {
+            e.printStackTrace();
+        }catch(NullPointerException e){
             e.printStackTrace();
         }
 
@@ -149,6 +155,7 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 lin_img_post.setVisibility(View.GONE);
+
                 prefs.putString("postImgPath", "");
                 prefs.commit();
 
@@ -165,8 +172,13 @@ public class PostActivity extends AppCompatActivity {
                         //your business logic
                         if (!editText.getText().toString().equalsIgnoreCase("") && !editText.getText().toString().isEmpty()) {
 
+                            prefs.putString("postImgPath", "");
+
                             prefs.putString("videolink", editText.getText().toString());
                             prefs.commit();
+
+                            lin_link_box.setVisibility(View.VISIBLE);
+                            txt_link_msg.setText(editText.getText().toString());
 
                         }
                         deleteDialog.dismiss();
@@ -191,21 +203,24 @@ public class PostActivity extends AppCompatActivity {
 
                     String postImgPath = prefs.getString("postImgPath", "");
                     String postVideoLink = prefs.getString("videolink", "");
-                    lin_img_post.setVisibility(View.GONE);
-                    Log.v(TAG, "postImgPath" + postImgPath);
+                   // lin_img_post.setVisibility(View.GONE);
+                    Log.v(TAG, "postImgPathLink" + postImgPath);
                     //System.out.print("postImgPath"+postImgPath);
                     Log.v(TAG, "postVideoLink" + postVideoLink);
+                    Log.v(TAG, "postVideoEm" + postVideoLink.isEmpty());
+                    Log.v(TAG, "postImgPathLinkEm" + postImgPath.isEmpty());
+
+
 
                     AddPostRequest addPostRequest = new AddPostRequest();
                     addPostRequest.setMessage(edt_msg_pst.getText().toString());
-                    addPostRequest.setUserID(Integer.parseInt(userResponse.getUserId()));
-                    addPostRequest.setPostedBy(Integer.parseInt(userResponse.getUserId()));
-                    addPostRequest.setPostOwnerId(Integer.parseInt(userResponse.getUserId()));
+                    addPostRequest.setUserID(Integer.parseInt(userResponse.getUserID()));
+                    addPostRequest.setPostedBy(Integer.parseInt(userResponse.getUserID()));
+                    addPostRequest.setPostOwnerId(Integer.parseInt(userResponse.getUserID()));
                     addPostRequest.setSharedPostId(0);
                     addPostRequest.setAssestType("");
                     addPostRequest.setIsActive(0);
                     if ((postImgPath == null || postImgPath.trim().equals("")) && (postVideoLink == null || postVideoLink.trim().equals(""))) {
-
 
                         commonMethods.showLog("Null Token  : ", TAG + "");
                         addPostRequest.setPostImage("");
@@ -214,17 +229,19 @@ public class PostActivity extends AppCompatActivity {
 
                     } else if ((postImgPath != null || !postImgPath.trim().equals("")) && (postVideoLink == null || postVideoLink.trim().equals(""))) {
 
-                        addPostRequest.setPostImage(postImgPath);
-                        addPostRequest.setPostVideo("");
+                        Log.v("postImgPath","123");
+                        addPostRequest.setPostImage("");
+                        addPostRequest.setPostVideo(postVideoLink);
                         callAddPost(addPostRequest);
                     } else if ((postImgPath == null || postImgPath.trim().equals("")) && (postVideoLink != null || !postVideoLink.trim().equals("")))
 
-                        addPostRequest.setPostImage("");
-                    addPostRequest.setPostVideo(postVideoLink);
-                    callAddPost(addPostRequest);
+                        Log.v("postVideoLink","123");
+                        addPostRequest.setPostImage(postImgPath);
+                        addPostRequest.setPostVideo("");
+                        callAddPost(addPostRequest);
                 } else {
 
-
+                    Log.v("Else","");
                     commonMethods.showToast(getResources().getString(R.string.post_msg));
                 }
             }
@@ -262,10 +279,12 @@ public class PostActivity extends AppCompatActivity {
                 String encodedImage = encodeImage(bitmap);
                 //System.out.println("encodedImage"+encodedImage);
                 prefs.putString("postImgPath", encodedImage);
+
+                prefs.putString("videolink", "");
                 prefs.commit();
                 img_preview_post.setImageBitmap(bitmapsimg);
                 lin_img_post.setVisibility(View.VISIBLE);
-
+                lin_link_box.setVisibility(View.GONE);
 
                 img_preview_post.setVisibility(View.VISIBLE);
                 btn_pst_imgdel_post.setVisibility(View.VISIBLE);
@@ -317,6 +336,8 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 progress_post.setVisibility(View.GONE);
+                lin_img_post.setVisibility(View.GONE);
+                lin_link_box.setVisibility(View.GONE);
                 edt_msg_pst.setText("");
                 commonMethods.showLog("URL Success : ", TAG + call.request().url());
                 commonMethods.showLog("Response Code : ", TAG + response.code());

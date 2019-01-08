@@ -138,40 +138,33 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimaryDark" android:paddingTop="4dp"
+                    android:paddingTop="4dp"
                     android:layout_margin="5dp"
                     android:orientation="vertical">
                     <TextView
                         android:id="@+id/txt_tittle_box"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:text="@string/video_link"
+                        android:text="@string/video_link_here"
+                        android:textSize="20sp"
+                        android:typeface="sans"
+                        android:textStyle="bold"
+                        android:gravity="left"
+
+                        />
+                    <TextView
+                        android:id="@+id/txt_link_msg"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
                         android:textSize="20sp"
                         android:typeface="sans"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="#ffffff"
+                        android:textColor="@color/black"
+
                         />
                 </LinearLayout>
-                <EditText
-                    android:id="@+id/edt_box"
-                    android:layout_below="@+id/lin_txt_box"
-                    android:layout_height="28dp"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:hint="@string/here"
-                    android:textColorHint="@android:color/black"
-                    android:textColor="@android:color/black"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="1dp"
-                    android:textSize="16sp"
-                    android:paddingBottom="1dp"
-                    android:typeface="sans"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
-                    android:background="#f4f3f3"
-                    android:layout_margin="5dp"
-                    />
+
             </LinearLayout>
 
 

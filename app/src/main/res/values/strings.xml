@@ -50,7 +50,8 @@
     <!--Post Activity --> <!--Dialogbox-->
 
     <string name="video_link">Enter the video URL.</string>
-    <string name="here">Enter here.</string>
+    <string name="video_link_here">video URL Here.</string>
+     <string name="here">Enter here.</string>
     <string name="add_post">Add your post</string>
     <string name="post">Post</string>
     <string name="edt_post">Edit Post</string>
@@ -62,6 +63,9 @@
     <string name="share_post_msg">Share this Post and it can be viewed by your followers.</string>
     <string name="pst_success">Successfully Posted.</string>
     <string name="pst_failure">Failed Posted</string>
+
+    <!--Toolbar Tittle Name-->
+    <string name="user_profile">User Profile</string>
 
 
     <!-- Bottom Navigation -->
