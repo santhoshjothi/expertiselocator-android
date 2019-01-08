@@ -102,6 +102,7 @@
 
     <string name="timeline_menu_edit">Edit Post</string>
     <string name="timeline_menu_delete">Delete Post</string>
+    <string name="timeline_menu_answered">Mark As Answered</string>
     <string name="timeline_menu_comment_edit">Edit Comment</string>
     <string name="timeline_menu_comment_delete">Delete Comment</string>
     <string name="timeline_menu_reply_edit">Edit Reply</string>
@@ -111,6 +112,7 @@
 
     <string name="timeline_comment_hint">Add Your Comment..</string>
     <string name="timeline_reply_hint">Add Your Reply..</string>
+    <string name="timeline_post_hint">Write a post,Share Photo or Video</string>
 
     <!-- Timeline Edit Delete - Comment and Reply -->
 
@@ -142,5 +144,11 @@
 
     <!--Post Activity --> <!--Dialogbox-->
 
+    <string name="timeline_like_status">You are the first one to like</string>
+    <string name="timeline_comment_status">You are the first one to comment</string>
+    <string name="timeline_comment_count">Comment</string>
+    <string name="timeline_comments_count">Comments</string>
+    <string name="timeline_like_count">Like</string>
+    <string name="timeline_likes_count">Likes</string>
 
 </resources>

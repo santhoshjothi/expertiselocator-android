@@ -6,69 +6,69 @@
     android:layout_height="match_parent"
     tools:context=".main.LoginActivity">
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
+        android:layout_margin="25dp"
         android:gravity="center"
+        android:text="@string/app_name"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/login_el"
-        android:layout_margin="25dp"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/login_el" />
 
     <LinearLayout
+        android:id="@+id/login_el"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_margin="15dp"
         android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/login_el"
-        >
+        app:layout_constraintTop_toTopOf="parent">
+
         <EditText
+            android:id="@+id/edt_username_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/username"
-            android:id="@+id/edt_username_login"
-            android:inputType="" />
+            android:inputType="textPersonName"
+            android:maxLines="1"/>
+
         <EditText
+            android:id="@+id/edt_pssd_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
-            android:inputType=""
-            android:id="@+id/edt_pssd_login"/>
+            android:inputType="textPersonName"
+            android:maxLines="1"/>
+
         <Button
+            android:id="@+id/btn_submit_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login"
-            android:gravity="center"
             android:layout_gravity="center"
-            android:id="@+id/btn_submit_login"/>
+            android:gravity="center"
+            android:text="@string/login" />
 
     </LinearLayout>
 
     <com.rey.material.widget.ProgressView
-        app:layout_constraintTop_toBottomOf="@+id/login_el"
         android:id="@+id/progress_login"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_el"
         app:pv_autostart="true"
         app:pv_circular="true"
         app:pv_progressMode="indeterminate"
-        app:pv_progressStyle="@style/Material.Drawable.CircularProgress"
-        android:visibility="gone"
-        android:layout_margin="10dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        />
-
+        app:pv_progressStyle="@style/Material.Drawable.CircularProgress" />
 
 </android.support.constraint.ConstraintLayout>

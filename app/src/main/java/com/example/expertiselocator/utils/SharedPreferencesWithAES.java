@@ -3,7 +3,6 @@ package com.example.expertiselocator.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
-import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -16,19 +15,16 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-
 public class SharedPreferencesWithAES {
 
-
     public static class SecurePreferencesException extends RuntimeException {
-
-        public SecurePreferencesException(Throwable e) {
+        SecurePreferencesException(Throwable e) {
             super(e);
         }
-
     }
+
     private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
-    private static final String KEY_TRANSFORMATION = "AES/ECB/PKCS5Padding";
+    private static final String KEY_TRANSFORMATION = "AES/CBC/PKCS5Padding";
     private static final String SECRET_KEY_HASH_TRANSFORMATION = "SHA-256";
     private static final String CHARSET = "UTF-8";
 
@@ -39,10 +35,6 @@ public class SharedPreferencesWithAES {
     private final SharedPreferences preferences;
     private static SharedPreferencesWithAES instance = null;
 
-
-
-
-
     public SharedPreferencesWithAES(Context context, String preferenceName,
                                     String secureKey, boolean encryptKeys)
             throws SecurePreferencesException {
@@ -50,12 +42,9 @@ public class SharedPreferencesWithAES {
             this.writer = Cipher.getInstance(TRANSFORMATION);
             this.reader = Cipher.getInstance(TRANSFORMATION);
             this.keyWriter = Cipher.getInstance(KEY_TRANSFORMATION);
-
             initCiphers(secureKey);
-
             this.preferences = context.getSharedPreferences(preferenceName,
                     Context.MODE_PRIVATE);
-
             this.encryptKeys = encryptKeys;
         } catch (GeneralSecurityException e) {
             throw new SecurePreferencesException(e);
@@ -64,10 +53,10 @@ public class SharedPreferencesWithAES {
         }
     }
 
-    public static SharedPreferencesWithAES getInstance(Context contxt,String prefName) {
+    public static SharedPreferencesWithAES getInstance(Context contxt, String prefName) {
         if (instance == null) {
             instance = new SharedPreferencesWithAES(contxt, prefName,
-                    prefName+"Key", true);
+                    prefName + "Key", true);
         }
         return instance;
     }
@@ -105,7 +94,6 @@ public class SharedPreferencesWithAES {
         return keyBytes;
     }
 
-
     public void putString(String key, String value) {
         if (value == null) {
             preferences.edit().remove(toKey(key)).commit();
@@ -123,15 +111,11 @@ public class SharedPreferencesWithAES {
     }
 
     public void putLong(String key, long value) {
-
         putValue(toKey(key), Long.toString(value));
-
     }
 
     public void putInt(String key, int value) {
-
         putValue(toKey(key), Integer.toString(value));
-
     }
 
     public boolean containsKey(String key) {
@@ -195,7 +179,6 @@ public class SharedPreferencesWithAES {
     private void putValue(String key, String value)
             throws SecurePreferencesException {
         String secureValueEncoded = encrypt(value, writer);
-        //Log.v("secureValueEncoded", "" + secureValueEncoded);
         preferences.edit().putString(key, secureValueEncoded).commit();
     }
 
@@ -231,8 +214,4 @@ public class SharedPreferencesWithAES {
             throw new SecurePreferencesException(e);
         }
     }
-
-
-
 }
-

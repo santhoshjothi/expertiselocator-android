@@ -78,6 +78,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         byte[] userProfilePic = Base64.decode(userProfilePicture, Base64.DEFAULT);
         Glide.with(context).asBitmap().load(userProfilePic).into(timelineViewHolder.imgTimelineProfilePicture);
 
+        timelineViewHolder.imgTimelineProfilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent userProfileIntent=new Intent(context, UserProfileActivity.class);
+                context.startActivity(userProfileIntent);
+            }
+        });
+
         String timelineProfileName = getPostedMessagesResponse.getUserName();
         timelineViewHolder.tvTimelineProfileName.setText(timelineProfileName);
 
@@ -252,13 +261,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //
 //            }
 
-        });
-
-        timelineViewHolder.imgTimelineProfilePicture.setOnClickListener(View ->{
-
-            String[] finalCommentPostData = new String[] {commentPostId};
-
-            timelineActivity.OnCommentItemClick(View, position, finalCommentPostData);
         });
     }
 

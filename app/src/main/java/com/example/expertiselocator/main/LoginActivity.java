@@ -144,7 +144,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
                         UserInfoRequest userInfoRequest = new UserInfoRequest();
                         userInfoRequest.setUsername(userNameEncryt);
                         userInfoRequest.setLanguage(getResources().getString(R.string.language));
-                        callGetUserInfo(userInfoRequest);
+                        callGetUserInfo(userInfoRequest,loginResponse.getToken());
                         Log.v("UserInfoRequest",""+userInfoRequest.getUsername());
                         Log.v("UserInfoRequest",""+userInfoRequest.getLanguage());
 
@@ -175,7 +175,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
     }
 
 
-    public void callGetUserInfo(UserInfoRequest userInfo){
+    public void callGetUserInfo(UserInfoRequest userInfo,String token){
 
         ExpertiseApiClient expertiseApiClient=new ExpertiseApiClient(LoginActivity.this);
         ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
@@ -184,15 +184,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
             @Override
             public void onResponse(@NonNull Call<List<GetUserInfoResponse>> call, @NonNull Response<List<GetUserInfoResponse>> response) {
 
-               String userId=null;String UserNameInfo =null;String firtNameInfo=null;String lastNameInfo=null;String userProfileImage = null;
-               String status=null;String language =null;String displayName =null;String designation=null;String division = null;
-               String phoneNumber=null;String department =null;String emailId =null;String picture=null;String accountId = null;
-               String accountJId=null;String profileStatus =null;String chatStatus =null;String roleId=null;String role = null;
-               String isDisabledforSearch=null;String createdBy =null;String createdDate =null;String modifiedBy=null;String modifiedDate = null;
-               String error=null;String isMessage =null;String messageCount =null;String isChatVisible=null;String termsandConditions = null;
-               String versionNo =null;
-
-
+               String userId=null;
+                String UserNameInfo =null;
+                String firtNameInfo=null;
+                String lastNameInfo=null;
+                String userProfileImage = null;
                 commonMethods.showLog("URL Success : " , TAG + call.request().url());
                 commonMethods.showLog("Response Code : ", TAG +  response.code());
                 commonMethods.showLog("Response Body : " ,TAG + response.body());
@@ -205,54 +201,22 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
                         UserNameInfo = loginResponse.get(i).getUserName();
                         firtNameInfo = loginResponse.get(i).getFirstName();
                         lastNameInfo = loginResponse.get(i).getLastName();
-                        status = String.valueOf(loginResponse.get(i).getLastName());
-                        displayName = loginResponse.get(i).getDisplayName();
-                        designation = loginResponse.get(i).getDesignation();
-                        division = loginResponse.get(i).getDivision();
-                        phoneNumber = loginResponse.get(i).getPhoneNumber();
-                        department=loginResponse.get(i).getDepartment();
-                        emailId = loginResponse.get(i).getEmailId();
-                        picture = loginResponse.get(i).getPicture();
-                        accountId = loginResponse.get(i).getAccountId();
-                        accountJId = loginResponse.get(i).getAccountJId();
-                        profileStatus = loginResponse.get(i).getProfileStatus();
-                        chatStatus = loginResponse.get(i).getChatStatus();
-                        roleId = String.valueOf(loginResponse.get(i).getRoleId());
-                        role = loginResponse.get(i).getRole();
-                        isDisabledforSearch = String.valueOf(loginResponse.get(i).getIsDisabledforSearch());
                         String profilePicture = loginResponse.get(i).getProfilePicture();
                         userProfileImage = profilePicture.replace("data:image/png;base64,", "");
-
-  commonMethods.showLog("userId: " ,TAG + userId);
+                        commonMethods.showLog("userId: " ,TAG + userId);
                         }
 
                     String userNameDecrpt = decrypt( UserNameInfo,"8080808080808080");
                     String firtNamDecrpt = decrypt( firtNameInfo,"8080808080808080");
                     String lastNameDecrpt = decrypt( lastNameInfo,"8080808080808080");
-                    String displayNameDecrpt = decrypt( displayName,"8080808080808080");
-                    String statusDecrpt = decrypt( status,"8080808080808080");
-                    String designationDecrpt = decrypt( designation,"8080808080808080");
-                    String departmentDecrpt = decrypt( department,"8080808080808080");
-                    String divisionDecrpt = decrypt( division,"8080808080808080");
-                    String phoneNumberDecrpt = decrypt( phoneNumber,"8080808080808080");
-
 
                     Gson gson = new Gson();
                     UserInfoModelPref userDetailPreferences =new UserInfoModelPref();
-                    userDetailPreferences.setUserID(userId);
+                    userDetailPreferences.setUserId(userId);
                     userDetailPreferences.setUserName(userNameDecrpt);
                     userDetailPreferences.setFirstName(firtNamDecrpt);
                     userDetailPreferences.setLastName(lastNameDecrpt);
-                    userDetailPreferences.setProfilePicture(userProfileImage);
-                    userDetailPreferences.setStatus(statusDecrpt);
-                    userDetailPreferences.setDisplayName(displayNameDecrpt);
-                    userDetailPreferences.setDesignation(designationDecrpt);
-                    userDetailPreferences.setDivision(divisionDecrpt);
-                    userDetailPreferences.setPhoneNumber(phoneNumberDecrpt);
-                    userDetailPreferences.setDepartment(departmentDecrpt);
-                    userDetailPreferences.setPicture(picture);
-
-
+                    userDetailPreferences.setProfilepicture(userProfileImage);
                     // Get java object list json format string.
                     String userInfoListJsonString = gson.toJson(userDetailPreferences);
                     //SharedPreferencesWithAES prefs = SharedPreferencesWithAES.getInstance(LoginActivity.this,"expertise_Prefs"); //provide context & preferences name.

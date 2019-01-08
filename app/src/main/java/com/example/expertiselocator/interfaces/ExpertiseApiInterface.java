@@ -25,16 +25,13 @@ public interface ExpertiseApiInterface {
 
     @Headers({"Content-Type: application/json"})
     @POST("Login/AuthenticateUser")
-    Call<LoginResponse> getLogin(@Body LoginRequest getPostedMessageRequest);
-
+    Call<LoginResponse> getLogin(@Body LoginRequest getLoginDetails);
 
     @Headers({"Content-Type: application/json"})
     @POST("Login/GetUserInfo_ByUserID")
-    Call<List<GetUserInfoResponse>> getUserInfo(@Body UserInfoRequest getPostedMessageRequest);
+    Call<List<GetUserInfoResponse>> getUserInfo(@Body UserInfoRequest getUserInfo);
 
     @Headers({"Content-Type: application/json"})
     @POST("PostComment/AddPosts")
     Call<String> getAddPosts(@Body AddPostRequest request);
-
-
 }

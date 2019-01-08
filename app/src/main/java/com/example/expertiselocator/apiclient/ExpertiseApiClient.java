@@ -21,17 +21,18 @@ public class ExpertiseApiClient {
 
     private static Retrofit retrofit = null;
     private static Retrofit retrofitWithAuthorization = null;
-    private static  SharedPreferencesWithAES prefs;
+
+    private static SharedPreferencesWithAES prefs;
     private Context context;
     private static String token;
+
     public ExpertiseApiClient(Context contex) {
-        this.context=contex;
-        prefs = SharedPreferencesWithAES.getInstance(context,"expertise_Prefs");
-        token= prefs.getString("loginresponse","");
+        this.context = contex;
+        prefs = SharedPreferencesWithAES.getInstance(context, "expertise_Prefs");
+        token = prefs.getString("loginresponse", "");
     }
 
     public static Retrofit getRetrofit() {
-
         Gson gson = new GsonBuilder().setLenient().create();
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                 .connectTimeout(2, TimeUnit.MINUTES)
@@ -53,10 +54,7 @@ public class ExpertiseApiClient {
     }
 
     public static Retrofit getRetrofitWithAuthorization() {
-          Gson gson = new GsonBuilder().setLenient().create();
-
-      //    Log.v("Authorization",""+token);
-       //final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InR1c2VyNiIsIm5iZiI6MTU0NjQyNjM3MiwiZXhwIjoxNTQ3MDMxMTcyLCJpYXQiOjE1NDY0MjYzNzJ9.0X5s5FUHS79Ks69xBR9ytqlpzccEMXl-qyNfqbJHibY";
+        Gson gson = new GsonBuilder().setLenient().create();
         if (retrofitWithAuthorization == null) {
             retrofitWithAuthorization = new Retrofit.Builder()
                     .client(new OkHttpClient.Builder()

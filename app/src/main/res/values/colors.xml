@@ -71,4 +71,8 @@
     <color name="nliveo_purple_colorPrimaryDark">#512DA8</color>
     <color name="nliveo_purple_alpha_colorPrimaryDark">#80512DA8</color>
 
+    <!-- Color Value -->
+
+    <color name="timeline_post_background">#f9f9f9</color>
+
 </resources>

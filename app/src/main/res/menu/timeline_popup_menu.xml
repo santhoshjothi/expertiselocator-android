@@ -9,4 +9,9 @@
         android:id="@+id/timelineMenuDelete"
         android:title="@string/timeline_menu_delete" />
 
+    <item
+        android:visible="false"
+        android:id="@+id/timelineMenuAnswered"
+        android:title="@string/timeline_menu_answered" />
+
 </menu>
