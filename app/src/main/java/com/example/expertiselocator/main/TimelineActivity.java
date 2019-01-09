@@ -1,6 +1,5 @@
 package com.example.expertiselocator.main;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -20,19 +18,17 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.expertiselocator.R;
 import com.example.expertiselocator.adapter.TimelineAdapter;
 import com.example.expertiselocator.apiclient.ExpertiseApiClient;
 import com.example.expertiselocator.interfaces.ExpertiseApiInterface;
 import com.example.expertiselocator.interfaces.OnItemClick;
 import com.example.expertiselocator.model.UserInfoModelPref;
-import com.example.expertiselocator.model.request.AddPostRequest;
 import com.example.expertiselocator.model.request.GetPostedMessageRequest;
 import com.example.expertiselocator.model.request.GetUserProfileRequest;
+import com.example.expertiselocator.model.request.PostCommentRequest;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
 import com.example.expertiselocator.model.response.GetProfileInfoAboutResponse;
-import com.example.expertiselocator.model.response.GetUserInfoResponse;
 import com.example.expertiselocator.utils.CommonMethods;
 import com.example.expertiselocator.utils.SharedPreferencesWithAES;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -72,7 +68,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
 
 
         commonMethods = new CommonMethods(TimelineActivity.this);
-        prefs = SharedPreferencesWithAES.getInstance(TimelineActivity.this, commonMethods.expertisePreference); //provide context & preferences name.
+        prefs = SharedPreferencesWithAES.getInstance(TimelineActivity.this, commonMethods.expertisePreference);
         shimmerViewContainerTimeline = (ShimmerFrameLayout) findViewById(R.id.shimmerViewContainerTimeline);
         rvTimelinePost = (RecyclerView) findViewById(R.id.rvTimelinePost);
         lin_post_timeline = (LinearLayout) findViewById(R.id.lin_post_timeline);
@@ -81,7 +77,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
         layoutManager = new LinearLayoutManager(TimelineActivity.this, LinearLayoutManager.VERTICAL, false);
         rvTimelinePost.setLayoutManager(layoutManager);
         prefs = SharedPreferencesWithAES.getInstance(TimelineActivity.this,"expertise_Prefs");
-        getPostedTimelineMsg();
+        callTimeline();
 
         lin_post_timeline.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,28 +113,22 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
     @Override
     protected void onRestart(){
         super.onRestart();
-        getPostedTimelineMsg();
+        callTimeline();
     }
 
-    public void getPostedTimelineMsg() {
+    public void callTimeline() {
 
         GetPostedMessageRequest getPostedMessageRequest = new GetPostedMessageRequest();
 
-        try {
-            String getUserInfo = prefs.getString("user_info", "");
-            ObjectMapper mapper = new ObjectMapper();
-            UserInfoModelPref userResponse = mapper.readValue(getUserInfo, UserInfoModelPref.class);
-            getPostedMessageRequest.setUserID(userResponse.getUserID());
+
+            getPostedMessageRequest.setUserID(commonMethods.getUserId());
             getPostedMessageRequest.setStartIndex("1");
             getPostedMessageRequest.setMaxCount("2");
             getPostedMessageRequest.setPostID("");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
 
         ExpertiseApiClient expertiseApiClient=new ExpertiseApiClient(TimelineActivity.this);
-        ExpertiseApiInterface apiInterface = expertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
+        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
         Call<List<GetPostedMessagesResponse>> getPostedMessage = apiInterface.getPostedMessage(getPostedMessageRequest);
         getPostedMessage.enqueue(new Callback<List<GetPostedMessagesResponse>>() {
             @Override
@@ -311,6 +301,15 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 commonMethods.showLog("Comment Post Id : " ,TAG+ commentData[0]
                         + " Message : " + commentData[1]
                         + " Position : " + position);
+
+                PostCommentRequest postCommentRequest=new PostCommentRequest();
+                postCommentRequest.setUserID(commonMethods.getUserId());
+                postCommentRequest.setPostID(commentData[0]);
+                postCommentRequest.setComments(commentData[1]);
+                postCommentRequest.setCommentedBy(commonMethods.getUserId());
+                postCommentRequest.setModifiedBy(commonMethods.getUserId());
+
+                callPostComment(postCommentRequest);
                 break;
 
             case R.id.linearTimelineActionLike:
@@ -319,34 +318,16 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                         + " Position : " + position);
                 Log.v("IsLiked",""+commentData[2]);
 
-
                 break;
 
             case R.id.imgTimelineProfilePicture:
                 commonMethods.showLog("Like Action : " ,TAG+ commentData[0]
                         + " Position : " + position);
 
-               try {
-                    String getUserInfo = prefs.getString(commonMethods.expertiseUserInfo, "");
-                    ObjectMapper mapper = new ObjectMapper();
-                    UserInfoModelPref userResponse = mapper.readValue(getUserInfo, UserInfoModelPref.class);
-                    // Log.v("Timeline_Fragment",""+loginResponse.getToken());
-                    Log.v("Timeline_Fragment", "" + userResponse.getUserID());
-
-                    GetUserProfileRequest profileRequest = new GetUserProfileRequest();
-                    profileRequest.setUserID(userResponse.getUserID());
-                    profileRequest.setLanguage(getResources().getString(R.string.language));
-                    callUserAbt(profileRequest);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }catch(NullPointerException e){
-                    e.printStackTrace();
-                }
-
-
-
-
+                GetUserProfileRequest profileRequest = new GetUserProfileRequest();
+                profileRequest.setUserID(commonMethods.getUserId());
+                profileRequest.setLanguage(getResources().getString(R.string.language));
+                callUserAbt(profileRequest);
 
             default:
                 break;
@@ -384,22 +365,23 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 commonMethods.showLog("URL Success : ", TAG + call.request().url());
                 commonMethods.showLog("Response Code : ", TAG + response.code());
                 commonMethods.showLog("Response Body : ", TAG + response.body());
-
+                String abtMe =null;
                 try {
 
                     if (response.code() == 200) {
+                        List<GetProfileInfoAboutResponse> getReponse=response.body();
 
+                        for(int i=0;i<getReponse.size();i++){
+                            abtMe=getReponse.get(i).getAboutMe();
+
+                        }
                         Intent userProfileIntent=new Intent(TimelineActivity.this, UserProfileActivity.class);
+                        userProfileIntent.putExtra("abtMe",abtMe);
                         startActivity(userProfileIntent);
-
-
-
-
-
                     } else {
 
                         commonMethods.showLog("Response code : ", TAG + response.code());
-
+                        commonMethods.showToast(getResources().getString(R.string.fail_abtme_userprofile));
                     }
 
 
@@ -415,13 +397,61 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
 
                 commonMethods.showLog("URL Failure : ", TAG + call.request().url());
                 commonMethods.showLog("Failure : ", TAG + t.getMessage());
+                commonMethods.showToast(getResources().getString(R.string.fail_abtme_userprofile));
+            }
+        });
+    }
+
+    public void callPostComment(PostCommentRequest commentRequest) {
+
+
+
+        ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
+        ExpertiseApiInterface apiInterface = expertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
+        Call<Integer> getUserProfileAbout= apiInterface.postComment(commentRequest);
+
+        getUserProfileAbout.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer>response) {
+
+                commonMethods.showLog("URL Success : ", TAG + call.request().url());
+                commonMethods.showLog("Response Code : ", TAG + response.code());
+                commonMethods.showLog("Response Body : ", TAG + response.body());
+                String abtMe =null;
+                try {
+
+//                    if (response.code() == 200) {
+//                        List<PostCommentResponse> getReponse=response.body();
+//
+//                        for(int i=0;i<getReponse.size();i++){
+//                            abtMe=getReponse.get(i).getAboutMe();
+//
+//                        }
+//                        Intent userProfileIntent=new Intent(TimelineActivity.this, UserProfileActivity.class);
+//                        userProfileIntent.putExtra("abtMe",abtMe);
+//                        startActivity(userProfileIntent);
+//                    } else {
+//
+//                        commonMethods.showLog("Response code : ", TAG + response.code());
+//                        commonMethods.showToast(getResources().getString(R.string.fail_abtme_userprofile));
+//                    }
+
+
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+
+                commonMethods.showLog("URL Failure : ", TAG + call.request().url());
+                commonMethods.showLog("Failure : ", TAG + t.getMessage());
+                commonMethods.showToast(getResources().getString(R.string.fail_abtme_userprofile));
             }
         });
 
-
     }
-
-
-
-
 }

@@ -18,7 +18,8 @@ import java.io.IOException;
 
 public class UserProfileActivity extends AppCompatActivity {
 
-    TextView txt_displayname_profile,tx_designation_user,tx_location_user,tx_email_user,tx_landline_user,tx_mobile_user;
+    TextView txt_displayname_profile,tx_designation_user,tx_location_user,tx_email_user,tx_landline_user,tx_mobile_user,
+            txt_abt_user;
     ImageView img_profile_user;
     SharedPreferencesWithAES prefs;
     UserInfoModelPref userResponse;
@@ -40,6 +41,8 @@ public class UserProfileActivity extends AppCompatActivity {
         tx_landline_user=(TextView)findViewById(R.id.tx_landline_user);
         tx_mobile_user=(TextView)findViewById(R.id.tx_mobile_user);
         img_profile_user=(ImageView) findViewById(R.id.img_profile_user);
+        txt_abt_user=(TextView) findViewById(R.id.txt_abt_user);
+
 
 
         try {
@@ -53,15 +56,16 @@ public class UserProfileActivity extends AppCompatActivity {
             txt_displayname_profile.setText(userResponse.getDisplayName());
             tx_designation_user.setText(userResponse.getDesignation() + "at" + userResponse.getDepartment());
 
+            String abtMe=getIntent().getStringExtra("abtMe");
+            txt_abt_user.setText(abtMe);
+
 
 
 
         } catch (IOException e) {
             e.printStackTrace();
+        }catch (NullPointerException e){
+            e.printStackTrace();
         }
-
-
-
-
         }
 }

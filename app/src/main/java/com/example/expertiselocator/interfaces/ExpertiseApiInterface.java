@@ -4,13 +4,12 @@ import com.example.expertiselocator.model.request.AddPostRequest;
 import com.example.expertiselocator.model.request.GetPostedMessageRequest;
 import com.example.expertiselocator.model.request.GetUserProfileRequest;
 import com.example.expertiselocator.model.request.LoginRequest;
+import com.example.expertiselocator.model.request.PostCommentRequest;
 import com.example.expertiselocator.model.request.UserInfoRequest;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
 import com.example.expertiselocator.model.response.GetProfileInfoAboutResponse;
 import com.example.expertiselocator.model.response.GetUserInfoResponse;
 import com.example.expertiselocator.model.response.LoginResponse;
-
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -40,6 +39,10 @@ public interface ExpertiseApiInterface {
     @Headers({"Content-Type: application/json"})
     @POST("Profile/GetProfileInfo_AbtMe")
     Call<List<GetProfileInfoAboutResponse>> getProfileInfoAbout(@Body GetUserProfileRequest request);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("PostComment/AddCommentReply")
+    Call<Integer> postComment(@Body PostCommentRequest request);
 
 
 }

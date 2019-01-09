@@ -9,16 +9,27 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.expertiselocator.R;
+import com.example.expertiselocator.main.TimelineActivity;
+import com.example.expertiselocator.model.UserInfoModelPref;
+import com.example.expertiselocator.model.request.GetUserProfileRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+
 public class CommonMethods {
 
     private Context context;
-
+    SharedPreferencesWithAES prefs;
     public String expertisePreference = "expertise_Prefs";
     public String expertiseLoginToken = "loginresponse";
     public String expertiseUserInfo = "user_info";
 
     public CommonMethods(Context context) {
+
         this.context = context;
+
+        prefs = SharedPreferencesWithAES.getInstance(context, expertisePreference);
     }
 
     public void expandTheView(LinearLayout $MsgHideLayout) {
@@ -82,4 +93,22 @@ public class CommonMethods {
     public void showLog(String TAG, String logMessage) {
         Log.e("Expertise Locator", TAG + " / " + logMessage);
     }
+
+
+    public String getUserId(){
+
+        UserInfoModelPref userResponse =null;
+        try {
+            String getUserInfo = prefs.getString(expertiseUserInfo, "");
+            ObjectMapper mapper = new ObjectMapper();
+             userResponse = mapper.readValue(getUserInfo, UserInfoModelPref.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
+        assert userResponse != null;
+        return userResponse.getUserID();
+    }
+
 }

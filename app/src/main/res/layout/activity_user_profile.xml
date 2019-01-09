@@ -281,32 +281,51 @@
                     style="@android:style/TextAppearance.DeviceDefault.SearchResult.Subtitle"
                     android:text="@string/about"/>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:padding="10dp"
-                android:weightSum="1"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:layout_marginRight="5dp"
+                android:orientation="vertical"
                 android:layout_marginLeft="5dp"
-                >
-                <TextView
+                android:layout_marginRight="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:gravity="left"
-                    android:layout_width="0dp"
-                    android:layout_weight=".8"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    android:weightSum="1">
+
+                    <TextView
+                        style="@android:style/TextAppearance.DeviceDefault.SearchResult.Subtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight=".8"
+                        android:gravity="left"
+                        android:text="About Me"
+                        android:textColor="@color/white" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".1"
+                        android:src="@android:drawable/ic_menu_edit" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:text="About Me"
-                    style="@android:style/TextAppearance.DeviceDefault.SearchResult.Subtitle"/>
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".1"
-                    android:src="@android:drawable/ic_menu_edit"/>
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:id="@+id/txt_abt_user"
+                        />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 

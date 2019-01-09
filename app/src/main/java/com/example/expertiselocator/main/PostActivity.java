@@ -347,14 +347,14 @@ public class PostActivity extends AppCompatActivity {
 
                         if (!response.body().equalsIgnoreCase("0")) {
 
-                            commonMethods.showToast(getResources().getString(R.string.pst_success));
+                            commonMethods.showToast(getResources().getString(R.string.success_addpost_post));
 
                             Intent timelineActiivty =new Intent(PostActivity.this,TimelineActivity.class);
                             startActivity(timelineActiivty);
 
                         } else {
 
-                            commonMethods.showToast(getResources().getString(R.string.pst_failure));
+                            commonMethods.showToast(getResources().getString(R.string.fail_addpost_post));
 
                         }
 
@@ -433,6 +433,8 @@ public class PostActivity extends AppCompatActivity {
                             permissionsDenied += "\n" + per;
 
                         }
+                        Log.v("Permission","Granted");
+
 
                     }
                     // Show permissionsDenied
