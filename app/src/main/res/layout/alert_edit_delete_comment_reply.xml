@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:text="@string/timeline_edit_comment_title"
-        android:background="@color/md_material_blue_800"
+        android:background="@color/colorPrimaryDark"
         android:textColor="@color/white"
         android:padding="@dimen/marginFive"
         android:textSize="@dimen/textSizeMedium"
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:text="@string/timeline_edit_comment_message"
-        android:background="@color/md_material_blue_600"
+        android:background="@color/colorPrimary"
         android:textColor="@color/white"
         android:padding="@dimen/marginFive"
         android:textSize="@dimen/textSizeSmall"
@@ -71,19 +71,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/timeline_edit_delete_update"
-            android:background="@color/md_material_blue_600"
+            android:background="@drawable/button_oval"
             android:padding="@dimen/marginEight"
-            android:textColor="@color/text_color_white_to_black"
-            android:layout_margin="@dimen/marginFive"/>
+            android:textColor="@color/white"
+            android:layout_margin="@dimen/marginFive"
+            />
 
         <TextView
             android:id="@+id/tvEditDeleteCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/timeline_edit_delete_cancel"
-            android:background="@color/md_material_blue_600"
+            android:background="@drawable/ovel_border"
             android:padding="@dimen/marginEight"
-            android:textColor="@color/text_color_white_to_black"
+            android:textColor="@color/black"
             android:layout_margin="@dimen/marginFive"/>
 
     </LinearLayout>

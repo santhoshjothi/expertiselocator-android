@@ -1,10 +1,12 @@
 package com.example.expertiselocator.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +47,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private boolean isCommentShow = false;
     private int currentExpand = 0, previousExpand = 0;
     private String commentPostId = "", commentPostMessage = "";
-    private boolean isliked;
+    private String isliked;
     private SharedPreferencesWithAES prefs = null;
 
     public TimelineAdapter(Context context, List<GetPostedMessagesResponse> getPostedMessagesResponses) {
@@ -74,233 +76,251 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         timelineViewHolder.linearTimelineActionShowComment.setVisibility(View.GONE);
         timelineViewHolder.includeTimelineAction.setVisibility(View.VISIBLE);
 
-        isliked = Boolean.parseBoolean(getPostedMessagesResponse.getIsLiked());
-        String profilePicture = getPostedMessagesResponse.getProfilePicture();
-        userProfilePicture = profilePicture.replace("data:image/png;base64,", "");
-        byte[] userProfilePic = Base64.decode(userProfilePicture, Base64.DEFAULT);
-        Glide.with(context).asBitmap().load(userProfilePic).into(timelineViewHolder.imgTimelineProfilePicture);
+        try {
 
-        timelineViewHolder.imgTimelineProfilePicture.setOnClickListener(View -> {
-            String[] finalCommentPostData = new String[]{commentPostId};
-            timelineActivity.OnCommentItemClick(View, position, finalCommentPostData);
-        });
+            isliked = getPostedMessagesResponse.getIsLiked();
+            String profilePicture = getPostedMessagesResponse.getProfilePicture();
+            userProfilePicture = profilePicture.replace("data:image/png;base64,", "");
+            byte[] userProfilePic = Base64.decode(userProfilePicture, Base64.DEFAULT);
+            Glide.with(context).asBitmap().load(userProfilePic).into(timelineViewHolder.imgTimelineProfilePicture);
 
-        String timelineProfileName = getPostedMessagesResponse.getUserName();
-        timelineViewHolder.tvTimelineProfileName.setText(timelineProfileName);
+            timelineViewHolder.imgTimelineProfilePicture.setOnClickListener(View -> {
+                String[] finalCommentPostData = new String[]{commentPostId};
+                timelineActivity.OnCommentItemClick(View, position, finalCommentPostData);
+            });
 
-        String timelineMessage = getPostedMessagesResponse.getMessage();
-        timelineViewHolder.tvTimelineMessage.setText(timelineMessage);
+            String timelineProfileName = getPostedMessagesResponse.getUserName();
+            timelineViewHolder.tvTimelineProfileName.setText(timelineProfileName);
 
-        String timelinePostedTime = getPostedMessagesResponse.getPostedDate();
-        timelineViewHolder.tvTimelinePostedTime.setText(timelinePostedTime);
+            String timelineMessage = getPostedMessagesResponse.getMessage();
+            timelineViewHolder.tvTimelineMessage.setText(timelineMessage);
 
-        if (getPostedMessagesResponse.getPostImage().trim().length() != 0) {
-            commonMethods.showLog("Post Image Adapter 00 : ", TAG + getPostedMessagesResponse.getPostImage());
-        }
+            String timelinePostedTime = getPostedMessagesResponse.getPostedDate();
+            timelineViewHolder.tvTimelinePostedTime.setText(timelinePostedTime);
 
-        if (getPostedMessagesResponse.getPostVideo().trim().length() != 0) {
-            commonMethods.showLog("Post Video Adapter 00 : ", TAG + getPostedMessagesResponse.getPostVideo());
-        }
-
-        if (!getPostedMessagesResponse.getSharedPostId().equals("0")) {
-            commonMethods.showLog("Post Share Adapter 00 : ", TAG + getPostedMessagesResponse.getSharedPostId());
-        }
-
-        if (getPostedMessagesResponse.getPostImage() != null) {
             if (getPostedMessagesResponse.getPostImage().trim().length() != 0) {
-                commonMethods.showLog("Post Image Adapter 01 : ", TAG + getPostedMessagesResponse.getPostImage());
-                timelineViewHolder.includeTimelineImage.setVisibility(View.VISIBLE);
-                String timelinePicture = getPostedMessagesResponse.getPostImage();
-                userTimelinePicture = timelinePicture.replace("data:image/png;base64,", "");
-                byte[] timelinePic = Base64.decode(userTimelinePicture, Base64.DEFAULT);
-                Glide.with(context).asBitmap().load(timelinePic)
-                        .into(timelineViewHolder.viewTimelineImage);
+                commonMethods.showLog("Post Image Adapter 00 : ", TAG + getPostedMessagesResponse.getPostImage());
             }
-        }
 
-        if (getPostedMessagesResponse.getPostVideo() != null) {
             if (getPostedMessagesResponse.getPostVideo().trim().length() != 0) {
-                if (URLUtil.isValidUrl(getPostedMessagesResponse.getPostVideo().trim())) {
-                    commonMethods.showLog("Post Video Adapter 01 : ", TAG + getPostedMessagesResponse.getPostVideo());
-                    timelineViewHolder.includeTimelineVideo.setVisibility(View.VISIBLE);
-                    videoUri = Uri.parse(getPostedMessagesResponse.getPostVideo());
-                    timelineViewHolder.viewTimelineVideo.setVideoURI(videoUri);
-                    timelineViewHolder.viewTimelineVideo.start();
-                    mediaController = new MediaController(context);
-                    mediaController.setMediaPlayer(timelineViewHolder.viewTimelineVideo);
-                    timelineViewHolder.viewTimelineVideo.setMediaController(mediaController);
-                    timelineViewHolder.viewTimelineVideo.requestFocus();
+                commonMethods.showLog("Post Video Adapter 00 : ", TAG + getPostedMessagesResponse.getPostVideo());
+            }
+
+            if (!getPostedMessagesResponse.getSharedPostId().equals("0")) {
+                commonMethods.showLog("Post Share Adapter 00 : ", TAG + getPostedMessagesResponse.getSharedPostId());
+            }
+
+            if (getPostedMessagesResponse.getPostImage() != null) {
+                if (getPostedMessagesResponse.getPostImage().trim().length() != 0) {
+                    commonMethods.showLog("Post Image Adapter 01 : ", TAG + getPostedMessagesResponse.getPostImage());
+                    timelineViewHolder.includeTimelineImage.setVisibility(View.VISIBLE);
+                    String timelinePicture = getPostedMessagesResponse.getPostImage();
+                    userTimelinePicture = timelinePicture.replace("data:image/png;base64,", "");
+                    byte[] timelinePic = Base64.decode(userTimelinePicture, Base64.DEFAULT);
+                    Glide.with(context).asBitmap().load(timelinePic)
+                            .into(timelineViewHolder.viewTimelineImage);
                 }
             }
-        }
 
-        if (getPostedMessagesResponse.getSharedPostId() != null) {
-            if (getPostedMessagesResponse.getSharedPostId().trim().length() != 0) {
-                if (!getPostedMessagesResponse.getSharedPostId().trim().equals("0")) {
-                    commonMethods.showLog("Post Share Adapter 01 : ", TAG + getPostedMessagesResponse.getSharedPostId());
-                    timelineViewHolder.includeTimelineShare.setVisibility(View.VISIBLE);
-                    timelineViewHolder.viewShareImage.setVisibility(View.GONE);
-                    timelineViewHolder.viewShareVideo.setVisibility(View.GONE);
-
-                    if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage() != null) {
-                        commonMethods.showLog("Share Image Adapter 00 : ", TAG
-                                + getPostedMessagesResponse.getTimeline_SharedPost().getPostImage());
+            if (getPostedMessagesResponse.getPostVideo() != null) {
+                if (getPostedMessagesResponse.getPostVideo().trim().length() != 0) {
+                    if (URLUtil.isValidUrl(getPostedMessagesResponse.getPostVideo().trim())) {
+                        commonMethods.showLog("Post Video Adapter 01 : ", TAG + getPostedMessagesResponse.getPostVideo());
+                        timelineViewHolder.includeTimelineVideo.setVisibility(View.VISIBLE);
+                        videoUri = Uri.parse(getPostedMessagesResponse.getPostVideo());
+                        timelineViewHolder.viewTimelineVideo.setVideoURI(videoUri);
+                        timelineViewHolder.viewTimelineVideo.start();
+                        mediaController = new MediaController(context);
+                        mediaController.setMediaPlayer(timelineViewHolder.viewTimelineVideo);
+                        timelineViewHolder.viewTimelineVideo.setMediaController(mediaController);
+                        timelineViewHolder.viewTimelineVideo.requestFocus();
                     }
+                }
+            }
 
-                    if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo() != null) {
-                        commonMethods.showLog("Share Video Adapter 00 : ", TAG
-                                + getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
-                    }
+            if (getPostedMessagesResponse.getSharedPostId() != null) {
+                if (getPostedMessagesResponse.getSharedPostId().trim().length() != 0) {
+                    if (!getPostedMessagesResponse.getSharedPostId().trim().equals("0")) {
+                        commonMethods.showLog("Post Share Adapter 01 : ", TAG + getPostedMessagesResponse.getSharedPostId());
+                        timelineViewHolder.includeTimelineShare.setVisibility(View.VISIBLE);
+                        timelineViewHolder.viewShareImage.setVisibility(View.GONE);
+                        timelineViewHolder.viewShareVideo.setVisibility(View.GONE);
 
-                    String sharePicture = getPostedMessagesResponse.getTimeline_SharedPost().getProfilePicture();
-                    shareProfilePicture = sharePicture.replace("data:image/png;base64,", "");
-                    byte[] shareProfilePic = Base64.decode(shareProfilePicture, Base64.DEFAULT);
-                    Glide.with(context).asBitmap().load(shareProfilePic)
-                            .into(timelineViewHolder.imgShareProfilePicture);
-
-                    String shareProfileName = getPostedMessagesResponse.getTimeline_SharedPost().getUserName();
-                    timelineViewHolder.tvShareProfileName.setText(shareProfileName);
-
-                    String shareMessage = getPostedMessagesResponse.getTimeline_SharedPost().getMessage();
-                    timelineViewHolder.tvShareMessage.setText(shareMessage);
-
-                    if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage() != null) {
-                        if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage().length() != 0) {
-                            commonMethods.showLog("Share Image Adapter 01 : ", TAG
+                        if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage() != null) {
+                            commonMethods.showLog("Share Image Adapter 00 : ", TAG
                                     + getPostedMessagesResponse.getTimeline_SharedPost().getPostImage());
-                            timelineViewHolder.viewShareImage.setVisibility(View.VISIBLE);
-                            String shareTimelinePic = getPostedMessagesResponse.getTimeline_SharedPost().getPostImage();
-                            shareTimelinePicture = shareTimelinePic.replace("data:image/png;base64,", "");
-                            byte[] sharetimelinePic = Base64.decode(shareTimelinePicture, Base64.DEFAULT);
-                            Glide.with(context).asBitmap().load(sharetimelinePic)
-                                    .into(timelineViewHolder.viewShareImage);
                         }
-                    }
 
-                    if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo() != null) {
-                        if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo().length() != 0) {
-                            if (URLUtil.isValidUrl(getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo().trim())) {
-                                commonMethods.showLog("Share Video Adapter 01 : ", TAG
-                                        + getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
-                                timelineViewHolder.viewShareVideo.setVisibility(View.VISIBLE);
-                                videoUri = Uri.parse(getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
-                                timelineViewHolder.viewShareVideo.setVideoURI(videoUri);
-                                timelineViewHolder.viewShareVideo.start();
-                                mediaController = new MediaController(context);
-                                mediaController.setMediaPlayer(timelineViewHolder.viewShareVideo);
-                                timelineViewHolder.viewShareVideo.setMediaController(mediaController);
-                                timelineViewHolder.viewShareVideo.requestFocus();
+                        if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo() != null) {
+                            commonMethods.showLog("Share Video Adapter 00 : ", TAG
+                                    + getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
+                        }
+
+                        String sharePicture = getPostedMessagesResponse.getTimeline_SharedPost().getProfilePicture();
+                        shareProfilePicture = sharePicture.replace("data:image/png;base64,", "");
+                        byte[] shareProfilePic = Base64.decode(shareProfilePicture, Base64.DEFAULT);
+                        Glide.with(context).asBitmap().load(shareProfilePic)
+                                .into(timelineViewHolder.imgShareProfilePicture);
+
+                        String shareProfileName = getPostedMessagesResponse.getTimeline_SharedPost().getUserName();
+                        timelineViewHolder.tvShareProfileName.setText(shareProfileName);
+
+                        String shareMessage = getPostedMessagesResponse.getTimeline_SharedPost().getMessage();
+                        timelineViewHolder.tvShareMessage.setText(shareMessage);
+
+                        if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage() != null) {
+                            if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage().length() != 0) {
+                                commonMethods.showLog("Share Image Adapter 01 : ", TAG
+                                        + getPostedMessagesResponse.getTimeline_SharedPost().getPostImage());
+                                timelineViewHolder.viewShareImage.setVisibility(View.VISIBLE);
+                                String shareTimelinePic = getPostedMessagesResponse.getTimeline_SharedPost().getPostImage();
+                                shareTimelinePicture = shareTimelinePic.replace("data:image/png;base64,", "");
+                                byte[] sharetimelinePic = Base64.decode(shareTimelinePicture, Base64.DEFAULT);
+                                Glide.with(context).asBitmap().load(sharetimelinePic)
+                                        .into(timelineViewHolder.viewShareImage);
+                            }
+                        }
+
+                        if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo() != null) {
+                            if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo().length() != 0) {
+                                if (URLUtil.isValidUrl(getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo().trim())) {
+                                    commonMethods.showLog("Share Video Adapter 01 : ", TAG
+                                            + getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
+                                    timelineViewHolder.viewShareVideo.setVisibility(View.VISIBLE);
+                                    videoUri = Uri.parse(getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
+                                    timelineViewHolder.viewShareVideo.setVideoURI(videoUri);
+                                    timelineViewHolder.viewShareVideo.start();
+                                    mediaController = new MediaController(context);
+                                    mediaController.setMediaPlayer(timelineViewHolder.viewShareVideo);
+                                    timelineViewHolder.viewShareVideo.setMediaController(mediaController);
+                                    timelineViewHolder.viewShareVideo.requestFocus();
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        if (getPostedMessagesResponse.getPostOwnerId().trim().equalsIgnoreCase(commonMethods.getUserId())) {
-            timelineViewHolder.imgTimelineProfileMenu.setVisibility(View.VISIBLE);
-        }
-
-        timelineViewHolder.imgTimelineProfileMenu.setOnClickListener(View -> {
-            timelineActivity.onItemClick(View, position);
-        });
-
-        timelineViewHolder.linearTimelineActionLike.setOnClickListener(View -> {
-            commentPostId = getPostedMessagesResponse.getId();
-            String isliked = getPostedMessagesResponse.getIsLiked();
-            View view = timelineViewHolder.tvTimelineActionLike;
-            String[] likeDetails = new String[]{commentPostId, isliked, String.valueOf(view)};
-
-            if (isliked.equalsIgnoreCase("0")) {
-                timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
-                timelineActivity.OnCommentItemClick(View, position, likeDetails);
-            } else {
-                timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
-                timelineActivity.OnCommentItemClick(View, position, likeDetails);
+            if (getPostedMessagesResponse.getPostOwnerId().trim().equalsIgnoreCase(commonMethods.getUserId())) {
+                timelineViewHolder.imgTimelineProfileMenu.setVisibility(View.VISIBLE);
             }
-        });
 
-        /* For Edit and Post Comment */
+            timelineViewHolder.imgTimelineProfileMenu.setOnClickListener(View -> {
+                String[] menuData=new String[]{};
+                timelineActivity.onItemClick(View, position,menuData);
+            });
 
-        if (getPostedMessagesResponse.getTimeline_Comments() != null) {
-            getTimelineComments = getPostedMessagesResponse.getTimeline_Comments();
-            timelineCommentAdapter = new TimelineCommentAdapter(context, getTimelineComments);
-            timelineViewHolder.rvTimelineActionComments.setAdapter(timelineCommentAdapter);
-        }
+            timelineViewHolder.linearTimelineActionLike.setOnClickListener(View -> {
 
-        timelineViewHolder.linearTimelineActionComment.setOnClickListener(View -> {
-            if (!isCommentShow) {
-                timelineViewHolder.etTimelineAddComment.requestFocus();
-                commonMethods.expandTheView(timelineViewHolder.linearTimelineActionShowComment);
-                timelineViewHolder.etTimelineAddComment.requestFocus();
-                isCommentShow = true;
-                commonMethods.showLog("Position : ", TAG + position);
-            } else {
-                commonMethods.closeTheView(timelineViewHolder.linearTimelineActionShowComment);
-                isCommentShow = false;
-                commonMethods.showLog("Position : ", TAG + position);
-            }
-        });
-
-        timelineViewHolder.linearTimelineSendComment.setOnClickListener(View -> {
-            if (timelineViewHolder.etTimelineAddComment.getText().toString().trim().length() != 0) {
                 commentPostId = getPostedMessagesResponse.getId();
-                commentPostMessage = timelineViewHolder.etTimelineAddComment.getText().toString();
-                String[] finalCommentPostData = new String[]{commentPostId, commentPostMessage};
-                timelineActivity.OnCommentItemClick(View, position, finalCommentPostData);
-                timelineViewHolder.etTimelineAddComment.clearFocus();
-                timelineViewHolder.etTimelineAddComment.setText("");
-            } else {
-                commonMethods.showToast("Comment Message Needed");
-                timelineViewHolder.etTimelineAddComment.requestFocus();
+                String islike = getPostedMessagesResponse.getIsLiked();
+                View view = timelineViewHolder.tvTimelineActionLike;
+                String[] likeDetails = new String[]{commentPostId, isliked, String.valueOf(view)};
+
+                if (isliked.equalsIgnoreCase("0")) {
+                    isliked="1";
+                    Drawable like = context.getResources().getDrawable(R.drawable.ic_liked);
+                    timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(like, null, null, null);
+                    timelineActivity.OnCommentItemClick(View, position, likeDetails);
+
+                } else {
+                    isliked="0";
+                    Drawable liked = context.getResources().getDrawable(R.drawable.ic_like);
+                    timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(liked, null, null, null);
+                    timelineActivity.OnCommentItemClick(View, position, likeDetails);
+                }
+            });
+
+            /* For Edit and Post Comment */
+
+            if (getPostedMessagesResponse.getTimeline_Comments() != null) {
+                getTimelineComments = getPostedMessagesResponse.getTimeline_Comments();
+                timelineCommentAdapter = new TimelineCommentAdapter(context, getTimelineComments);
+                timelineViewHolder.rvTimelineActionComments.setAdapter(timelineCommentAdapter);
             }
-        });
 
-        /* Timeline Post Background */
+            timelineViewHolder.linearTimelineActionComment.setOnClickListener(View -> {
+                if (!isCommentShow) {
+                    timelineViewHolder.etTimelineAddComment.requestFocus();
+                    commonMethods.expandTheView(timelineViewHolder.linearTimelineActionShowComment);
+                    timelineViewHolder.etTimelineAddComment.requestFocus();
+                    isCommentShow = true;
+                    commonMethods.showLog("Position : ", TAG + position);
+                } else {
+                    commonMethods.closeTheView(timelineViewHolder.linearTimelineActionShowComment);
+                    isCommentShow = false;
+                    commonMethods.showLog("Position : ", TAG + position);
+                }
+            });
 
-        String timelineAssetType = getPostedMessagesResponse.getAssestType().trim();
+            timelineViewHolder.linearTimelineSendComment.setOnClickListener(View -> {
+                if (timelineViewHolder.etTimelineAddComment.getText().toString().trim().length() != 0) {
+                    commentPostId = getPostedMessagesResponse.getId();
+                    commentPostMessage = timelineViewHolder.etTimelineAddComment.getText().toString();
+                    String[] finalCommentPostData = new String[]{commentPostId, commentPostMessage};
+                    timelineActivity.OnCommentItemClick(View, position, finalCommentPostData);
+                    timelineViewHolder.etTimelineAddComment.clearFocus();
+                    timelineViewHolder.etTimelineAddComment.setText("");
+                } else {
+                    commonMethods.showToast("Comment Message Needed");
+                    timelineViewHolder.etTimelineAddComment.requestFocus();
+                }
+            });
 
-        if (!timelineAssetType.trim().equals("Post")) {
-            timelineViewHolder.imgTimelineProfileMenu.setVisibility(View.VISIBLE);
-            timelineViewHolder.linearTimelineHeader.setBackgroundColor(context
-                    .getResources().getColor(R.color.nliveo_blue_colorPrimary));
-            timelineViewHolder.tvTimelineProfileName.setTextColor(context
-                    .getResources().getColor(R.color.white));
-            timelineViewHolder.tvTimelinePostedTime.setTextColor(context
-                    .getResources().getColor(R.color.white));
-        }
+            /* Timeline Post Background */
 
-        /* Timeline Comment and Like Count Label */
+            String timelineAssetType = getPostedMessagesResponse.getAssestType().trim();
 
-        String timelineLikeCount = null, timelineCommentCount = null, timelineLikeCommentCount = null;
-
-        if (getPostedMessagesResponse.getLikesCounts().trim().equals("0")) {
-            timelineLikeCount = context.getResources().getString(R.string.timeline_like_status);
-        } else {
-            if (getPostedMessagesResponse.getLikesCounts().trim().equals("1")) {
-                timelineLikeCount = getPostedMessagesResponse.getLikesCounts().trim() + " "
-                        + context.getResources().getString(R.string.timeline_like_count);
-            } else {
-                timelineLikeCount = getPostedMessagesResponse.getLikesCounts().trim() + " "
-                        + context.getResources().getString(R.string.timeline_likes_count);
+            if (!timelineAssetType.trim().equals("Post")) {
+                timelineViewHolder.imgTimelineProfileMenu.setVisibility(View.VISIBLE);
+                timelineViewHolder.linearTimelineHeader.setBackgroundColor(context
+                        .getResources().getColor(R.color.nliveo_blue_colorPrimary));
+                timelineViewHolder.tvTimelineProfileName.setTextColor(context
+                        .getResources().getColor(R.color.white));
+                timelineViewHolder.tvTimelinePostedTime.setTextColor(context
+                        .getResources().getColor(R.color.white));
             }
-        }
 
-        if (getPostedMessagesResponse.getCommentsCounts().trim().equals("0")) {
-            timelineCommentCount = context.getResources().getString(R.string.timeline_comment_status);
-        } else {
-            if (getPostedMessagesResponse.getCommentsCounts().trim().equals("1")) {
-                timelineCommentCount = getPostedMessagesResponse.getCommentsCounts().trim() + " "
-                        + context.getResources().getString(R.string.timeline_comment_count);
+            /* Timeline Comment and Like Count Label */
+
+            String timelineLikeCount = null, timelineCommentCount = null, timelineLikeCommentCount = null;
+
+            if (getPostedMessagesResponse.getLikesCounts().trim().equals("0")) {
+                timelineLikeCount = context.getResources().getString(R.string.timeline_like_status);
             } else {
-                timelineCommentCount = getPostedMessagesResponse.getCommentsCounts().trim() + " "
-                        + context.getResources().getString(R.string.timeline_comments_count);
+                if (getPostedMessagesResponse.getLikesCounts().trim().equals("1")) {
+                    timelineLikeCount = getPostedMessagesResponse.getLikesCounts().trim() + " "
+                            + context.getResources().getString(R.string.timeline_like_count);
+                } else {
+                    timelineLikeCount = getPostedMessagesResponse.getLikesCounts().trim() + " "
+                            + context.getResources().getString(R.string.timeline_likes_count);
+                }
             }
+
+            if (getPostedMessagesResponse.getCommentsCounts().trim().equals("0")) {
+                timelineCommentCount = context.getResources().getString(R.string.timeline_comment_status);
+            } else {
+                if (getPostedMessagesResponse.getCommentsCounts().trim().equals("1")) {
+                    timelineCommentCount = getPostedMessagesResponse.getCommentsCounts().trim() + " "
+                            + context.getResources().getString(R.string.timeline_comment_count);
+                } else {
+                    timelineCommentCount = getPostedMessagesResponse.getCommentsCounts().trim() + " "
+                            + context.getResources().getString(R.string.timeline_comments_count);
+                }
+            }
+
+            timelineLikeCommentCount = timelineLikeCount + " - " + timelineCommentCount;
+
+            timelineViewHolder.tvTimelineActionLikeCommentStatus.setText(timelineLikeCommentCount);
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
+    }
 
-        timelineLikeCommentCount = timelineLikeCount + " - " + timelineCommentCount;
-
-        timelineViewHolder.tvTimelineActionLikeCommentStatus.setText(timelineLikeCommentCount);
+    public void refreshPostedMessage(List<GetPostedMessagesResponse> getPostedMessagesResponses) {
+        this.getPostedMessagesResponses = getPostedMessagesResponses;
+        notifyDataSetChanged();
     }
 
     @Override

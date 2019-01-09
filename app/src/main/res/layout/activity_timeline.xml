@@ -46,12 +46,14 @@
 
     </android.support.design.widget.AppBarLayout>
     <LinearLayout
+        android:layout_margin="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:id="@+id/lin_post_timeline"
         android:orientation="vertical"
         android:background="#f9f9f9"
+        android:padding="2dp"
         >
 
         <LinearLayout

@@ -45,12 +45,14 @@
     <string name="ui_ux_designer">UI/UX Designer</string>
     <string name="cxm_i_tf">CXM,I TF</string>
     <string name="about_me">About Me</string>
+    <string name="permmision_denied">Permmision Denied</string>
+
 
 
     <!--Post Activity --> <!--Dialogbox-->
-
-    <string name="video_link">Enter the video URL.</string>
-    <string name="video_link_here">video URL Here.</string>
+    <string name="video_link_title">Video Link</string>
+    <string name="video_link">Enter the video URL</string>
+    <string name="video_link_here">video URL Here</string>
      <string name="here">Enter here.</string>
     <string name="add_post">Add your post</string>
     <string name="post">Post</string>
@@ -154,6 +156,7 @@
     <!--API Failure Toast Msg-->
     <string name="fail_abtme_userprofile"> API Failure </string>
     <string name="fail_addpost_post">Failed Posted</string>
+    <string name="fail_addcomment_timeline">Failed Post Comment</string>
 
     <!--API Sucess Toast Msg-->
     <string name="success_addpost_post">Successfully Posted.</string>

@@ -432,14 +432,18 @@ public class PostActivity extends AppCompatActivity {
                         if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                             permissionsDenied += "\n" + per;
 
+                            commonMethods.showToast(getResources().getString(R.string.permmision_denied));
+
+                        }else{
+                            selectimage();
                         }
-                        Log.v("Permission","Granted");
+
 
 
                     }
                     // Show permissionsDenied
                  //   updateViews();
-                    Log.v("Permission","denied");
+
                 }
                 return;
             }

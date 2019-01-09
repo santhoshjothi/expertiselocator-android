@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="@dimen/marginThree">
+        android:layout_margin="@dimen/marginThree"
+        android:padding="3dp"
+        android:layout_marginTop="2dp">
 
         <ImageView
             android:id="@+id/imgTimelineProfilePicture"
@@ -65,6 +67,7 @@
         android:text="@string/no_data"
         android:textSize="@dimen/textSizeMedium"
         android:layout_margin="@dimen/marginThree"
+
         android:maxLines="3"
         android:ellipsize="end"/>
 

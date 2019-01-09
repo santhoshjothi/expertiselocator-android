@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,12 +78,19 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
         }
 
-        if (getTimelineCommentData.getUserID().trim().equals("15")) {
+        if (getTimelineCommentData.getUserID().trim().equals(commonMethods.getUserId())) {
             timelineCommentHolder.imgTimelineCommentProfileMenu.setVisibility(View.VISIBLE);
+
         }
 
         timelineCommentHolder.imgTimelineCommentProfileMenu.setOnClickListener(View -> {
-            timelineActivity.onItemClick(View, position);
+            String deleteMsg=getTimelineCommentData.getComments();
+            String commentsID=getTimelineCommentData.getCommentID();
+
+            Log.v("commentsID",""+" / "+commentsID + deleteMsg);
+
+            String [] deleteComment=new String[]{deleteMsg};
+            timelineActivity.onItemClick(View, position,deleteComment);
         });
 
         timelineCommentHolder.tvTimelineCommentReply.setOnClickListener(View -> {
