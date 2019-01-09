@@ -136,12 +136,10 @@
     <string name="timeline_edit_delete_delete">Delete</string>
     <string name="timeline_edit_delete_cancel">Cancel</string>
 
-
     <!--Login Activity-->
     <string name="username">UserName</string>
     <string name="password">Password</string>
     <string name="login">login</string>
-
 
     <!--Post Activity --> <!--Dialogbox-->
 
