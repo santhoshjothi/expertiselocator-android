@@ -1,12 +1,10 @@
 package com.example.expertiselocator.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +18,7 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.expertiselocator.R;
-import com.example.expertiselocator.main.LoginActivity;
 import com.example.expertiselocator.main.TimelineActivity;
-import com.example.expertiselocator.main.UserProfileActivity;
 import com.example.expertiselocator.model.UserInfoModelPref;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
 import com.example.expertiselocator.utils.CommonMethods;
@@ -50,23 +46,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private int currentExpand = 0, previousExpand = 0;
     private String commentPostId = "", commentPostMessage = "";
     private boolean isliked;
-    private  SharedPreferencesWithAES prefs = null;
-    UserInfoModelPref userResponse;
+    private SharedPreferencesWithAES prefs = null;
+
     public TimelineAdapter(Context context, List<GetPostedMessagesResponse> getPostedMessagesResponses) {
         this.context = context;
         this.getPostedMessagesResponses = getPostedMessagesResponses;
         commonMethods = new CommonMethods(context);
         timelineActivity = (TimelineActivity) context;
         prefs = SharedPreferencesWithAES.getInstance(context, commonMethods.expertisePreference);
-
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            String getUserInfo = prefs.getString(commonMethods.expertiseUserInfo, "");
-            userResponse = mapper.readValue(getUserInfo, UserInfoModelPref.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     @Override
@@ -87,20 +74,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         timelineViewHolder.linearTimelineActionShowComment.setVisibility(View.GONE);
         timelineViewHolder.includeTimelineAction.setVisibility(View.VISIBLE);
 
-         isliked = Boolean.parseBoolean(getPostedMessagesResponse.getIsLiked());
-         String profilePicture = getPostedMessagesResponse.getProfilePicture();
+        isliked = Boolean.parseBoolean(getPostedMessagesResponse.getIsLiked());
+        String profilePicture = getPostedMessagesResponse.getProfilePicture();
         userProfilePicture = profilePicture.replace("data:image/png;base64,", "");
         byte[] userProfilePic = Base64.decode(userProfilePicture, Base64.DEFAULT);
         Glide.with(context).asBitmap().load(userProfilePic).into(timelineViewHolder.imgTimelineProfilePicture);
 
-
-
-
-        timelineViewHolder.imgTimelineProfilePicture.setOnClickListener(View->{
-
-              String[] finalCommentPostData = new String[] {commentPostId};
-             timelineActivity.OnCommentItemClick(View, position, finalCommentPostData);
-
+        timelineViewHolder.imgTimelineProfilePicture.setOnClickListener(View -> {
+            String[] finalCommentPostData = new String[]{commentPostId};
+            timelineActivity.OnCommentItemClick(View, position, finalCommentPostData);
         });
 
         String timelineProfileName = getPostedMessagesResponse.getUserName();
@@ -113,20 +95,20 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         timelineViewHolder.tvTimelinePostedTime.setText(timelinePostedTime);
 
         if (getPostedMessagesResponse.getPostImage().trim().length() != 0) {
-            commonMethods.showLog("Post Image Adapter 00 : " ,TAG + getPostedMessagesResponse.getPostImage());
+            commonMethods.showLog("Post Image Adapter 00 : ", TAG + getPostedMessagesResponse.getPostImage());
         }
 
         if (getPostedMessagesResponse.getPostVideo().trim().length() != 0) {
-            commonMethods.showLog("Post Video Adapter 00 : " , TAG + getPostedMessagesResponse.getPostVideo());
+            commonMethods.showLog("Post Video Adapter 00 : ", TAG + getPostedMessagesResponse.getPostVideo());
         }
 
         if (!getPostedMessagesResponse.getSharedPostId().equals("0")) {
-            commonMethods.showLog("Post Share Adapter 00 : " ,TAG+ getPostedMessagesResponse.getSharedPostId());
+            commonMethods.showLog("Post Share Adapter 00 : ", TAG + getPostedMessagesResponse.getSharedPostId());
         }
 
         if (getPostedMessagesResponse.getPostImage() != null) {
             if (getPostedMessagesResponse.getPostImage().trim().length() != 0) {
-                commonMethods.showLog("Post Image Adapter 01 : " ,TAG + getPostedMessagesResponse.getPostImage());
+                commonMethods.showLog("Post Image Adapter 01 : ", TAG + getPostedMessagesResponse.getPostImage());
                 timelineViewHolder.includeTimelineImage.setVisibility(View.VISIBLE);
                 String timelinePicture = getPostedMessagesResponse.getPostImage();
                 userTimelinePicture = timelinePicture.replace("data:image/png;base64,", "");
@@ -139,7 +121,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (getPostedMessagesResponse.getPostVideo() != null) {
             if (getPostedMessagesResponse.getPostVideo().trim().length() != 0) {
                 if (URLUtil.isValidUrl(getPostedMessagesResponse.getPostVideo().trim())) {
-                    commonMethods.showLog("Post Video Adapter 01 : " ,TAG+ getPostedMessagesResponse.getPostVideo());
+                    commonMethods.showLog("Post Video Adapter 01 : ", TAG + getPostedMessagesResponse.getPostVideo());
                     timelineViewHolder.includeTimelineVideo.setVisibility(View.VISIBLE);
                     videoUri = Uri.parse(getPostedMessagesResponse.getPostVideo());
                     timelineViewHolder.viewTimelineVideo.setVideoURI(videoUri);
@@ -155,18 +137,18 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (getPostedMessagesResponse.getSharedPostId() != null) {
             if (getPostedMessagesResponse.getSharedPostId().trim().length() != 0) {
                 if (!getPostedMessagesResponse.getSharedPostId().trim().equals("0")) {
-                    commonMethods.showLog("Post Share Adapter 01 : " ,TAG+ getPostedMessagesResponse.getSharedPostId());
+                    commonMethods.showLog("Post Share Adapter 01 : ", TAG + getPostedMessagesResponse.getSharedPostId());
                     timelineViewHolder.includeTimelineShare.setVisibility(View.VISIBLE);
                     timelineViewHolder.viewShareImage.setVisibility(View.GONE);
                     timelineViewHolder.viewShareVideo.setVisibility(View.GONE);
 
                     if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage() != null) {
-                        commonMethods.showLog("Share Image Adapter 00 : ",TAG
+                        commonMethods.showLog("Share Image Adapter 00 : ", TAG
                                 + getPostedMessagesResponse.getTimeline_SharedPost().getPostImage());
                     }
 
                     if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo() != null) {
-                        commonMethods.showLog("Share Video Adapter 00 : ",TAG
+                        commonMethods.showLog("Share Video Adapter 00 : ", TAG
                                 + getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
                     }
 
@@ -184,7 +166,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage() != null) {
                         if (getPostedMessagesResponse.getTimeline_SharedPost().getPostImage().length() != 0) {
-                            commonMethods.showLog("Share Image Adapter 01 : ",TAG
+                            commonMethods.showLog("Share Image Adapter 01 : ", TAG
                                     + getPostedMessagesResponse.getTimeline_SharedPost().getPostImage());
                             timelineViewHolder.viewShareImage.setVisibility(View.VISIBLE);
                             String shareTimelinePic = getPostedMessagesResponse.getTimeline_SharedPost().getPostImage();
@@ -198,7 +180,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo() != null) {
                         if (getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo().length() != 0) {
                             if (URLUtil.isValidUrl(getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo().trim())) {
-                                commonMethods.showLog("Share Video Adapter 01 : ",TAG
+                                commonMethods.showLog("Share Video Adapter 01 : ", TAG
                                         + getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
                                 timelineViewHolder.viewShareVideo.setVisibility(View.VISIBLE);
                                 videoUri = Uri.parse(getPostedMessagesResponse.getTimeline_SharedPost().getPostVideo());
@@ -215,8 +197,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         }
 
-        if (getPostedMessagesResponse.getPostOwnerId().trim().equalsIgnoreCase(userResponse.getUserID())) {
-
+        if (getPostedMessagesResponse.getPostOwnerId().trim().equalsIgnoreCase(commonMethods.getUserId())) {
             timelineViewHolder.imgTimelineProfileMenu.setVisibility(View.VISIBLE);
         }
 
@@ -224,30 +205,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             timelineActivity.onItemClick(View, position);
         });
 
-
         timelineViewHolder.linearTimelineActionLike.setOnClickListener(View -> {
-
             commentPostId = getPostedMessagesResponse.getId();
             String isliked = getPostedMessagesResponse.getIsLiked();
             View view = timelineViewHolder.tvTimelineActionLike;
             String[] likeDetails = new String[]{commentPostId, isliked, String.valueOf(view)};
-            Log.v("IsLiked", "" + likeDetails);
 
             if (isliked.equalsIgnoreCase("0")) {
-                // Log.v("isliked/"," if "+isliked);
-
                 timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
-                //  isliked = true;
                 timelineActivity.OnCommentItemClick(View, position, likeDetails);
             } else {
-                //  Log.v("isliked/"," else "+isliked);
-                // isliked = false;
-                //feedlike.setBackgroundResource(R.drawable.ic_liked);
                 timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
                 timelineActivity.OnCommentItemClick(View, position, likeDetails);
-
             }
-
         });
 
         /* For Edit and Post Comment */
@@ -262,12 +232,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (!isCommentShow) {
                 timelineViewHolder.etTimelineAddComment.requestFocus();
                 commonMethods.expandTheView(timelineViewHolder.linearTimelineActionShowComment);
+                timelineViewHolder.etTimelineAddComment.requestFocus();
                 isCommentShow = true;
-                commonMethods.showLog("Position : " ,TAG+ position);
+                commonMethods.showLog("Position : ", TAG + position);
             } else {
                 commonMethods.closeTheView(timelineViewHolder.linearTimelineActionShowComment);
                 isCommentShow = false;
-                commonMethods.showLog("Position : " ,TAG+ position);
+                commonMethods.showLog("Position : ", TAG + position);
             }
         });
 
@@ -275,7 +246,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (timelineViewHolder.etTimelineAddComment.getText().toString().trim().length() != 0) {
                 commentPostId = getPostedMessagesResponse.getId();
                 commentPostMessage = timelineViewHolder.etTimelineAddComment.getText().toString();
-                String[] finalCommentPostData = new String[] {commentPostId, commentPostMessage};
+                String[] finalCommentPostData = new String[]{commentPostId, commentPostMessage};
                 timelineActivity.OnCommentItemClick(View, position, finalCommentPostData);
                 timelineViewHolder.etTimelineAddComment.clearFocus();
                 timelineViewHolder.etTimelineAddComment.setText("");
@@ -284,6 +255,52 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 timelineViewHolder.etTimelineAddComment.requestFocus();
             }
         });
+
+        /* Timeline Post Background */
+
+        String timelineAssetType = getPostedMessagesResponse.getAssestType().trim();
+
+        if (!timelineAssetType.trim().equals("Post")) {
+            timelineViewHolder.imgTimelineProfileMenu.setVisibility(View.VISIBLE);
+            timelineViewHolder.linearTimelineHeader.setBackgroundColor(context
+                    .getResources().getColor(R.color.nliveo_blue_colorPrimary));
+            timelineViewHolder.tvTimelineProfileName.setTextColor(context
+                    .getResources().getColor(R.color.white));
+            timelineViewHolder.tvTimelinePostedTime.setTextColor(context
+                    .getResources().getColor(R.color.white));
+        }
+
+        /* Timeline Comment and Like Count Label */
+
+        String timelineLikeCount = null, timelineCommentCount = null, timelineLikeCommentCount = null;
+
+        if (getPostedMessagesResponse.getLikesCounts().trim().equals("0")) {
+            timelineLikeCount = context.getResources().getString(R.string.timeline_like_status);
+        } else {
+            if (getPostedMessagesResponse.getLikesCounts().trim().equals("1")) {
+                timelineLikeCount = getPostedMessagesResponse.getLikesCounts().trim() + " "
+                        + context.getResources().getString(R.string.timeline_like_count);
+            } else {
+                timelineLikeCount = getPostedMessagesResponse.getLikesCounts().trim() + " "
+                        + context.getResources().getString(R.string.timeline_likes_count);
+            }
+        }
+
+        if (getPostedMessagesResponse.getCommentsCounts().trim().equals("0")) {
+            timelineCommentCount = context.getResources().getString(R.string.timeline_comment_status);
+        } else {
+            if (getPostedMessagesResponse.getCommentsCounts().trim().equals("1")) {
+                timelineCommentCount = getPostedMessagesResponse.getCommentsCounts().trim() + " "
+                        + context.getResources().getString(R.string.timeline_comment_count);
+            } else {
+                timelineCommentCount = getPostedMessagesResponse.getCommentsCounts().trim() + " "
+                        + context.getResources().getString(R.string.timeline_comments_count);
+            }
+        }
+
+        timelineLikeCommentCount = timelineLikeCount + " - " + timelineCommentCount;
+
+        timelineViewHolder.tvTimelineActionLikeCommentStatus.setText(timelineLikeCommentCount);
     }
 
     @Override
@@ -311,9 +328,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         EditText etTimelineAddComment;
         LinearLayout linearTimelineSendComment;
 
+        LinearLayout linearTimelineHeader;
+        TextView tvTimelineActionLikeCommentStatus;
+
         TimelineViewHolder(View itemView) {
             super(itemView);
 
+            linearTimelineHeader = (LinearLayout) itemView.findViewById(R.id.linearTimelineHeader);
             imgTimelineProfilePicture = (ImageView) itemView.findViewById(R.id.imgTimelineProfilePicture);
             imgTimelineProfileMenu = (ImageView) itemView.findViewById(R.id.imgTimelineProfileMenu);
             tvTimelineProfileName = (TextView) itemView.findViewById(R.id.tvTimelineProfileName);
@@ -343,6 +364,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             tvTimelineActionLike = (TextView) includeTimelineAction.findViewById(R.id.tvTimelineActionLike);
             tvTimelineActionComment = (TextView) includeTimelineAction.findViewById(R.id.tvTimelineActionComment);
             tvTimelineActionShare = (TextView) includeTimelineAction.findViewById(R.id.tvTimelineActionShare);
+            tvTimelineActionLikeCommentStatus = (TextView) includeTimelineAction.findViewById(R.id.tvTimelineActionLikeCommentStatus);
 
             etTimelineAddComment = (EditText) includeTimelineAction.findViewById(R.id.etTimelineAddComment);
             linearTimelineSendComment = (LinearLayout) includeTimelineAction.findViewById(R.id.linearTimelineSendComment);
