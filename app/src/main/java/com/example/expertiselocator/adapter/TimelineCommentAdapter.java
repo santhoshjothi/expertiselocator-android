@@ -47,6 +47,11 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return new TimelineCommentHolder(viewTimelineComments);
     }
 
+    public void loadMoreComment(List<GetPostedMessagesResponse.Timeline_Comments> getTimelineComments) {
+        this.getTimelineComments = getTimelineComments;
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         GetPostedMessagesResponse.Timeline_Comments getTimelineCommentData = getTimelineComments.get(position);

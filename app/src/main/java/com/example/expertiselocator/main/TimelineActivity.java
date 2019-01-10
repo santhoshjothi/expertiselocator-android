@@ -24,6 +24,7 @@ import com.example.expertiselocator.apiclient.ExpertiseApiClient;
 import com.example.expertiselocator.interfaces.ExpertiseApiInterface;
 import com.example.expertiselocator.interfaces.OnItemClick;
 import com.example.expertiselocator.model.request.CommentActionRequest;
+import com.example.expertiselocator.model.request.GetMoreCommentRequest;
 import com.example.expertiselocator.model.request.GetPostedMessageRequest;
 import com.example.expertiselocator.model.request.GetUserProfileRequest;
 import com.example.expertiselocator.model.request.PostCommentRequest;
@@ -56,6 +57,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
     private int menuItemClickedPosition = 0, menuItemClickedCommentPosition = 0, menuItemClickedReplyPosition = 0;
     LinearLayout lin_post_timeline;
     SharedPreferencesWithAES prefs;
+    int getMoreCommentsPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -292,6 +294,16 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 callUserAbt(profileRequest);
                 break;
 
+            case R.id.tvTimelineActionViewMoreComments:
+                getMoreCommentsPosition = position;
+                GetMoreCommentRequest getMoreCommentRequest = new GetMoreCommentRequest();
+                getMoreCommentRequest.setPostID(commentData[0]);
+                getMoreCommentRequest.setUserID(commentData[1]);
+                getMoreCommentRequest.setStartIndex("1");
+                getMoreCommentRequest.setMaxCount("2");
+                callGetMoreComments(getMoreCommentRequest);
+                break;
+
             default:
                 break;
         }
@@ -373,13 +385,13 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
 
 
                         } else {
-                            commonMethods.showToast(getResources().getString(R.string.fail_addcomment_timeline));
+//                            commonMethods.showToast(getResources().getString(R.string.fail_addcomment_timeline));
 
                         }
 
                     } else {
                         commonMethods.showLog("Response code : ", TAG + response.code());
-                        commonMethods.showToast(getResources().getString(R.string.fail_addcomment_timeline));
+//                        commonMethods.showToast(getResources().getString(R.string.fail_addcomment_timeline));
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
@@ -390,7 +402,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
             public void onFailure(Call<Integer> call, Throwable t) {
                 commonMethods.showLog("URL Failure : ", TAG + call.request().url());
                 commonMethods.showLog("Failure : ", TAG + t.getMessage());
-                commonMethods.showToast(getResources().getString(R.string.fail_addcomment_timeline));
+//                commonMethods.showToast(getResources().getString(R.string.fail_addcomment_timeline));
             }
         });
     }
@@ -501,5 +513,27 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
         });
     }
 
+    public void callGetMoreComments(GetMoreCommentRequest getMoreCommentRequest) {
+        ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
+        ExpertiseApiInterface expertiseApiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
+        Call<List<GetPostedMessagesResponse.Timeline_Comments>> getMoreTimelineComments = expertiseApiInterface.getMoreComments(getMoreCommentRequest);
+        getMoreTimelineComments.enqueue(new Callback<List<GetPostedMessagesResponse.Timeline_Comments>>() {
+            @Override
+            public void onResponse(Call<List<GetPostedMessagesResponse.Timeline_Comments>> call, Response<List<GetPostedMessagesResponse.Timeline_Comments>> response) {
+                commonMethods.showLog(TAG, "" + response.body());
+                commonMethods.showLog(TAG, "" + call.request().url());
 
+                if (response.code() == 200) {
+                    List<GetPostedMessagesResponse.Timeline_Comments> getTimelineMoreComments = response.body();
+                    getPostedMessagesResponses.get(getMoreCommentsPosition).setTimeline_Comments(getTimelineMoreComments);
+                    timelineAdapter.refreshTimeline(getPostedMessagesResponses);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<GetPostedMessagesResponse.Timeline_Comments>> call, Throwable t) {
+                commonMethods.showToast("Failed To Load");
+            }
+        });
+    }
 }
