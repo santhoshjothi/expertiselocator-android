@@ -62,7 +62,7 @@ public class TimelineReplyAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         timelineReplyHolder.imgTimelineReplyProfileMenu.setOnClickListener(View -> {
-           // timelineActivity.onItemClick(View, position);
+            timelineActivity.onItemClick(View, position);
         });
     }
 

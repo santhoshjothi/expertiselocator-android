@@ -75,7 +75,7 @@
             android:padding="@dimen/marginEight"
             android:textColor="@color/white"
             android:layout_margin="@dimen/marginFive"
-            />
+        />
 
         <TextView
             android:id="@+id/tvEditDeleteCancel"

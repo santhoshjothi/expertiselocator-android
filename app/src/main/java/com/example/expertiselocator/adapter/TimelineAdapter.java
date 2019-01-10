@@ -69,6 +69,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         GetPostedMessagesResponse getPostedMessagesResponse = getPostedMessagesResponses.get(position);
         TimelineViewHolder timelineViewHolder = (TimelineViewHolder) holder;
 
+        commonMethods.showLog("TimelineAdapter : ", getPostedMessagesResponse.getId() + " " + position);
+
         timelineViewHolder.includeTimelineShare.setVisibility(View.GONE);
         timelineViewHolder.includeTimelineImage.setVisibility(View.GONE);
         timelineViewHolder.includeTimelineVideo.setVisibility(View.GONE);
@@ -99,7 +101,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             timelineViewHolder.tvTimelinePostedTime.setText(timelinePostedTime);
 
             if (getPostedMessagesResponse.getPostImage().trim().length() != 0) {
-                commonMethods.showLog("Post Image Adapter 00 : ", TAG + getPostedMessagesResponse.getPostImage());
+                //commonMethods.showLog("Post Image Adapter 00 : ", TAG + getPostedMessagesResponse.getPostImage());
             }
 
             if (getPostedMessagesResponse.getPostVideo().trim().length() != 0) {
@@ -112,7 +114,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             if (getPostedMessagesResponse.getPostImage() != null) {
                 if (getPostedMessagesResponse.getPostImage().trim().length() != 0) {
-                    commonMethods.showLog("Post Image Adapter 01 : ", TAG + getPostedMessagesResponse.getPostImage());
+                    //commonMethods.showLog("Post Image Adapter 01 : ", TAG + getPostedMessagesResponse.getPostImage());
                     timelineViewHolder.includeTimelineImage.setVisibility(View.VISIBLE);
                     String timelinePicture = getPostedMessagesResponse.getPostImage();
                     userTimelinePicture = timelinePicture.replace("data:image/png;base64,", "");
@@ -206,7 +208,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             timelineViewHolder.imgTimelineProfileMenu.setOnClickListener(View -> {
-              timelineActivity.onItemClick(View, position);
+                timelineActivity.onItemClick(View, position);
             });
 
             timelineViewHolder.linearTimelineActionLike.setOnClickListener(View -> {
@@ -234,6 +236,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (getPostedMessagesResponse.getTimeline_Comments() != null) {
                 getTimelineComments = getPostedMessagesResponse.getTimeline_Comments();
                 timelineCommentAdapter = new TimelineCommentAdapter(context, getTimelineComments, position);
+                commonMethods.showLog("TimelineAdapter : ", getTimelineComments.get(0).getId() + " " + position);
                 timelineViewHolder.rvTimelineActionComments.setAdapter(timelineCommentAdapter);
             }
 
@@ -266,13 +269,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
 
             /* Timeline Post Background */
-
             String timelineAssetType = getPostedMessagesResponse.getAssestType().trim();
-
             if (!timelineAssetType.trim().equals("Post")) {
                 timelineViewHolder.imgTimelineProfileMenu.setVisibility(View.VISIBLE);
                 timelineViewHolder.linearTimelineHeader.setBackgroundColor(context
-                        .getResources().getColor(R.color.nliveo_blue_colorPrimary));
+                        .getResources().getColor(R.color.colorPrimaryDark));
                 timelineViewHolder.tvTimelineProfileName.setTextColor(context
                         .getResources().getColor(R.color.white));
                 timelineViewHolder.tvTimelinePostedTime.setTextColor(context
@@ -281,8 +282,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             /* Timeline Comment and Like Count Label */
 
-            String timelineLikeCount = null, timelineCommentCount = null,
-                    timelineLikeCommentCount = null, timelineCommentView = null;
+            String timelineLikeCount = null, timelineCommentCount = null, timelineLikeCommentCount = null;
 
             if (getPostedMessagesResponse.getLikesCounts().trim().equals("0")) {
                 timelineLikeCount = context.getResources().getString(R.string.timeline_like_status);
@@ -298,16 +298,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             if (getPostedMessagesResponse.getCommentsCounts().trim().equals("0")) {
                 timelineCommentCount = context.getResources().getString(R.string.timeline_comment_status);
-                timelineViewHolder.tvTimelineActionViewMoreComments.setVisibility(View.GONE);
             } else {
                 if (getPostedMessagesResponse.getCommentsCounts().trim().equals("1")) {
-                    timelineViewHolder.tvTimelineActionViewMoreComments.setVisibility(View.GONE);
                     timelineCommentCount = getPostedMessagesResponse.getCommentsCounts().trim() + " "
                             + context.getResources().getString(R.string.timeline_comment_count);
                 } else {
-                    timelineCommentView = "View " + getPostedMessagesResponse.getCommentsCounts().trim() + " More Comments";
-                    timelineViewHolder.tvTimelineActionViewMoreComments.setVisibility(View.VISIBLE);
-                    timelineViewHolder.tvTimelineActionViewMoreComments.setText(timelineCommentView);
                     timelineCommentCount = getPostedMessagesResponse.getCommentsCounts().trim() + " "
                             + context.getResources().getString(R.string.timeline_comments_count);
                 }
@@ -317,13 +312,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             timelineViewHolder.tvTimelineActionLikeCommentStatus.setText(timelineLikeCommentCount);
 
-            /* Timeline View more Comments */
-
-            timelineViewHolder.tvTimelineActionViewMoreComments.setOnClickListener(View -> {
-                String commentPostId = getPostedMessagesResponse.getId();
-                String[] viewMoreComments = new String[] {commentPostId, commonMethods.getUserId()};
-                timelineActivity.OnCommentItemClick(View, position, viewMoreComments);
-            });
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -337,11 +325,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemCount() {
         return getPostedMessagesResponses.size();
-    }
-
-    public void refreshTimeline(List<GetPostedMessagesResponse> getPostedMessagesResponses) {
-        this.getPostedMessagesResponses = getPostedMessagesResponses;
-        notifyDataSetChanged();
     }
 
     class TimelineViewHolder extends RecyclerView.ViewHolder {
@@ -365,7 +348,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LinearLayout linearTimelineSendComment;
 
         LinearLayout linearTimelineHeader;
-        TextView tvTimelineActionLikeCommentStatus, tvTimelineActionViewMoreComments;;
+        TextView tvTimelineActionLikeCommentStatus;
 
         TimelineViewHolder(View itemView) {
             super(itemView);
@@ -401,7 +384,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             tvTimelineActionComment = (TextView) includeTimelineAction.findViewById(R.id.tvTimelineActionComment);
             tvTimelineActionShare = (TextView) includeTimelineAction.findViewById(R.id.tvTimelineActionShare);
             tvTimelineActionLikeCommentStatus = (TextView) includeTimelineAction.findViewById(R.id.tvTimelineActionLikeCommentStatus);
-            tvTimelineActionViewMoreComments = (TextView) includeTimelineAction.findViewById(R.id.tvTimelineActionViewMoreComments);
 
             etTimelineAddComment = (EditText) includeTimelineAction.findViewById(R.id.etTimelineAddComment);
             linearTimelineSendComment = (LinearLayout) includeTimelineAction.findViewById(R.id.linearTimelineSendComment);

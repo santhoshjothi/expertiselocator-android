@@ -53,7 +53,7 @@
     <string name="video_link_title">Video Link</string>
     <string name="video_link">Enter the video URL</string>
     <string name="video_link_here">video URL Here</string>
-     <string name="here">Enter here.</string>
+    <string name="here">Enter here.</string>
     <string name="add_post">Add your post</string>
     <string name="post">Post</string>
     <string name="edt_post">Edit Post</string>

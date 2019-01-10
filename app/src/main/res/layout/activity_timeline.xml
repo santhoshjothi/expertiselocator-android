@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
         android:id="@+id/lin"
-       >
+        >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"

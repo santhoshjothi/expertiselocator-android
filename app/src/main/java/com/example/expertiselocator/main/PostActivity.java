@@ -431,13 +431,11 @@ public class PostActivity extends AppCompatActivity {
                     for (String per : permissionsList) {
                         if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                             permissionsDenied += "\n" + per;
-
                             commonMethods.showToast(getResources().getString(R.string.permmision_denied));
 
                         }else{
                             selectimage();
                         }
-
 
 
                     }

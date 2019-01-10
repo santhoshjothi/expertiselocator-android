@@ -1,6 +1,5 @@
 package com.example.expertiselocator.model.response;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class GetPostedMessagesResponse {

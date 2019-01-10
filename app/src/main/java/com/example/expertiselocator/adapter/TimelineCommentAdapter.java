@@ -33,13 +33,14 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private LinearLayoutManager linearLayoutManager;
     private List<GetPostedMessagesResponse.Timeline_Replies> getTimelineReplies;
     private TimelineReplyAdapter timelineReplyAdapter;
-    public int timelinePostion ;
-    TimelineCommentAdapter(Context context, List<GetPostedMessagesResponse.Timeline_Comments> getTimelineComments,int timelinePostion) {
+    public int timelinePostion;
+
+    TimelineCommentAdapter(Context context, List<GetPostedMessagesResponse.Timeline_Comments> getTimelineComments, int timelinePostion) {
         this.context = context;
         this.getTimelineComments = getTimelineComments;
         commonMethods = new CommonMethods(context);
         timelineActivity = (TimelineActivity) context;
-        this.timelinePostion=timelinePostion;
+        this.timelinePostion = timelinePostion;
     }
 
     @Override
@@ -57,19 +58,18 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         GetPostedMessagesResponse.Timeline_Comments getTimelineCommentData = getTimelineComments.get(position);
         TimelineCommentHolder timelineCommentHolder = (TimelineCommentHolder) holder;
-        commonMethods.showLog("TimelineCommentProfileMenu. 123: " ,TAG + position);
+
+        commonMethods.showLog("TimelineCommentProfileMenu. 123: ", TAG + position + " " + timelinePostion);
+
         timelineCommentHolder.imgTimelineCommentProfileMenu.setVisibility(View.GONE);
         timelineCommentHolder.linearTimelineActionAddReply.setVisibility(View.GONE);
 
         String commentProfileName = getTimelineCommentData.getUserName();
         timelineCommentHolder.tvTimelineCommentProfileName.setText(commentProfileName);
-
         String commentPostedTime = getTimelineCommentData.getCommentedDate();
         timelineCommentHolder.tvTimelineCommentPostedTime.setText(commentPostedTime);
-
         String commentPostedMessage = getTimelineCommentData.getComments();
         timelineCommentHolder.tvTimelineCommentMessage.setText(commentPostedMessage);
-
         String profilePicture = getTimelineCommentData.getProfilePicture();
         userProfilePicture = profilePicture.replace("data:image/png;base64,", "");
         byte[] userProfilePic = Base64.decode(userProfilePicture, Base64.DEFAULT);
@@ -86,25 +86,23 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         if (getTimelineCommentData.getUserID().trim().equals(commonMethods.getUserId())) {
             timelineCommentHolder.imgTimelineCommentProfileMenu.setVisibility(View.VISIBLE);
-
         }
 
         timelineCommentHolder.imgTimelineCommentProfileMenu.setOnClickListener(View -> {
-            commonMethods.showLog("TimelineCommentProfileMenu. : " ,TAG + position);
-            commonMethods.showLog("commentPostion. : " ,TAG + timelinePostion);
-
-            timelineActivity.onItemCommentClick(View, timelinePostion,position);
+            commonMethods.showLog("TimelineCommentProfileMenu. : ", TAG + getTimelineCommentData.getPostID());
+            commonMethods.showLog("commentPostion. : ", TAG + timelinePostion);
+            timelineActivity.onItemClick(View, timelinePostion);
         });
 
         timelineCommentHolder.tvTimelineCommentReply.setOnClickListener(View -> {
             if (!isReplyShown) {
                 commonMethods.expandTheView(timelineCommentHolder.linearTimelineActionAddReply);
                 isReplyShown = true;
-                commonMethods.showLog("Position : " ,TAG+ position);
+                commonMethods.showLog("Position : ", TAG + position);
             } else {
                 commonMethods.closeTheView(timelineCommentHolder.linearTimelineActionAddReply);
                 isReplyShown = false;
-                commonMethods.showLog("Position : " ,TAG+ position);
+                commonMethods.showLog("Position : ", TAG + position);
             }
         });
     }
