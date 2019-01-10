@@ -206,25 +206,23 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             timelineViewHolder.imgTimelineProfileMenu.setOnClickListener(View -> {
-                String[] menuData=new String[]{};
-                timelineActivity.onItemClick(View, position,menuData);
+              timelineActivity.onItemClick(View, position);
             });
 
             timelineViewHolder.linearTimelineActionLike.setOnClickListener(View -> {
 
                 commentPostId = getPostedMessagesResponse.getId();
-                String islike = getPostedMessagesResponse.getIsLiked();
                 View view = timelineViewHolder.tvTimelineActionLike;
                 String[] likeDetails = new String[]{commentPostId, isliked, String.valueOf(view)};
 
                 if (isliked.equalsIgnoreCase("0")) {
-                    isliked="1";
+                    isliked = "1";
                     Drawable like = context.getResources().getDrawable(R.drawable.ic_liked);
                     timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(like, null, null, null);
                     timelineActivity.OnCommentItemClick(View, position, likeDetails);
 
                 } else {
-                    isliked="0";
+                    isliked = "0";
                     Drawable liked = context.getResources().getDrawable(R.drawable.ic_like);
                     timelineViewHolder.tvTimelineActionLike.setCompoundDrawablesWithIntrinsicBounds(liked, null, null, null);
                     timelineActivity.OnCommentItemClick(View, position, likeDetails);
@@ -235,7 +233,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             if (getPostedMessagesResponse.getTimeline_Comments() != null) {
                 getTimelineComments = getPostedMessagesResponse.getTimeline_Comments();
-                timelineCommentAdapter = new TimelineCommentAdapter(context, getTimelineComments);
+                timelineCommentAdapter = new TimelineCommentAdapter(context, getTimelineComments, position);
                 timelineViewHolder.rvTimelineActionComments.setAdapter(timelineCommentAdapter);
             }
 

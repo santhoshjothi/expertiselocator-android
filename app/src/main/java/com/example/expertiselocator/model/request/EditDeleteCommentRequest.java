@@ -1,6 +1,6 @@
 package com.example.expertiselocator.model.request;
 
-public class CommentActionRequest {
+public class EditDeleteCommentRequest {
 
     public String id;
     public String comments;

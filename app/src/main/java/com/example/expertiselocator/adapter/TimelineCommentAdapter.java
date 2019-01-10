@@ -33,12 +33,13 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private LinearLayoutManager linearLayoutManager;
     private List<GetPostedMessagesResponse.Timeline_Replies> getTimelineReplies;
     private TimelineReplyAdapter timelineReplyAdapter;
-
-    TimelineCommentAdapter(Context context, List<GetPostedMessagesResponse.Timeline_Comments> getTimelineComments) {
+    public int timelinePostion ;
+    TimelineCommentAdapter(Context context, List<GetPostedMessagesResponse.Timeline_Comments> getTimelineComments,int timelinePostion) {
         this.context = context;
         this.getTimelineComments = getTimelineComments;
         commonMethods = new CommonMethods(context);
         timelineActivity = (TimelineActivity) context;
+        this.timelinePostion=timelinePostion;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         GetPostedMessagesResponse.Timeline_Comments getTimelineCommentData = getTimelineComments.get(position);
         TimelineCommentHolder timelineCommentHolder = (TimelineCommentHolder) holder;
-
+        commonMethods.showLog("TimelineCommentProfileMenu. 123: " ,TAG + position);
         timelineCommentHolder.imgTimelineCommentProfileMenu.setVisibility(View.GONE);
         timelineCommentHolder.linearTimelineActionAddReply.setVisibility(View.GONE);
 
@@ -84,13 +85,10 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
 
         timelineCommentHolder.imgTimelineCommentProfileMenu.setOnClickListener(View -> {
-            String deleteMsg=getTimelineCommentData.getComments();
-            String commentsID=getTimelineCommentData.getCommentID();
+            commonMethods.showLog("TimelineCommentProfileMenu. : " ,TAG + position);
+            commonMethods.showLog("commentPostion. : " ,TAG + timelinePostion);
 
-            Log.v("commentsID",""+" / "+commentsID + deleteMsg);
-
-            String [] deleteComment=new String[]{deleteMsg};
-            timelineActivity.onItemClick(View, position,deleteComment);
+            timelineActivity.onItemCommentClick(View, timelinePostion,position);
         });
 
         timelineCommentHolder.tvTimelineCommentReply.setOnClickListener(View -> {
