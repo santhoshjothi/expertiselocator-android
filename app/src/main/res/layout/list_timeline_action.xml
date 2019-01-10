@@ -135,6 +135,15 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tvTimelineActionViewMoreComments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:text="@string/no_data"
+        android:textSize="@dimen/textSizeSmall"
+        android:layout_margin="@dimen/marginThree"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvTimelineActionComments"
         android:layout_width="match_parent"

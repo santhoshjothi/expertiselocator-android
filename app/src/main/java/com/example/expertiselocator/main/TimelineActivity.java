@@ -23,7 +23,7 @@ import com.example.expertiselocator.adapter.TimelineAdapter;
 import com.example.expertiselocator.apiclient.ExpertiseApiClient;
 import com.example.expertiselocator.interfaces.ExpertiseApiInterface;
 import com.example.expertiselocator.interfaces.OnItemClick;
-import com.example.expertiselocator.model.request.EditDeleteCommentRequest;
+import com.example.expertiselocator.model.request.CommentActionRequest;
 import com.example.expertiselocator.model.request.GetPostedMessageRequest;
 import com.example.expertiselocator.model.request.GetUserProfileRequest;
 import com.example.expertiselocator.model.request.PostCommentRequest;
@@ -41,7 +41,7 @@ import retrofit2.Response;
 
 public class TimelineActivity extends AppCompatActivity implements OnItemClick,
         PopupMenu.OnMenuItemClickListener,
-        OnItemClick.OnItemClickComment, OnItemClick.onItemCommentClick {
+        OnItemClick.OnItemClickComment {
 
     CommonMethods commonMethods;
     ImageView img_search_toolbar;
@@ -53,7 +53,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
     List<GetPostedMessagesResponse> getPostedMessagesResponses;
     TimelineAdapter timelineAdapter;
 
-    private int menuItemClickedPosition = 0, menuItemClickedCommentPosition = 0, menuItemClickedReplyPosition = 0,commentPostion=0;
+    private int menuItemClickedPosition = 0, menuItemClickedCommentPosition = 0, menuItemClickedReplyPosition = 0;
     LinearLayout lin_post_timeline;
     SharedPreferencesWithAES prefs;
 
@@ -111,7 +111,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
 
 
     @Override
-    public void onItemClick(View view, int position) {
+    public void onItemClick(View view, int position, String[] commentData) {
         int viewType = view.getId();
         switch (viewType) {
             case R.id.imgTimelineProfileMenu:
@@ -127,6 +127,14 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                     }
                 }
                 popupMenuTimeline.show();
+                break;
+
+            case R.id.imgTimelineCommentProfileMenu:
+                menuItemClickedCommentPosition = position;
+                PopupMenu popupCommentMenuTimeline = new PopupMenu(TimelineActivity.this, view);
+                popupCommentMenuTimeline.setOnMenuItemClickListener(this);
+                popupCommentMenuTimeline.inflate(R.menu.timeline_popup_comment_menu);
+                popupCommentMenuTimeline.show();
                 break;
 
             case R.id.imgTimelineReplyProfileMenu:
@@ -156,7 +164,6 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 break;
 
             case R.id.timelineCommentMenuEdit:
-                Log.v("Postion", "" + menuItemClickedPosition+"?"+commentPostion);
                 showEditDeleteCommentDialog("Edit", "Comment");
                 break;
 
@@ -200,8 +207,6 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 tvEditDeleteTitle.setText(getResources().getString(R.string.timeline_edit_comment_title));
                 tvEditDeleteMessage.setText(getResources().getString(R.string.timeline_edit_comment_message));
                 tvEditDeleteQuery.setVisibility(View.GONE);
-                Log.v("Postion", "5" + menuItemClickedPosition);
-                etEditDeleteMessageContent.setText(getPostedMessagesResponses.get(menuItemClickedPosition).getTimeline_Comments().get(0).getComments());
             }
 
             if (menuOption.equals("Reply")) {
@@ -219,11 +224,6 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 tvEditDeleteMessage.setText(getResources().getString(R.string.timeline_delete_comment_message));
                 tvEditDeleteQuery.setVisibility(View.VISIBLE);
                 tvEditDeleteQuery.setText(getResources().getString(R.string.timeline_delete_comment_query));
-                try {
-                    etEditDeleteMessageContent.setText(getPostedMessagesResponses.get(menuItemClickedPosition).getTimeline_Comments().get(0).getComments());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 etEditDeleteMessageContent.setEnabled(false);
 
 
@@ -245,44 +245,9 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
             if (menuType.equals("Delete")) {
                 if (menuOption.equals("Comment")) {
 
-                    try {
-                        //getPostedMessagesResponses.get(menuItemClickedPosition).getTimeline_Comments().get(0).getComments() != null)
-                        EditDeleteCommentRequest actionRequest = new EditDeleteCommentRequest();
-                        Log.v("actionRequest", " 1 " + getPostedMessagesResponses.get(menuItemClickedPosition).getTimeline_Comments().get(0).getComments());
-                        Log.v("actionRequest", " 2 " + getPostedMessagesResponses.get(menuItemClickedPosition).getId());
-                        actionRequest.setComments(getPostedMessagesResponses.get(menuItemClickedPosition).getTimeline_Comments().get(0).getComments());
-                        actionRequest.setId(getPostedMessagesResponses.get(menuItemClickedPosition).getTimeline_Comments().get(0).getId());
-                        actionRequest.setUserID(commonMethods.getUserId());
-                        dialogEditDeleteComment.dismiss();
-                        callDeleteComment(actionRequest, menuItemClickedPosition, getPostedMessagesResponses.get(menuItemClickedPosition).getPostID());
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
+                    callDeleteComment();
 
                 }
-            } else if (menuType.equals("Edit")) {
-                if (menuOption.equals("Comment")) {
-                    etEditDeleteMessageContent.getText().toString();
-                    try {
-                        //getPostedMessagesResponses.get(menuItemClickedPosition).getTimeline_Comments().get(0).getComments() != null)
-                        EditDeleteCommentRequest actionRequest = new EditDeleteCommentRequest();
-                        Log.v("actionRequest", " 1 " + getPostedMessagesResponses.get(menuItemClickedPosition).getTimeline_Comments().get(0).getComments());
-                        Log.v("actionRequest", " 2 " + getPostedMessagesResponses.get(menuItemClickedPosition).getId());
-                        actionRequest.setComments(etEditDeleteMessageContent.getText().toString());
-                        actionRequest.setId(getPostedMessagesResponses.get(menuItemClickedPosition).getTimeline_Comments().get(0).getId());
-                        actionRequest.setUserID(commonMethods.getUserId());
-                        dialogEditDeleteComment.dismiss();
-                        callEditComment(actionRequest, menuItemClickedPosition, getPostedMessagesResponses.get(menuItemClickedPosition).getPostID());
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-
             }
         });
 
@@ -298,6 +263,9 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
         int commentView = view.getId();
         switch (commentView) {
             case R.id.linearTimelineSendComment:
+                commonMethods.showLog("Comment Post Id : ", TAG + commentData[0]
+                        + " Message : " + commentData[1]
+                        + " Position : " + position);
 
                 PostCommentRequest postCommentRequest = new PostCommentRequest();
                 postCommentRequest.setUserID(commonMethods.getUserId());
@@ -306,12 +274,6 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 postCommentRequest.setCommentedBy(commonMethods.getUserId());
                 postCommentRequest.setModifiedBy(commonMethods.getUserId());
                 callPostComment(postCommentRequest, commentData[0], position);
-
-                commonMethods.showLog("Comment Post Id : ", TAG + commentData[0]
-                        + " PostID : " + commentData[0]
-                        + " Comment : " + commentData[1]
-                        + " CommentedBy : " + commonMethods.getUserId()
-                        + " Position : " + position);
                 break;
 
             case R.id.linearTimelineActionLike:
@@ -334,6 +296,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 break;
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -343,10 +306,12 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 return super.onOptionsItemSelected(item);
         }
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
+
 
     public void callUserAbt(GetUserProfileRequest userInfo) {
         ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
@@ -402,7 +367,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 try {
                     if (response.code() == 200) {
 
-                        if (!response.body().toString().equalsIgnoreCase("0")) {
+                        if (response.body().toString().equalsIgnoreCase("2")) {
 
                             callTimelineParticularPost(postId, position);
 
@@ -506,7 +471,13 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
         });
     }
 
-    public void callDeleteComment(EditDeleteCommentRequest actionRequest, int position, String postId) {
+    public void callDeleteComment() {
+
+        CommentActionRequest actionRequest = new CommentActionRequest();
+        actionRequest.setUserID(commonMethods.getUserId());
+        actionRequest.setComments("");
+        actionRequest.setId("");
+
 
         ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
         ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
@@ -518,27 +489,6 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 commonMethods.showLog("Response Code : ", TAG + response.code());
                 commonMethods.showLog("Response Body : ", TAG + response.body());
 
-                try {
-                    if (response.code() == 200) {
-
-                        if (!response.body().toString().equalsIgnoreCase("0")) {
-
-                            callTimelineParticularPost(postId, position);
-                            menuItemClickedPosition = 0;
-
-                        } else {
-                            commonMethods.showToast(getResources().getString(R.string.fail_addcomment_timeline));
-
-                        }
-
-                    } else {
-                        commonMethods.showLog("Response code : ", TAG + response.code());
-                        commonMethods.showToast(getResources().getString(R.string.fail_addcomment_timeline));
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-
             }
 
             @Override
@@ -551,64 +501,5 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
         });
     }
 
-    public void callEditComment(EditDeleteCommentRequest actionRequest, int position, String postId) {
 
-        ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
-        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
-        Call<Integer> getPostedMessage = apiInterface.editComment(actionRequest);
-        getPostedMessage.enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
-                commonMethods.showLog("URL Success : ", TAG + call.request().url());
-                commonMethods.showLog("Response Code : ", TAG + response.code());
-                commonMethods.showLog("Response Body : ", TAG + response.body());
-
-                try {
-                    if (response.code() == 200) {
-
-                        if (!response.body().toString().equalsIgnoreCase("0")) {
-
-                            menuItemClickedPosition = 0;
-                            callTimelineParticularPost(postId, position);
-
-
-                        } else {
-                            commonMethods.showToast(getResources().getString(R.string.fail_addcomment_timeline));
-
-                        }
-
-                    } else {
-                        commonMethods.showLog("Response code : ", TAG + response.code());
-                        commonMethods.showToast(getResources().getString(R.string.fail_addcomment_timeline));
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-                commonMethods.showLog("URL Failure : ", TAG + call.request().url());
-                commonMethods.showLog("Failure : ", TAG + t.getMessage());
-                shimmerViewContainerTimeline.stopShimmer();
-                shimmerViewContainerTimeline.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    @Override
-    public void onItemCommentClick(View view, int timelinePostion, int commentpotion) {
-        int viewType = view.getId();
-        switch (viewType) {
-            case R.id.imgTimelineCommentProfileMenu:
-                menuItemClickedCommentPosition = timelinePostion;
-                commentPostion=commentpotion;
-                PopupMenu popupCommentMenuTimeline = new PopupMenu(TimelineActivity.this, view);
-                popupCommentMenuTimeline.setOnMenuItemClickListener(this);
-                popupCommentMenuTimeline.inflate(R.menu.timeline_popup_comment_menu);
-                popupCommentMenuTimeline.show();
-                break;
-        }
-    }
 }
