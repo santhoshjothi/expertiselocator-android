@@ -68,9 +68,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         GetPostedMessagesResponse getPostedMessagesResponse = getPostedMessagesResponses.get(position);
         TimelineViewHolder timelineViewHolder = (TimelineViewHolder) holder;
-
         commonMethods.showLog("TimelineAdapter : ", getPostedMessagesResponse.getId() + " " + position);
-
         timelineViewHolder.includeTimelineShare.setVisibility(View.GONE);
         timelineViewHolder.includeTimelineImage.setVisibility(View.GONE);
         timelineViewHolder.includeTimelineVideo.setVisibility(View.GONE);
@@ -322,16 +320,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void refreshPostedMessage(List<GetPostedMessagesResponse> getPostedMessagesResponses) {
         this.getPostedMessagesResponses = getPostedMessagesResponses;
         notifyDataSetChanged();
-
     }
 
-    public void refreshCommentMessage(List<GetPostedMessagesResponse> getPostedMessagesResponses){
-            this.getPostedMessagesResponses = getPostedMessagesResponses;
-             notifyDataSetChanged();
-            timelineCommentAdapter.refreshPostedMessage(getPostedMessagesResponses.get(0).getTimeline_Comments());
-
-
-
+    public void refreshCommentMessage(List<GetPostedMessagesResponse> getPostedMessagesResponses,int position){
+        Log.v("TimelineApdate",""+position +" " + getPostedMessagesResponses.get(position).getTimeline_Comments().size());
+          getTimelineComments = getPostedMessagesResponses.get(position).getTimeline_Comments();
+             //getTimelineComments.remove(0);
+             getTimelineComments = getPostedMessagesResponses.get(position).getTimeline_Comments();
+//            getTimelineComments.add(0,getPostedMessagesResponses.get(position).getTimeline_Comments().get(0));
+            timelineCommentAdapter.refreshPostedMessage(getTimelineComments);
+            notifyDataSetChanged();
     }
 
     @Override
@@ -405,4 +403,5 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             rvTimelineActionComments.setLayoutManager(layoutManager);
         }
     }
+
 }

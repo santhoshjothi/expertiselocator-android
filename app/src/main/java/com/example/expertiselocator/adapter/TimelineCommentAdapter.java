@@ -50,10 +50,9 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public void refreshPostedMessage(List<GetPostedMessagesResponse.Timeline_Comments> getTimeline) {
-        commonMethods.showLog("TimeLineCommentAdapter :"," "+getTimelineComments.get(0).getComments());
         this.getTimelineComments = getTimeline;
-        notifyDataSetChanged();
 
+        notifyDataSetChanged();
     }
 
     @Override
@@ -93,7 +92,7 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         timelineCommentHolder.imgTimelineCommentProfileMenu.setOnClickListener(View -> {
             commonMethods.showLog("TimelineCommentProfileMenu. : ", TAG + getTimelineCommentData.getPostID());
             commonMethods.showLog("TimelineCommentProfileMenu. : ", TAG + getTimelineCommentData.getComments());
-            commonMethods.showLog("commentPostion. : ", TAG + timelinePostion);
+            commonMethods.showLog("commentPostion. : ", TAG + timelinePostion + "CurrentPostion" +position);
             timelineActivity.onItemClick(View, timelinePostion);
         });
 
