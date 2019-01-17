@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,6 +35,7 @@ import com.example.expertiselocator.utils.SharedPreferencesWithAES;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,6 +57,9 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
     public int menuItemClickedPosition, menuItemClickedCommentPosition, menuItemClickedReplyPosition;
     LinearLayout lin_post_timeline;
     SharedPreferencesWithAES prefs;
+
+    boolean timelinePageScrolled = false, loadTimelineOnScroll = false, hasNextPage = false;
+    int timelineLastPosition = 0, timelineTotalCount = 0, timelineContentPage = 1, timelineMaxCount = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +92,36 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
 
             Intent postActitity = new Intent(TimelineActivity.this, SearchActivty.class);
             startActivity(postActitity);
+        });
+
+        rvTimelinePost.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    timelinePageScrolled = true;
+                }
+
+                LinearLayoutManager layoutManager = ((LinearLayoutManager) rvTimelinePost.getLayoutManager());
+                timelineLastPosition = layoutManager.findLastCompletelyVisibleItemPosition();
+                timelineTotalCount = rvTimelinePost.getAdapter().getItemCount();
+
+                commonMethods.showLog(TAG, "On Scroll 00 " + timelineLastPosition + " " + (timelineTotalCount -1));
+                commonMethods.showLog(TAG, "On Scroll 00 " + timelinePageScrolled + " " + hasNextPage + " " + loadTimelineOnScroll);
+
+                if (timelineLastPosition >= timelineTotalCount - 1) {
+                    if (timelinePageScrolled) {
+                        timelinePageScrolled = false;
+                        if (hasNextPage) {
+                            hasNextPage = false;
+                            loadTimelineOnScroll = true;
+                            callTimelineOnScroll(String.valueOf(timelineContentPage), String.valueOf(timelineMaxCount));
+                        } else {
+                            commonMethods.showToast("That's All For Now.!");
+                        }
+                    }
+                }
+            }
         });
     }
 
@@ -435,8 +470,8 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
     public void callTimeline() {
         GetPostedMessageRequest getPostedMessageRequest = new GetPostedMessageRequest();
         getPostedMessageRequest.setUserID(commonMethods.getUserId());
-        getPostedMessageRequest.setStartIndex("1");
-        getPostedMessageRequest.setMaxCount("2");
+        getPostedMessageRequest.setStartIndex(String.valueOf(timelineContentPage));
+        getPostedMessageRequest.setMaxCount(String.valueOf(timelineMaxCount));
         getPostedMessageRequest.setPostID("");
 
         ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
@@ -445,18 +480,17 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
         getPostedMessage.enqueue(new Callback<List<GetPostedMessagesResponse>>() {
             @Override
             public void onResponse(@NonNull Call<List<GetPostedMessagesResponse>> call, @NonNull Response<List<GetPostedMessagesResponse>> response) {
-                commonMethods.showLog("URL Success : ", TAG + call.request().url());
-                commonMethods.showLog("Response Code : ", TAG + response.code());
-                commonMethods.showLog("Response Body : ", TAG + response.body());
+                commonMethods.showLog("On Scroll 01 URL : ", response.code() + " " + call.request().url());
+                commonMethods.showLog("On Scroll 01 Response Body : ", TAG + response.body());
 
                 List<GetPostedMessagesResponse> getPostedMessagesResponseResult = response.body();
                 assert getPostedMessagesResponseResult != null;
                 for (GetPostedMessagesResponse messages : getPostedMessagesResponseResult) {
-                    commonMethods.showLog("Message : ", TAG + messages.getMessage());
-                    commonMethods.showLog("Username : ", TAG + messages.getUserName());
-                    commonMethods.showLog("Shared Post Id : ", TAG + messages.getSharedPostId());
-                    commonMethods.showLog("Post Image : ", TAG + messages.getPostImage());
+                    commonMethods.showLog("On Scroll 01 Post Id : ", TAG + messages.getSharedPostId());
                 }
+
+                hasNextPage = true;
+                timelineContentPage = timelineContentPage + 1;
                 getPostedMessagesResponses = response.body();
                 timelineAdapter = new TimelineAdapter(TimelineActivity.this, getPostedMessagesResponses);
                 rvTimelinePost.setAdapter(timelineAdapter);
@@ -626,4 +660,53 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
 
 
 
+    /* Call Timeline On Page Scroll */
+
+    public void callTimelineOnScroll(String startIndexPosition, String maxCount) {
+        commonMethods.showHideDialog(true);
+        GetPostedMessageRequest getPostedMessageRequest = new GetPostedMessageRequest();
+        getPostedMessageRequest.setUserID(commonMethods.getUserId());
+        getPostedMessageRequest.setStartIndex(startIndexPosition);
+        getPostedMessageRequest.setMaxCount(maxCount);
+        getPostedMessageRequest.setPostID("");
+
+        commonMethods.showLog(TAG, "On Scroll "+ commonMethods.getUserId() + " " + startIndexPosition + " " + maxCount);
+
+        ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
+        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
+        Call<List<GetPostedMessagesResponse>> getPostedMessage = apiInterface.getPostedMessage(getPostedMessageRequest);
+        getPostedMessage.enqueue(new Callback<List<GetPostedMessagesResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<GetPostedMessagesResponse>> call, @NonNull Response<List<GetPostedMessagesResponse>> response) {
+                commonMethods.showLog("On Scroll URL : ", response.code() + " " + call.request().url());
+                commonMethods.showLog("On Scroll Response Body : ", TAG + response.body());
+
+                List<GetPostedMessagesResponse> getPostedMessagesResponseResult = response.body();
+                assert getPostedMessagesResponseResult != null;
+                for (GetPostedMessagesResponse messages : getPostedMessagesResponseResult) {
+                    commonMethods.showLog("On Scroll Post Id : ", TAG + messages.getId());
+                }
+                getPostedMessagesResponses.addAll(Objects.requireNonNull(response.body()));
+                timelineAdapter = new TimelineAdapter(TimelineActivity.this, getPostedMessagesResponses);
+                rvTimelinePost.setAdapter(timelineAdapter);
+                timelineAdapter.refreshPostedMessage(getPostedMessagesResponses);
+                commonMethods.showHideDialog(false);
+                if (loadTimelineOnScroll) {
+                    loadTimelineOnScroll = false;
+                    rvTimelinePost.scrollToPosition(timelineLastPosition + 1);
+                    hasNextPage = true;
+                    timelineContentPage = timelineContentPage + 1;
+                }
+                commonMethods.showLog(TAG, "On Scroll " + timelineContentPage);
+            }
+
+            @Override
+            public void onFailure(Call<List<GetPostedMessagesResponse>> call, Throwable t) {
+                commonMethods.showLog("On Scroll URL Failure : ", TAG + call.request().url());
+                commonMethods.showLog("On Scroll Failure : ", TAG + t.getMessage());
+                shimmerViewContainerTimeline.stopShimmer();
+                shimmerViewContainerTimeline.setVisibility(View.GONE);
+            }
+        });
+    }
 }

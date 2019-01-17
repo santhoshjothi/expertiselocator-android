@@ -2,13 +2,17 @@ package com.example.expertiselocator.utils;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.expertiselocator.R;
 import com.example.expertiselocator.model.UserInfoModelPref;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -18,6 +22,7 @@ public class CommonMethods {
 
     private Context context;
     private SharedPreferencesWithAES prefs;
+    ProgressDialog dialogLoad;
 
     public String expertisePreference = "expertise_Prefs";
     public String expertiseLoginToken = "loginresponse";
@@ -25,7 +30,26 @@ public class CommonMethods {
 
     public CommonMethods(Context context) {
         this.context = context;
+        dialogLoad = new ProgressDialog(context);
         prefs = SharedPreferencesWithAES.getInstance(context, expertisePreference);
+    }
+
+    public void showHideDialog(boolean isDialogShown) {
+        try {
+            if (isDialogShown) {
+                dialogLoad.setCancelable(false);
+                dialogLoad.setCanceledOnTouchOutside(false);
+                dialogLoad.show();
+                dialogLoad.setContentView(R.layout.custom_progress_dialog);
+                dialogLoad.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            } else {
+                if (dialogLoad != null) {
+                    dialogLoad.dismiss();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void expandTheView(LinearLayout $MsgHideLayout) {

@@ -161,4 +161,6 @@
     <!--API Sucess Toast Msg-->
     <string name="success_addpost_post">Successfully Posted.</string>
 
+    <string name="loading">Loading..</string>
+
 </resources>

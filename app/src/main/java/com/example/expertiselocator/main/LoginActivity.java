@@ -75,6 +75,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectivityRece
         progress_login = (ProgressView) findViewById(R.id.progress_login);
         prefs = SharedPreferencesWithAES.getInstance(LoginActivity.this, commonMethods.expertisePreference);
 
+        edt_username.setText("tuser6");
+        edt_passd.setText("abcd#1234");
+
         btn_submit.setOnClickListener(view -> {
             boolean isConnected = ConnectivityReceiver.isConnected();
             if (isConnected) {

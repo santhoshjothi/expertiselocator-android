@@ -237,7 +237,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 getTimelineComments = getPostedMessagesResponse.getTimeline_Comments();
                 commonMethods.showLog("TimelineAdapter For Comment : ", String.valueOf(getTimelineComments.size()));
                 timelineCommentAdapter = new TimelineCommentAdapter(context, getTimelineComments, position);
-                commonMethods.showLog("TimelineAdapter : ", getTimelineComments.get(0).getId() + " " + position);
                 timelineViewHolder.rvTimelineActionComments.setAdapter(timelineCommentAdapter);
             }
 
