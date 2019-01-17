@@ -49,9 +49,11 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return new TimelineCommentHolder(viewTimelineComments);
     }
 
-    public void loadMoreComment(List<GetPostedMessagesResponse.Timeline_Comments> getTimelineComments) {
-        this.getTimelineComments = getTimelineComments;
+    public void refreshPostedMessage(List<GetPostedMessagesResponse.Timeline_Comments> getTimeline) {
+        commonMethods.showLog("TimeLineCommentAdapter :"," "+getTimelineComments.get(0).getComments());
+        this.getTimelineComments = getTimeline;
         notifyDataSetChanged();
+
     }
 
     @Override
@@ -59,7 +61,7 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         GetPostedMessagesResponse.Timeline_Comments getTimelineCommentData = getTimelineComments.get(position);
         TimelineCommentHolder timelineCommentHolder = (TimelineCommentHolder) holder;
 
-        commonMethods.showLog("TimelineCommentProfileMenu. 123: ", TAG + position + " " + timelinePostion);
+        commonMethods.showLog("TimelineCommentProfileMenu. : ", TAG + position + " " + timelinePostion);
 
         timelineCommentHolder.imgTimelineCommentProfileMenu.setVisibility(View.GONE);
         timelineCommentHolder.linearTimelineActionAddReply.setVisibility(View.GONE);
@@ -90,6 +92,7 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         timelineCommentHolder.imgTimelineCommentProfileMenu.setOnClickListener(View -> {
             commonMethods.showLog("TimelineCommentProfileMenu. : ", TAG + getTimelineCommentData.getPostID());
+            commonMethods.showLog("TimelineCommentProfileMenu. : ", TAG + getTimelineCommentData.getComments());
             commonMethods.showLog("commentPostion. : ", TAG + timelinePostion);
             timelineActivity.onItemClick(View, timelinePostion);
         });

@@ -229,7 +229,8 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 tvEditDeleteQuery.setVisibility(View.VISIBLE);
                 tvEditDeleteQuery.setText(getResources().getString(R.string.timeline_delete_comment_query));
                 try {
-                    etEditDeleteMessageContent.setText(getPostedMessagesResponses.get(menuItemClickedPosition).getTimeline_Comments().get(0).getComments());
+                    etEditDeleteMessageContent.setText(getPostedMessagesResponses.get(menuItemClickedCommentPosition)
+                            .getTimeline_Comments().get(0).getComments());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -253,8 +254,9 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 if (menuOption.equals("Comment")) {
                     try {
                         EditDeleteCommentRequest actionRequest = new EditDeleteCommentRequest();
-                        Log.v("actionRequest", " 1 " + getPostedMessagesResponses.get(menuItemClickedCommentPosition).getTimeline_Comments().get(0).getComments());
-                        Log.v("actionRequest", " 2 " + getPostedMessagesResponses.get(menuItemClickedCommentPosition).getId());
+                        Log.v("Edit_Submit_Comment", " Comment :" + getPostedMessagesResponses.get(menuItemClickedCommentPosition).getTimeline_Comments().get(0).getComments());
+                        Log.v("Edit_Submit_Comment", " ID  : " + getPostedMessagesResponses.get(menuItemClickedCommentPosition).getId());
+                        Log.v("Edit_Submit_Comment", " TimelineAdapter_postion  : " + menuItemClickedCommentPosition);
                         actionRequest.setComments(etEditDeleteMessageContent.getText().toString());
                         actionRequest.setId(getPostedMessagesResponses.get(menuItemClickedCommentPosition).getTimeline_Comments().get(0).getId());
                         actionRequest.setUserID(commonMethods.getUserId());
@@ -271,12 +273,12 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                     try {
                         //getPostedMessagesResponses.get(menuItemClickedPosition).getTimeline_Comments().get(0).getComments() != null)
                         EditDeleteCommentRequest actionRequest = new EditDeleteCommentRequest();
-                        Log.v("actionRequest", " 1 " + getPostedMessagesResponses.get(menuItemClickedPosition).getTimeline_Comments().get(0).getComments());
-                        Log.v("actionRequest", " 2 " + getPostedMessagesResponses.get(menuItemClickedPosition).getId());
-                        actionRequest.setComments(getPostedMessagesResponses.get(menuItemClickedPosition).getTimeline_Comments().get(0).getComments());
-                        actionRequest.setId(getPostedMessagesResponses.get(menuItemClickedPosition).getId());
+                        Log.v("Delete_Submit_Comment", " Comment :" + getPostedMessagesResponses.get(menuItemClickedCommentPosition).getTimeline_Comments().get(0).getComments());
+                        Log.v("Delete_Submit_Comment", " ID  : " + getPostedMessagesResponses.get(menuItemClickedCommentPosition).getId());
+                        Log.v("Delete_Submit_Comment", " TimelineAdapter_postion  : " + menuItemClickedCommentPosition);
+                        actionRequest.setComments(getPostedMessagesResponses.get(menuItemClickedCommentPosition).getTimeline_Comments().get(0).getComments());
+                        actionRequest.setId(getPostedMessagesResponses.get(menuItemClickedCommentPosition).getTimeline_Comments().get(0).getId());
                         actionRequest.setUserID(commonMethods.getUserId());
-
                         dialogEditDeleteComment.dismiss();
                         callDeleteComment(actionRequest, menuItemClickedCommentPosition, getPostedMessagesResponses.get(menuItemClickedPosition).getId());
 
@@ -337,7 +339,6 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 break;
         }
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -347,12 +348,10 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 return super.onOptionsItemSelected(item);
         }
     }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
-
     public void callUserAbt(GetUserProfileRequest userInfo) {
         ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
         ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
@@ -392,7 +391,6 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
             }
         });
     }
-
     public void callPostComment(PostCommentRequest commentRequest, String postId, final int position) {
         ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
         ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
@@ -434,7 +432,6 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
             }
         });
     }
-
     public void callTimeline() {
         GetPostedMessageRequest getPostedMessageRequest = new GetPostedMessageRequest();
         getPostedMessageRequest.setUserID(commonMethods.getUserId());
@@ -476,15 +473,13 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
             }
         });
     }
-
     public void callTimelineParticularPost(String postId, int position) {
-
         GetPostedMessageRequest getPostedMessageRequest = new GetPostedMessageRequest();
         getPostedMessageRequest.setUserID(commonMethods.getUserId());
         getPostedMessageRequest.setStartIndex("1");
         getPostedMessageRequest.setMaxCount("1");
         getPostedMessageRequest.setPostID(postId);
-        commonMethods.showLog("Timeline Activity Particular : ", TAG + postId);
+        commonMethods.showLog("Timeline Activity ParticularPost : ", TAG + " postId "+ postId + "position " +position );
         ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
         ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
         Call<List<GetPostedMessagesResponse>> getPostedMessage = apiInterface.getPostedMessage(getPostedMessageRequest);
@@ -510,7 +505,6 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
             }
         });
     }
-
     public void callDeleteComment(EditDeleteCommentRequest actionRequest, int position, String postId) {
 
         ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
@@ -522,13 +516,13 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 commonMethods.showLog("URL Success : ", TAG + call.request().url());
                 commonMethods.showLog("Response Code : ", TAG + response.code());
                 commonMethods.showLog("Response Body : ", TAG + response.body());
-
+                commonMethods.showLog("TimelineActivity callDelete: ", "postId" + postId + "position" + position);
                 try {
                     if (response.code() == 200) {
 
                         if (!response.body().toString().equalsIgnoreCase("0")) {
-                            commonMethods.showLog("Timeline Activity callDeleteComment : ", " " + postId + " " + position);
-                            callTimelineParticularPost(postId, position);
+
+                            callTimelineEditDeleteComment(postId, position);
 
 
                         } else {
@@ -555,7 +549,6 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
             }
         });
     }
-
     public void callEditComment(EditDeleteCommentRequest actionRequest, int position, String postId) {
 
         ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
@@ -567,13 +560,13 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 commonMethods.showLog("URL Success : ", TAG + call.request().url());
                 commonMethods.showLog("Response Code : ", TAG + response.code());
                 commonMethods.showLog("Response Body : ", TAG + response.body());
-
+                commonMethods.showLog("Timeline Activity CallEdit : ", "postId" + postId + "position" + position);
                 try {
                     if (response.code() == 200) {
                         assert response.body() != null;
                         if (!response.body().toString().equalsIgnoreCase("0")) {
-                            commonMethods.showLog("Timeline Activity Particular : ", " " + postId + " " + position);
-                            callTimelineParticularPost(postId, position);
+
+                            callTimelineEditDeleteComment(postId, position);
                         } else {
                             commonMethods.showToast(getResources().getString(R.string.fail_addcomment_timeline));
                         }
@@ -596,5 +589,41 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
             }
         });
     }
+    public void callTimelineEditDeleteComment(String postId, int position) {
+        GetPostedMessageRequest getPostedMessageRequest = new GetPostedMessageRequest();
+        getPostedMessageRequest.setUserID(commonMethods.getUserId());
+        getPostedMessageRequest.setStartIndex("1");
+        getPostedMessageRequest.setMaxCount("1");
+        getPostedMessageRequest.setPostID(postId);
+        commonMethods.showLog("TimelineActivity EditDeleteCommentParticularPostID: ", TAG + "PostId"+postId + "Postion"+position);
+        ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
+        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
+        Call<List<GetPostedMessagesResponse>> getPostedMessage = apiInterface.getPostedMessage(getPostedMessageRequest);
+        getPostedMessage.enqueue(new Callback<List<GetPostedMessagesResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<GetPostedMessagesResponse>> call, @NonNull Response<List<GetPostedMessagesResponse>> response) {
+                commonMethods.showLog("URL Success : ", TAG + call.request().url());
+                commonMethods.showLog("Response Code : ", TAG + response.code());
+                commonMethods.showLog("Response Body : ", TAG + response.body());
+                List<GetPostedMessagesResponse> getPostedMessagesResponseResult = response.body();
+                assert getPostedMessagesResponseResult != null;
+                getPostedMessagesResponses.remove(position);
+                getPostedMessagesResponses.add(position, getPostedMessagesResponseResult.get(0));
+                timelineAdapter.notifyDataSetChanged();
+                timelineAdapter.refreshCommentMessage(getPostedMessagesResponses);
+            }
+
+            @Override
+            public void onFailure(Call<List<GetPostedMessagesResponse>> call, Throwable t) {
+                commonMethods.showLog("URL Failure : ", TAG + call.request().url());
+                commonMethods.showLog("Failure : ", TAG + t.getMessage());
+                shimmerViewContainerTimeline.stopShimmer();
+                shimmerViewContainerTimeline.setVisibility(View.GONE);
+            }
+        });
+    }
+
+
+
 
 }

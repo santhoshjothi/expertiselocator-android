@@ -233,8 +233,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             /* For Edit and Post Comment */
 
-            if (getPostedMessagesResponse.getTimeline_Comments() != null) {
+            if (getPostedMessagesResponse.getTimeline_Comments() != null && !getPostedMessagesResponse.getTimeline_Comments().isEmpty()) {
                 getTimelineComments = getPostedMessagesResponse.getTimeline_Comments();
+                commonMethods.showLog("TimelineAdapter For Comment : ", String.valueOf(getTimelineComments.size()));
                 timelineCommentAdapter = new TimelineCommentAdapter(context, getTimelineComments, position);
                 commonMethods.showLog("TimelineAdapter : ", getTimelineComments.get(0).getId() + " " + position);
                 timelineViewHolder.rvTimelineActionComments.setAdapter(timelineCommentAdapter);
@@ -268,8 +269,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
 
+
             /* Timeline Post Background */
             String timelineAssetType = getPostedMessagesResponse.getAssestType().trim();
+            commonMethods.showLog("TimelineAdapter : ", timelineAssetType + " " + position);
             if (!timelineAssetType.trim().equals("Post")) {
                 timelineViewHolder.imgTimelineProfileMenu.setVisibility(View.VISIBLE);
                 timelineViewHolder.linearTimelineHeader.setBackgroundColor(context
@@ -320,6 +323,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void refreshPostedMessage(List<GetPostedMessagesResponse> getPostedMessagesResponses) {
         this.getPostedMessagesResponses = getPostedMessagesResponses;
         notifyDataSetChanged();
+
+    }
+
+    public void refreshCommentMessage(List<GetPostedMessagesResponse> getPostedMessagesResponses){
+            this.getPostedMessagesResponses = getPostedMessagesResponses;
+             notifyDataSetChanged();
+            timelineCommentAdapter.refreshPostedMessage(getPostedMessagesResponses.get(0).getTimeline_Comments());
+
+
+
     }
 
     @Override
