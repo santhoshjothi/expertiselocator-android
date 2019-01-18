@@ -1,6 +1,7 @@
 package com.example.expertiselocator.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import com.example.expertiselocator.main.LoginActivity;
 import com.example.expertiselocator.main.TimelineActivity;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
 import com.example.expertiselocator.utils.CommonMethods;
+import com.github.abdularis.civ.CircleImageView;
 
 import java.util.List;
 
@@ -51,7 +54,6 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public void refreshPostedMessage(List<GetPostedMessagesResponse.Timeline_Comments> getTimeline) {
         this.getTimelineComments = getTimeline;
-
         notifyDataSetChanged();
     }
 
@@ -95,17 +97,33 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             commonMethods.showLog("commentPostion. : ", TAG + timelinePostion + "CurrentPostion" +position);
             timelineActivity.onItemClick(View, timelinePostion);
         });
-
         timelineCommentHolder.tvTimelineCommentReply.setOnClickListener(View -> {
             if (!isReplyShown) {
                 commonMethods.expandTheView(timelineCommentHolder.linearTimelineActionAddReply);
                 isReplyShown = true;
                 commonMethods.showLog("Position : ", TAG + position);
+
             } else {
                 commonMethods.closeTheView(timelineCommentHolder.linearTimelineActionAddReply);
                 isReplyShown = false;
                 commonMethods.showLog("Position : ", TAG + position);
             }
+        });
+
+        timelineCommentHolder.imgTimelineReplyComment.setOnClickListener(View -> {
+
+            if(timelineCommentHolder.edtTimelineReplyComment.getText().toString()== null || timelineCommentHolder.edtTimelineReplyComment.getText().toString().equalsIgnoreCase("")) {
+                commonMethods.showLog("plycommentMessage : ", TAG + null);
+                commonMethods.showToast(context.getResources().getString(R.string.enter_rply));
+            }else{
+                commonMethods.showLog("plycommentMessage : ", TAG + timelineCommentHolder.edtTimelineReplyComment.getText().toString());
+                commonMethods.showLog("Position : ", TAG + position + "Timeline Postion" +timelinePostion);
+                commonMethods.showLog("TimelineCommentRepy", TAG + getTimelineCommentData.getPostID());
+                commonMethods.showLog("TimelineCommentRepy", "getCommentID :" + getTimelineCommentData.getId() + getTimelineCommentData.getComments());
+                String[] finalCommentPostData = new String[]{getTimelineCommentData.getPostID(), getTimelineCommentData.getId(),timelineCommentHolder.edtTimelineReplyComment.getText().toString(),String.valueOf(timelinePostion)};
+                timelineActivity.OnCommentItemClick(View, position, finalCommentPostData);
+            }
+
         });
     }
 
@@ -115,25 +133,25 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     class TimelineCommentHolder extends RecyclerView.ViewHolder {
+        ImageView  imgTimelineCommentProfileMenu;
+        CircleImageView imgTimelineCommentProfilePicture;
 
-        ImageView imgTimelineCommentProfilePicture, imgTimelineCommentProfileMenu;
         TextView tvTimelineCommentProfileName, tvTimelineCommentPostedTime, tvTimelineCommentMessage, tvTimelineCommentReply;
         RecyclerView rvTimelineReplyMessages;
         LinearLayout linearTimelineActionAddReply;
-
+        EditText edtTimelineReplyComment;
+        ImageView imgTimelineReplyComment;
         TimelineCommentHolder(View itemView) {
             super(itemView);
-
             linearTimelineActionAddReply = (LinearLayout) itemView.findViewById(R.id.linearTimelineActionAddReply);
-
-            imgTimelineCommentProfilePicture = (ImageView) itemView.findViewById(R.id.imgTimelineCommentProfilePicture);
+            imgTimelineCommentProfilePicture = (CircleImageView) itemView.findViewById(R.id.imgTimelineCommentProfilePicture);
             imgTimelineCommentProfileMenu = (ImageView) itemView.findViewById(R.id.imgTimelineCommentProfileMenu);
-
             tvTimelineCommentProfileName = (TextView) itemView.findViewById(R.id.tvTimelineCommentProfileName);
             tvTimelineCommentPostedTime = (TextView) itemView.findViewById(R.id.tvTimelineCommentPostedTime);
             tvTimelineCommentMessage = (TextView) itemView.findViewById(R.id.tvTimelineCommentMessage);
             tvTimelineCommentReply = (TextView) itemView.findViewById(R.id.tvTimelineCommentReply);
-
+            edtTimelineReplyComment = (EditText) itemView.findViewById(R.id.edtTimelineReplyComment);
+            imgTimelineReplyComment = (ImageView) itemView.findViewById(R.id.imgTimelineReplyComment);
             rvTimelineReplyMessages = (RecyclerView) itemView.findViewById(R.id.rvTimelineReplyMessages);
             linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             rvTimelineReplyMessages.setLayoutManager(linearLayoutManager);

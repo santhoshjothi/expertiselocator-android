@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide;
 import com.example.expertiselocator.R;
 import com.example.expertiselocator.main.TimelineActivity;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
+import com.example.expertiselocator.utils.CommonMethods;
+import com.github.abdularis.civ.CircleImageView;
 
 import java.util.List;
 
@@ -22,11 +24,12 @@ public class TimelineReplyAdapter extends RecyclerView.Adapter<RecyclerView.View
     private List<GetPostedMessagesResponse.Timeline_Replies> getTimelineReplies;
     private TimelineActivity timelineActivity;
     private String userProfilePicture;
-
+    private CommonMethods commonMethods;
     TimelineReplyAdapter(Context context, List<GetPostedMessagesResponse.Timeline_Replies> getTimelineReplies) {
         this.context = context;
         this.getTimelineReplies = getTimelineReplies;
         timelineActivity = (TimelineActivity) context;
+        commonMethods = new CommonMethods(context);
     }
 
     @Override
@@ -39,25 +42,21 @@ public class TimelineReplyAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         GetPostedMessagesResponse.Timeline_Replies getTimelineReplyData = getTimelineReplies.get(position);
         TimelineReplyHolder timelineReplyHolder = (TimelineReplyHolder) holder;
-
+        commonMethods.showLog("TimelineCommentRplyAdater. : ",  + position + " " + getTimelineReplies.size());
         timelineReplyHolder.imgTimelineReplyProfileMenu.setVisibility(View.GONE);
-
         String timelineReplyName = getTimelineReplyData.getUserName();
         timelineReplyHolder.tvTimelineReplyProfileName.setText(timelineReplyName);
-
         String timelineReplyTime = getTimelineReplyData.getModifiedDate();
         timelineReplyHolder.tvTimelineReplyPostedTime.setText(timelineReplyTime);
-
         String timelineReplyMessage = getTimelineReplyData.getReplyMessage();
         timelineReplyHolder.tvTimelineReplyMessage.setText(timelineReplyMessage);
-
         String profilePicture = getTimelineReplyData.getProfilePicture();
         userProfilePicture = profilePicture.replace("data:image/png;base64,", "");
         byte[] userProfilePic = Base64.decode(userProfilePicture, Base64.DEFAULT);
         Glide.with(context).asBitmap().load(userProfilePic)
                 .into(timelineReplyHolder.imgTimelineReplyProfilePicture);
 
-        if (getTimelineReplyData.getUserID().trim().equals("15")) {
+        if (getTimelineReplyData.getUserID().trim().equals(commonMethods.getUserId())) {
             timelineReplyHolder.imgTimelineReplyProfileMenu.setVisibility(View.VISIBLE);
         }
 
@@ -73,13 +72,14 @@ public class TimelineReplyAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     class TimelineReplyHolder extends RecyclerView.ViewHolder {
 
-        ImageView imgTimelineReplyProfilePicture, imgTimelineReplyProfileMenu;
+        ImageView  imgTimelineReplyProfileMenu;
+        CircleImageView imgTimelineReplyProfilePicture;
         TextView tvTimelineReplyProfileName, tvTimelineReplyPostedTime, tvTimelineReplyMessage;
 
         TimelineReplyHolder(View itemView) {
             super(itemView);
 
-            imgTimelineReplyProfilePicture = (ImageView) itemView.findViewById(R.id.imgTimelineReplyProfilePicture);
+            imgTimelineReplyProfilePicture = (CircleImageView) itemView.findViewById(R.id.imgTimelineReplyProfilePicture);
             imgTimelineReplyProfileMenu = (ImageView) itemView.findViewById(R.id.imgTimelineReplyProfileMenu);
 
             tvTimelineReplyProfileName = (TextView) itemView.findViewById(R.id.tvTimelineReplyProfileName);

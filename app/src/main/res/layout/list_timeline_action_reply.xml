@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
@@ -10,7 +10,7 @@
         android:orientation="horizontal"
         android:layout_margin="@dimen/marginThree">
 
-        <ImageView
+        <com.github.abdularis.civ.CircleImageView
             android:id="@+id/imgTimelineReplyProfilePicture"
             android:layout_width="@dimen/widthHeightThirty"
             android:layout_height="@dimen/widthHeightThirty"

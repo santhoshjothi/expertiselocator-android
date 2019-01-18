@@ -26,6 +26,7 @@ import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
 import com.example.expertiselocator.utils.CommonMethods;
 import com.example.expertiselocator.utils.SharedPreferencesWithAES;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.abdularis.civ.CircleImageView;
 
 import java.io.IOException;
 import java.util.List;
@@ -322,14 +323,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
-    public void refreshCommentMessage(List<GetPostedMessagesResponse> getPostedMessagesResponses,int position){
-        Log.v("TimelineApdate",""+position +" " + getPostedMessagesResponses.get(position).getTimeline_Comments().size());
-          getTimelineComments = getPostedMessagesResponses.get(position).getTimeline_Comments();
-             //getTimelineComments.remove(0);
-             getTimelineComments = getPostedMessagesResponses.get(position).getTimeline_Comments();
-//            getTimelineComments.add(0,getPostedMessagesResponses.get(position).getTimeline_Comments().get(0));
-            timelineCommentAdapter.refreshPostedMessage(getTimelineComments);
-            notifyDataSetChanged();
+    public void refreshCommentMessage(List<GetPostedMessagesResponse> getPostedMessagesResponses, int position) {
+        Log.v("TimelineApdate", "" + position + " " + getPostedMessagesResponses.get(0).getTimeline_Comments().size());
+        Log.v("TimelineApdate", "" + position + " " + getTimelineComments.size());
+        try {
+            getTimelineComments.remove(0);
+            timelineCommentAdapter.notifyDataSetChanged();
+            timelineCommentAdapter.refreshPostedMessage(getPostedMessagesResponses.get(0).getTimeline_Comments());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -338,8 +341,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     class TimelineViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView imgTimelineProfilePicture, imgTimelineProfileMenu;
+        CircleImageView imgTimelineProfilePicture;
+        ImageView imgTimelineProfileMenu;
         TextView tvTimelineProfileName, tvTimelineMessage, tvTimelinePostedTime;
         View includeTimelineShare, includeTimelineImage, includeTimelineVideo, includeTimelineAction;
 
@@ -364,7 +367,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
 
             linearTimelineHeader = (LinearLayout) itemView.findViewById(R.id.linearTimelineHeader);
-            imgTimelineProfilePicture = (ImageView) itemView.findViewById(R.id.imgTimelineProfilePicture);
+            imgTimelineProfilePicture = (CircleImageView) itemView.findViewById(R.id.imgTimelineProfilePicture);
             imgTimelineProfileMenu = (ImageView) itemView.findViewById(R.id.imgTimelineProfileMenu);
             tvTimelineProfileName = (TextView) itemView.findViewById(R.id.tvTimelineProfileName);
             tvTimelinePostedTime = (TextView) itemView.findViewById(R.id.tvTimelinePostedTime);

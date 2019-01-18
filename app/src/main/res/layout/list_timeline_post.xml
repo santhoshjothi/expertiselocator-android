@@ -15,7 +15,7 @@
         android:padding="3dp"
         android:layout_marginTop="2dp">
 
-        <ImageView
+        <com.github.abdularis.civ.CircleImageView
             android:id="@+id/imgTimelineProfilePicture"
             android:layout_width="@dimen/widthHeightSixty"
             android:layout_height="@dimen/widthHeightSixty"

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import com.example.expertiselocator.R;
 import com.example.expertiselocator.model.UserInfoModelPref;
 import com.example.expertiselocator.utils.SharedPreferencesWithAES;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.abdularis.civ.CircleImageView;
 
 import java.io.IOException;
 
@@ -20,7 +22,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     TextView txt_displayname_profile,tx_designation_user,tx_location_user,tx_email_user,tx_landline_user,tx_mobile_user,
             txt_abt_user;
-    ImageView img_profile_user;
+    CircleImageView img_profile_user;
     SharedPreferencesWithAES prefs;
     UserInfoModelPref userResponse;
     @Override
@@ -40,7 +42,7 @@ public class UserProfileActivity extends AppCompatActivity {
         tx_email_user=(TextView)findViewById(R.id.tx_email_user);
         tx_landline_user=(TextView)findViewById(R.id.tx_landline_user);
         tx_mobile_user=(TextView)findViewById(R.id.tx_mobile_user);
-        img_profile_user=(ImageView) findViewById(R.id.img_profile_user);
+        img_profile_user=(CircleImageView) findViewById(R.id.img_profile_user);
         txt_abt_user=(TextView) findViewById(R.id.txt_abt_user);
 
 
@@ -68,4 +70,17 @@ public class UserProfileActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
 }

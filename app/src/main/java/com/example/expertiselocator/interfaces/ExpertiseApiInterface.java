@@ -1,5 +1,6 @@
 package com.example.expertiselocator.interfaces;
 
+import com.example.expertiselocator.model.request.AddReplyCommentRequest;
 import com.example.expertiselocator.model.request.AddPostRequest;
 import com.example.expertiselocator.model.request.DeletePostRequest;
 import com.example.expertiselocator.model.request.EditDeleteCommentRequest;
@@ -62,6 +63,11 @@ public interface ExpertiseApiInterface {
     @Headers({"Content-Type: application/json"})
     @POST("PostComment/DeletePosts")
     Call<Integer> DeletePost(@Body DeletePostRequest request);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("PostComment/AddCommentReply")
+    Call<Integer> replyComment(@Body AddReplyCommentRequest request);
+
 
 
 

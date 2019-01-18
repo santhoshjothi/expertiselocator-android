@@ -82,8 +82,17 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         >
-                        <ImageView
-                            android:id="@+id/img_profile_user"
+                        <!--<ImageView-->
+                            <!--android:id="@+id/img_profile_user"-->
+                            <!--android:layout_width="@dimen/abt_img_width"-->
+                            <!--android:layout_height="@dimen/abt_img_height"-->
+                            <!--android:paddingBottom="10dp"-->
+                            <!--android:scaleType="fitXY"-->
+                            <!--android:src="@drawable/solutions"-->
+                            <!--android:layout_gravity="bottom|center"-->
+                            <!--android:background="@drawable/circle_img"-->
+                            <!--/>-->
+                        <com.github.abdularis.civ.CircleImageView
                             android:layout_width="@dimen/abt_img_width"
                             android:layout_height="@dimen/abt_img_height"
                             android:paddingBottom="10dp"
@@ -91,7 +100,9 @@
                             android:src="@drawable/solutions"
                             android:layout_gravity="bottom|center"
                             android:background="@drawable/circle_img"
+                            android:id="@+id/img_profile_user"
                             />
+
                         <ImageView
                             android:layout_width="@dimen/edit_img_width"
                             android:layout_height="@dimen/edit_img_height"

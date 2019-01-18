@@ -24,6 +24,7 @@ import com.example.expertiselocator.adapter.TimelineAdapter;
 import com.example.expertiselocator.apiclient.ExpertiseApiClient;
 import com.example.expertiselocator.interfaces.ExpertiseApiInterface;
 import com.example.expertiselocator.interfaces.OnItemClick;
+import com.example.expertiselocator.model.request.AddReplyCommentRequest;
 import com.example.expertiselocator.model.request.DeletePostRequest;
 import com.example.expertiselocator.model.request.EditDeleteCommentRequest;
 import com.example.expertiselocator.model.request.EditPostRequest;
@@ -86,8 +87,9 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
         lin_post_timeline.setOnClickListener(view -> {
 
             Intent postActitity = new Intent(TimelineActivity.this, PostActivity.class);
+            postActitity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(postActitity);
-            finish();
+
         });
         img_search_toolbar.setOnClickListener(view -> {
 
@@ -388,7 +390,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 postCommentRequest.setComments(commentData[1]);
                 postCommentRequest.setCommentedBy(commonMethods.getUserId());
                 postCommentRequest.setModifiedBy(commonMethods.getUserId());
-                callPostComment(postCommentRequest, commentData[0], position);
+                callAddComment(postCommentRequest, commentData[0], position);
 
                 commonMethods.showLog("Comment Post Id : ", TAG + commentData[0]
                         + " PostID : " + commentData[0]
@@ -407,11 +409,29 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
             case R.id.imgTimelineProfilePicture:
                 commonMethods.showLog("Like Action : ", TAG + commentData[0]
                         + " Position : " + position);
-                GetUserProfileRequest profileRequest = new GetUserProfileRequest();
-                profileRequest.setUserID(commonMethods.getUserId());
-                profileRequest.setLanguage(getResources().getString(R.string.language));
-                callUserAbt(profileRequest);
+//                GetUserProfileRequest profileRequest = new GetUserProfileRequest();
+//                profileRequest.setUserID(commonMethods.getUserId());
+//                profileRequest.setLanguage(getResources().getString(R.string.language));
+//                callUserAbt(profileRequest);
+
+                Intent expert = new Intent(TimelineActivity.this, ExpertProfileActivity.class);
+                expert.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(expert);
                 break;
+
+            case R.id.imgTimelineReplyComment:
+                commonMethods.showLog("Reply Action : ", TAG + commentData[0] + " Comment : " + commentData[1]);
+                AddReplyCommentRequest replyRequest = new AddReplyCommentRequest();
+                replyRequest.setPostID(commentData[0]);
+                replyRequest.setUserID(commonMethods.getUserId());
+                replyRequest.setCommentID(commentData[1]);
+                replyRequest.setReplyMessage(commentData[2]);
+                replyRequest.setAssestType("");
+                replyRequest.setIsActive("0");
+                replyRequest.setCreatedBy(commonMethods.getUserId());
+                replyRequest.setModifiedBy(commonMethods.getUserId());
+
+                callCommentReply(replyRequest, commentData[0], commentData[3]);
 
             default:
                 break;
@@ -422,6 +442,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -473,7 +494,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
         });
     }
 
-    public void callPostComment(PostCommentRequest commentRequest, String postId, final int position) {
+    public void callAddComment(PostCommentRequest commentRequest, String postId, final int position) {
         ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
         ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
         Call<Integer> getUserProfileAbout = apiInterface.postComment(commentRequest);
@@ -888,6 +909,52 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                         if (!response.body().toString().equalsIgnoreCase("0")) {
 
                             callTimelineParticularDeletePost(postID, position);
+
+
+                        } else {
+                            commonMethods.showToast(getResources().getString(R.string.fail_delete_post_timeline));
+
+                        }
+
+                    } else {
+                        commonMethods.showLog("Response code : ", TAG + response.code());
+                        commonMethods.showToast(getResources().getString(R.string.fail_delete_post_timeline));
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                commonMethods.showLog("URL Failure : ", TAG + call.request().url());
+                commonMethods.showLog("Failure : ", TAG + t.getMessage());
+                shimmerViewContainerTimeline.stopShimmer();
+                shimmerViewContainerTimeline.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void callCommentReply(AddReplyCommentRequest postRequest, String postID, String position) {
+
+        ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(TimelineActivity.this);
+        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
+        Call<Integer> getPostedMessage = apiInterface.replyComment(postRequest);
+        getPostedMessage.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
+                commonMethods.showLog("URL Success : ", TAG + call.request().url());
+                commonMethods.showLog("Response Code : ", TAG + response.code());
+                commonMethods.showLog("Response Body : ", TAG + response.body());
+                commonMethods.showLog("TimelineActivity_callEidt: ", "postID" + postID + "position" + position);
+                try {
+                    if (response.code() == 200) {
+
+                        if (!response.body().toString().equalsIgnoreCase("0")) {
+
+
+                            callTimelineParticularPost(postID, Integer.valueOf(position));
 
 
                         } else {

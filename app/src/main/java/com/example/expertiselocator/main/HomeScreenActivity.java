@@ -2,19 +2,40 @@ package com.example.expertiselocator.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.expertiselocator.R;
 import com.example.expertiselocator.adapter.MenuAdapter;
+import com.example.expertiselocator.adapter.TimelineAdapter;
+import com.example.expertiselocator.apiclient.ExpertiseApiClient;
+import com.example.expertiselocator.interfaces.ExpertiseApiInterface;
 import com.example.expertiselocator.interfaces.MenuItemClick;
 import com.example.expertiselocator.model.MenuModel;
+import com.example.expertiselocator.model.UserInfoModelPref;
+import com.example.expertiselocator.model.request.GetUserProfileRequest;
+import com.example.expertiselocator.model.response.GetProfileInfoAboutResponse;
 import com.example.expertiselocator.utils.CommonMethods;
 import com.example.expertiselocator.utils.SharedPreferencesWithAES;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.abdularis.civ.CircleImageView;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeScreenActivity extends AppCompatActivity implements View.OnClickListener, MenuItemClick {
 
@@ -31,7 +52,11 @@ public class HomeScreenActivity extends AppCompatActivity implements View.OnClic
     RecyclerView rvMenu;
     GridLayoutManager gridLayoutManager;
     SharedPreferencesWithAES prefs;
+    UserInfoModelPref userResponse;
+    TextView txtDesignation,txtDisplayName;
+    CircleImageView imgProfilePicture;
 
+    public static final String TAG = HomeScreenActivity.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +64,33 @@ public class HomeScreenActivity extends AppCompatActivity implements View.OnClic
 
         commonMethods = new CommonMethods(this);
         prefs = SharedPreferencesWithAES.getInstance(HomeScreenActivity.this, commonMethods.expertisePreference);
+
+
+        txtDisplayName=(TextView)findViewById(R.id.txt_displayname_home);
+        txtDesignation=(TextView)findViewById(R.id.tx_designation_home);
+        imgProfilePicture=(CircleImageView) findViewById(R.id.img_profile_home);
+
+
+
+        try {
+            String getUserInfo = prefs.getString("user_info", "");
+            ObjectMapper mapper = new ObjectMapper();
+            userResponse = mapper.readValue(getUserInfo, UserInfoModelPref.class);
+            // Log.v("Timeline_Fragment",""+loginResponse.getToken());
+            Log.v("UserProfileActivity", "" + userResponse.getUserID());
+            byte[] imageByte = Base64.decode(userResponse.getProfilePicture(), Base64.DEFAULT);
+            Glide.with(getApplicationContext()).asBitmap().load(imageByte).into(imgProfilePicture);
+            txtDisplayName.setText(userResponse.getDisplayName());
+            txtDesignation.setText(userResponse.getDesignation() + "at" + userResponse.getDepartment());
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
+
 
         menuIcon = new int[]{R.drawable.ic_menu_timeline,
                 R.drawable.ic_menu_messaging,
@@ -90,6 +142,19 @@ public class HomeScreenActivity extends AppCompatActivity implements View.OnClic
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), maxGridCount);
         rvMenu.setLayoutManager(gridLayoutManager);
         rvMenu.setAdapter(menuAdapter);
+
+
+        imgProfilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                GetUserProfileRequest profileRequest = new GetUserProfileRequest();
+                profileRequest.setUserID(commonMethods.getUserId());
+                profileRequest.setLanguage(getResources().getString(R.string.language));
+                callUserAbt(profileRequest);
+            }
+        });
+
     }
 
     @Override
@@ -117,5 +182,45 @@ public class HomeScreenActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    public void callUserAbt(GetUserProfileRequest userInfo) {
+        ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(HomeScreenActivity.this);
+        ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
+        Call<List<GetProfileInfoAboutResponse>> getUserProfileAbout = apiInterface.getProfileInfoAbout(userInfo);
+
+        getUserProfileAbout.enqueue(new Callback<List<GetProfileInfoAboutResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<GetProfileInfoAboutResponse>> call, @NonNull Response<List<GetProfileInfoAboutResponse>> response) {
+                commonMethods.showLog("URL Success : ", TAG + call.request().url());
+                commonMethods.showLog("Response Code : ", TAG + response.code());
+                commonMethods.showLog("Response Body : ", TAG + response.body());
+
+                String abtMe = null;
+                try {
+                    if (response.code() == 200) {
+                        List<GetProfileInfoAboutResponse> getReponse = response.body();
+                        for (int i = 0; i < getReponse.size(); i++) {
+                            abtMe = getReponse.get(i).getAboutMe();
+                        }
+                        Intent userProfileIntent = new Intent(HomeScreenActivity.this, UserProfileActivity.class);
+                        userProfileIntent.putExtra("abtMe", abtMe);
+                        startActivity(userProfileIntent);
+                    } else {
+                        commonMethods.showLog("Response code : ", TAG + response.code());
+                        commonMethods.showToast(getResources().getString(R.string.fail_abtme_userprofile));
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<GetProfileInfoAboutResponse>> call, Throwable t) {
+                commonMethods.showLog("URL Failure : ", TAG + call.request().url());
+                commonMethods.showLog("Failure : ", TAG + t.getMessage());
+                commonMethods.showToast(getResources().getString(R.string.fail_abtme_userprofile));
+            }
+        });
     }
 }

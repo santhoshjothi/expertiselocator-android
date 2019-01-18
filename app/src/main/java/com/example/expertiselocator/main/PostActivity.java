@@ -40,6 +40,7 @@ import com.example.expertiselocator.model.response.LoginResponse;
 import com.example.expertiselocator.utils.CommonMethods;
 import com.example.expertiselocator.utils.SharedPreferencesWithAES;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.abdularis.civ.CircleImageView;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 
@@ -59,7 +60,8 @@ public class PostActivity extends AppCompatActivity {
     private final int IMG_REQUEST = 1;
     private Bitmap bitmapsimg;
     private Button btn_pst_post, btn_pst_imgdel_post;
-    ImageView img_camera_post, img_prof_post, img_preview_post, img_link_post, img_toolbar_close_post;
+    ImageView img_camera_post, img_preview_post, img_link_post, img_toolbar_close_post;
+    CircleImageView img_prof_post;
     EditText edt_msg_pst;
     LinearLayout lin_link_box;
     FrameLayout lin_img_post;
@@ -85,18 +87,17 @@ public class PostActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         img_camera_post = (ImageView) findViewById(R.id.img_camera_post);
-        img_prof_post = (ImageView) findViewById(R.id.img_prof_post);
+        img_prof_post = (CircleImageView) findViewById(R.id.img_prof_post);
         img_preview_post = (ImageView) findViewById(R.id.img_preview_post);
         btn_pst_post = (Button) findViewById(R.id.btn_pst_post);
         btn_pst_imgdel_post = (Button) findViewById(R.id.btn_pst_imgdel_post);
         edt_msg_pst = (EditText) findViewById(R.id.edt_msg_pst);
         img_link_post = (ImageView) findViewById(R.id.img_link_post);
-         lin_link_box=(LinearLayout) findViewById(R.id.lin_link_box);
+        lin_link_box = (LinearLayout) findViewById(R.id.lin_link_box);
         lin_img_post = (FrameLayout) findViewById(R.id.lin_img_post);
         img_toolbar_close_post = (ImageView) findViewById(R.id.img_toolbar_close_post);
         progress_post = (ProgressView) findViewById(R.id.progress_post);
         txt_link_msg = (TextView) findViewById(R.id.txt_link_msg);
-
 
 
         try {
@@ -116,7 +117,7 @@ public class PostActivity extends AppCompatActivity {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
@@ -237,9 +238,9 @@ public class PostActivity extends AppCompatActivity {
                     } else {
 
                     }
-                }else {
+                } else {
 
-                    Log.v("Else","");
+                    Log.v("Else", "");
                     commonMethods.showToast(getResources().getString(R.string.post_msg));
                 }
             }
@@ -349,7 +350,7 @@ public class PostActivity extends AppCompatActivity {
 
                             commonMethods.showToast(getResources().getString(R.string.success_addpost_post));
 
-                            Intent timelineActiivty =new Intent(PostActivity.this,TimelineActivity.class);
+                            Intent timelineActiivty = new Intent(PostActivity.this, TimelineActivity.class);
                             startActivity(timelineActiivty);
 
                         } else {
@@ -405,6 +406,7 @@ public class PostActivity extends AppCompatActivity {
 
         return true;
     }
+
     private boolean checkPermissions() {
         int result;
         List<String> listPermissionsNeeded = new ArrayList<>();
@@ -433,14 +435,14 @@ public class PostActivity extends AppCompatActivity {
                             permissionsDenied += "\n" + per;
                             commonMethods.showToast(getResources().getString(R.string.permmision_denied));
 
-                        }else{
+                        } else {
                             selectimage();
                         }
 
 
                     }
                     // Show permissionsDenied
-                 //   updateViews();
+                    //   updateViews();
 
                 }
                 return;

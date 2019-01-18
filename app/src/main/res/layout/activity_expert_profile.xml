@@ -26,7 +26,7 @@
                 android:layout_gravity="center"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:text="@string/toolbar_name"
+                android:text="@string/expertprofile"
                 style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
                 />
             <ImageView
@@ -70,7 +70,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="15dp">
 
-                    <ImageView
+                    <com.github.abdularis.civ.CircleImageView
                         android:layout_width="@dimen/abt_img_width"
                         android:layout_height="@dimen/abt_img_height"
                         android:src="@drawable/solutions"

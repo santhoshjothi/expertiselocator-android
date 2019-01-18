@@ -17,6 +17,7 @@
     <string name="collaboration">Collaboration</string>
     <string name="thank_expert">Thank Expert</string>
     <string name="submit_request">Submit Request</string>
+    <string name="expertprofile">Expert Profile</string>
 
     <string name="edu_heading">Education </string>
     <string name="title">Title</string>
@@ -139,7 +140,7 @@
 
 
 
-
+    <string name="enter_rply">Please Enter the Reply</string>
     <string name="timeline_edit_delete_update">Update</string>
     <string name="timeline_edit_delete_delete">Delete</string>
     <string name="timeline_edit_delete_cancel">Cancel</string>
@@ -172,5 +173,7 @@
     <string name="success_edit_post_timeline">Successfully Edit Posted.</string>
     <string name="success_delete_post_timeline">Successfully Delet Posted.</string>
    <string name="loading">Loading..</string>
+
+
 
 </resources>
