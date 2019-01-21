@@ -44,6 +44,7 @@
         <activity android:name=".main.ExpertProfileActivity" />
         <activity android:name=".main.UserProfileActivity" />
         <activity android:name=".main.SearchActivty" />
+        <activity android:name=".main.UserFollowingListActivity"></activity>
     </application>
 
 </manifest>

@@ -7,14 +7,12 @@ import android.view.MenuItem;
 
 import com.example.expertiselocator.R;
 
-public class SearchActivty extends AppCompatActivity {
+public class UserFollowingListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_activty);
-
-
+        setContentView(R.layout.activity_user_following_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -31,4 +29,5 @@ public class SearchActivty extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

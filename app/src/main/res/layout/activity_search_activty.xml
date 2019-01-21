@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.SearchActivity"
+    tools:context=".main.SearchActivty"
     android:orientation="vertical">
 
 
@@ -28,7 +28,7 @@
                 android:layout_gravity="center"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:text="Search Results"
+                android:text="@string/search_activity"
                 style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
 
                 />

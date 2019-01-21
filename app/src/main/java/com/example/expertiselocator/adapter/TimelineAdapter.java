@@ -80,6 +80,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         try {
 
             isliked = getPostedMessagesResponse.getIsLiked();
+            commonMethods.showLog("IsLiked : ", isliked);
             String profilePicture = getPostedMessagesResponse.getProfilePicture();
             userProfilePicture = profilePicture.replace("data:image/png;base64,", "");
             byte[] userProfilePic = Base64.decode(userProfilePicture, Base64.DEFAULT);
@@ -215,6 +216,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 commentPostId = getPostedMessagesResponse.getId();
                 View view = timelineViewHolder.tvTimelineActionLike;
                 String[] likeDetails = new String[]{commentPostId, isliked, String.valueOf(view)};
+
+
 
                 if (isliked.equalsIgnoreCase("0")) {
                     isliked = "1";

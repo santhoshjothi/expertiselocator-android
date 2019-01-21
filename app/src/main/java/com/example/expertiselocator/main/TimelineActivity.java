@@ -31,6 +31,7 @@ import com.example.expertiselocator.model.request.EditPostRequest;
 import com.example.expertiselocator.model.request.GetPostedMessageRequest;
 import com.example.expertiselocator.model.request.GetUserProfileRequest;
 import com.example.expertiselocator.model.request.PostCommentRequest;
+import com.example.expertiselocator.model.request.ReplyEditDeleteRequest;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
 import com.example.expertiselocator.model.response.GetProfileInfoAboutResponse;
 import com.example.expertiselocator.utils.CommonMethods;
@@ -109,8 +110,8 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 timelineLastPosition = layoutManager.findLastCompletelyVisibleItemPosition();
                 timelineTotalCount = rvTimelinePost.getAdapter().getItemCount();
 
-                commonMethods.showLog(TAG, "On Scroll 00 " + timelineLastPosition + " " + (timelineTotalCount - 1));
-                commonMethods.showLog(TAG, "On Scroll 00 " + timelinePageScrolled + " " + hasNextPage + " " + loadTimelineOnScroll);
+                //commonMethods.showLog(TAG, "On Scroll 00 " + timelineLastPosition + " " + (timelineTotalCount - 1));
+                //commonMethods.showLog(TAG, "On Scroll 00 " + timelinePageScrolled + " " + hasNextPage + " " + loadTimelineOnScroll);
 
                 if (timelineLastPosition >= timelineTotalCount - 1) {
                     if (timelinePageScrolled) {
@@ -255,6 +256,7 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 tvEditDeleteTitle.setText(getResources().getString(R.string.timeline_edit_reply_title));
                 tvEditDeleteMessage.setText(getResources().getString(R.string.timeline_edit_reply_message));
                 tvEditDeleteQuery.setVisibility(View.GONE);
+                etEditDeleteMessageContent.setText(getPostedMessagesResponses.get(menuItemClickedPosition).getMessage());
             }
             if (menuOption.equals("Post")) {
                 tvEditDeleteTitle.setText(getResources().getString(R.string.timeline_edit_post_heading));
@@ -329,6 +331,21 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                         postRequest.setPostID(getPostedMessagesResponses.get(menuItemClickedPosition).getId());
                         dialogEditDeleteComment.dismiss();
                         callEditPost(postRequest, menuItemClickedPosition, getPostedMessagesResponses.get(menuItemClickedPosition).getId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }else if (menuOption.equals("Reply")) {
+                    try {
+                        Log.v("Edit_Submit_Reply", " TimelineAdapter_postion : " + menuItemClickedPosition);
+                        Log.v("Edit_Submit_Reply", " TimelineAdapter_text: " + etEditDeleteMessageContent.getText().toString());
+
+
+                        ReplyEditDeleteRequest replyEditDeleteRequest=new ReplyEditDeleteRequest();
+                        replyEditDeleteRequest.setId("");
+                        replyEditDeleteRequest.setReplyMessage("");
+                        replyEditDeleteRequest.setUserID("");
+
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -430,7 +447,6 @@ public class TimelineActivity extends AppCompatActivity implements OnItemClick,
                 replyRequest.setIsActive("0");
                 replyRequest.setCreatedBy(commonMethods.getUserId());
                 replyRequest.setModifiedBy(commonMethods.getUserId());
-
                 callCommentReply(replyRequest, commentData[0], commentData[3]);
 
             default:

@@ -5,6 +5,14 @@
     android:orientation="vertical"
     android:layout_margin="@dimen/marginTwo">
 
+    <View
+        android:layout_marginRight="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:background="#cfcfcf" >
+
+    </View>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +35,8 @@
                 android:text="@string/timeline_like"
                 android:drawableLeft="@drawable/ic_like"
                 android:drawableStart="@drawable/ic_like"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textStyle="bold"/>
 
         </LinearLayout>
 
@@ -45,7 +54,8 @@
                 android:text="@string/timeline_comment"
                 android:drawableLeft="@drawable/ic_comment"
                 android:drawableStart="@drawable/ic_comment"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textStyle="bold"/>
 
         </LinearLayout>
 
@@ -63,7 +73,8 @@
                 android:text="@string/timeline_share"
                 android:drawableLeft="@drawable/ic_share"
                 android:drawableStart="@drawable/ic_share"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textStyle="bold"/>
 
         </LinearLayout>
 
@@ -134,6 +145,15 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_marginRight="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:background="#cfcfcf" >
+
+    </View>
 
     <TextView
         android:id="@+id/tvTimelineActionViewMoreComments"

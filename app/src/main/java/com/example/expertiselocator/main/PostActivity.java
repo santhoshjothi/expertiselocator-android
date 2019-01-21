@@ -80,7 +80,7 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         prefs = SharedPreferencesWithAES.getInstance(PostActivity.this, "expertise_Prefs");
         commonMethods = new CommonMethods(PostActivity.this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

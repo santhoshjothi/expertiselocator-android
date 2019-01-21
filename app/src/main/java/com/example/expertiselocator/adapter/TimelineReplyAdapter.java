@@ -25,11 +25,13 @@ public class TimelineReplyAdapter extends RecyclerView.Adapter<RecyclerView.View
     private TimelineActivity timelineActivity;
     private String userProfilePicture;
     private CommonMethods commonMethods;
-    TimelineReplyAdapter(Context context, List<GetPostedMessagesResponse.Timeline_Replies> getTimelineReplies) {
+    private int timelinePostion;
+    TimelineReplyAdapter(Context context, List<GetPostedMessagesResponse.Timeline_Replies> getTimelineReplies, int timelinePostion) {
         this.context = context;
         this.getTimelineReplies = getTimelineReplies;
         timelineActivity = (TimelineActivity) context;
         commonMethods = new CommonMethods(context);
+        this.timelinePostion=timelinePostion;
     }
 
     @Override
@@ -62,7 +64,10 @@ public class TimelineReplyAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         timelineReplyHolder.imgTimelineReplyProfileMenu.setOnClickListener(View -> {
             timelineActivity.onItemClick(View, position);
+            commonMethods.showLog("TimelineCommentRplyAdater. : ",  + position + " timelinePostion :" + timelinePostion);
+
         });
+
     }
 
     @Override

@@ -82,7 +82,7 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         if (getTimelineCommentData.getTimeline_Replies() != null) {
             if (getTimelineCommentData.getTimeline_Replies().size() != 0) {
                 getTimelineReplies = getTimelineCommentData.getTimeline_Replies();
-                timelineReplyAdapter = new TimelineReplyAdapter(context, getTimelineReplies);
+                timelineReplyAdapter = new TimelineReplyAdapter(context, getTimelineReplies,timelinePostion);
                 timelineCommentHolder.rvTimelineReplyMessages.setAdapter(timelineReplyAdapter);
             }
         }

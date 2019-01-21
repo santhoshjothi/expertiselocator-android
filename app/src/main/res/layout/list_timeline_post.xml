@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/shape_square"
-    android:layout_margin="@dimen/marginTwo">
+    android:background="@color/white"
+    android:layout_marginTop="8dp">
+    <!--  android:background="@drawable/shape_square"-->
 
     <LinearLayout
         android:id="@+id/linearTimelineHeader"
@@ -37,7 +38,8 @@
                 android:text="@string/no_data"
                 android:textStyle="bold"
                 android:layout_margin="@dimen/marginThree"
-                android:textSize="@dimen/textSizeLarge"/>
+                android:textSize="@dimen/textSizeLarge"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/tvTimelinePostedTime"
@@ -67,7 +69,6 @@
         android:text="@string/no_data"
         android:textSize="@dimen/textSizeMedium"
         android:layout_margin="@dimen/marginThree"
-
         android:maxLines="3"
         android:ellipsize="end"/>
 

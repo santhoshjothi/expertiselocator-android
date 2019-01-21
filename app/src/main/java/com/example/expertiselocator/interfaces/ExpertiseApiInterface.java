@@ -9,6 +9,7 @@ import com.example.expertiselocator.model.request.GetPostedMessageRequest;
 import com.example.expertiselocator.model.request.GetUserProfileRequest;
 import com.example.expertiselocator.model.request.LoginRequest;
 import com.example.expertiselocator.model.request.PostCommentRequest;
+import com.example.expertiselocator.model.request.ReplyEditDeleteRequest;
 import com.example.expertiselocator.model.request.UserInfoRequest;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
 import com.example.expertiselocator.model.response.GetProfileInfoAboutResponse;
@@ -67,6 +68,18 @@ public interface ExpertiseApiInterface {
     @Headers({"Content-Type: application/json"})
     @POST("PostComment/AddCommentReply")
     Call<Integer> replyComment(@Body AddReplyCommentRequest request);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("PostComment/EditReply")
+    Call<Integer> editReplyComment(@Body ReplyEditDeleteRequest request);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("PostComment/DeleteReply")
+    Call<Integer> deleteReplyComment(@Body ReplyEditDeleteRequest request);
+
+
+
+
 
 
 

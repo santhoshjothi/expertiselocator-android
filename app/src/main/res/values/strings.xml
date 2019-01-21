@@ -49,7 +49,6 @@
     <string name="permmision_denied">Permmision Denied</string>
 
 
-
     <!--Post Activity --> <!--Dialogbox-->
     <string name="video_link_title">Video Link</string>
     <string name="video_link">Enter the video URL</string>
@@ -66,10 +65,11 @@
     <string name="share_post_msg">Share this Post and it can be viewed by your followers.</string>
 
 
-
-
     <!--Toolbar Tittle Name-->
     <string name="user_profile">User Profile</string>
+    <string name="search_activity">Search Results</string>
+    <string name="following_list_activity">Following list</string>
+
 
 
     <!-- Bottom Navigation -->
@@ -116,7 +116,7 @@
 
     <string name="timeline_comment_hint">Add Your Comment..</string>
     <string name="timeline_reply_hint">Add Your Reply..</string>
-    <string name="timeline_post_hint">Write a post,Share Photo or Video</string>
+    <string name="timeline_post_hint">Write a post, Share Photo or Video</string>
 
     <!-- Timeline Edit Delete - Comment and Reply -->
 
@@ -137,7 +137,6 @@
 
     <string name="timeline_edit_post_heading">Edit Post</string>
     <string name="timeline_edit_post_message">Edit your Post and it will be updated to your followers.</string>
-
 
 
     <string name="enter_rply">Please Enter the Reply</string>
@@ -172,8 +171,7 @@
     <string name="success_addpost_post">Successfully Posted.</string>
     <string name="success_edit_post_timeline">Successfully Edit Posted.</string>
     <string name="success_delete_post_timeline">Successfully Delet Posted.</string>
-   <string name="loading">Loading..</string>
-
+    <string name="loading">Loading..</string>
 
 
 </resources>
