@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/follwinglist_MenuRequest"
+        android:title="@string/followinglist_menu_request" />
+
+    <item
+        android:id="@+id/follwinglist_MenuMessage"
+        android:title="@string/followinglist_menu_msg" />
+
+</menu>

@@ -5,12 +5,14 @@ import com.example.expertiselocator.model.request.AddPostRequest;
 import com.example.expertiselocator.model.request.DeletePostRequest;
 import com.example.expertiselocator.model.request.EditDeleteCommentRequest;
 import com.example.expertiselocator.model.request.EditPostRequest;
+import com.example.expertiselocator.model.request.FollowingListRequest;
 import com.example.expertiselocator.model.request.GetPostedMessageRequest;
 import com.example.expertiselocator.model.request.GetUserProfileRequest;
 import com.example.expertiselocator.model.request.LoginRequest;
 import com.example.expertiselocator.model.request.PostCommentRequest;
 import com.example.expertiselocator.model.request.ReplyEditDeleteRequest;
 import com.example.expertiselocator.model.request.UserInfoRequest;
+import com.example.expertiselocator.model.response.FollowingListResponse;
 import com.example.expertiselocator.model.response.GetPostedMessagesResponse;
 import com.example.expertiselocator.model.response.GetProfileInfoAboutResponse;
 import com.example.expertiselocator.model.response.GetUserInfoResponse;
@@ -76,6 +78,18 @@ public interface ExpertiseApiInterface {
     @Headers({"Content-Type: application/json"})
     @POST("PostComment/DeleteReply")
     Call<Integer> deleteReplyComment(@Body ReplyEditDeleteRequest request);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("Profile/GetFollowingslistById")
+    Call<List<FollowingListResponse>> getFollowingListUser(@Body FollowingListRequest request);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("Profile/GetFollowerslistById")
+    Call<List<FollowingListResponse>> getFollowerUser(@Body FollowingListRequest request);
+
+
+
+
 
 
 

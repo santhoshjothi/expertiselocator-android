@@ -173,6 +173,12 @@ public class HomeScreenActivity extends AppCompatActivity implements View.OnClic
             case 0:
                 startActivity(new Intent(HomeScreenActivity.this, TimelineActivity.class));
                 break;
+            case 6:
+                startActivity(new Intent(HomeScreenActivity.this, FollowersActivity.class));
+                break;
+            case 7:
+                startActivity(new Intent(HomeScreenActivity.this, UserFollowingListActivity.class));
+                break;
 
             default:
                 break;

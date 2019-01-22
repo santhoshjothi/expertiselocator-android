@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".main.UserFollowingListActivity"
+    tools:context=".main.FollowersActivity"
     >
 
 
@@ -36,7 +36,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <GridView
-        android:id="@+id/gridView_follewinglist"
+        android:id="@+id/gridView_follower"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:numColumns="2"

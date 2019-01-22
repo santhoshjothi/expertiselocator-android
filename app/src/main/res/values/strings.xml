@@ -71,7 +71,6 @@
     <string name="following_list_activity">Following list</string>
 
 
-
     <!-- Bottom Navigation -->
 
     <string name="bottom_post">Post</string>
@@ -111,6 +110,8 @@
     <string name="timeline_menu_comment_delete">Delete Comment</string>
     <string name="timeline_menu_reply_edit">Edit Reply</string>
     <string name="timeline_menu_reply_delete">Delete Reply</string>
+    <string name="followinglist_menu_msg">MESSAGE</string>
+    <string name="followinglist_menu_request">SUBMIT A REQUEST</string>
 
     <!-- Timeline Hint -->
 

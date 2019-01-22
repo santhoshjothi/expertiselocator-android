@@ -218,7 +218,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 String[] likeDetails = new String[]{commentPostId, isliked, String.valueOf(view)};
 
 
-
                 if (isliked.equalsIgnoreCase("0")) {
                     isliked = "1";
                     Drawable like = context.getResources().getDrawable(R.drawable.ic_liked);

@@ -10,6 +10,7 @@ import android.widget.GridView;
 import android.widget.PopupMenu;
 
 import com.example.expertiselocator.R;
+import com.example.expertiselocator.adapter.FollowerAdapater;
 import com.example.expertiselocator.adapter.FollowingListAdapter;
 import com.example.expertiselocator.apiclient.ExpertiseApiClient;
 import com.example.expertiselocator.interfaces.ExpertiseApiInterface;
@@ -26,29 +27,30 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UserFollowingListActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener,
+public class FollowersActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener,
         PopupMenu.OnMenuItemClickListener, OnItemClick {
 
     GridView follwingListGrid;
     private List<FollowingListResponse> followingList = new ArrayList<>();
-    private FollowingListAdapter followingListAdapter;
+    private FollowerAdapater followerAdapater;
     CommonMethods commonMethods;
-    public static final String TAG = UserFollowingListActivity.class.getSimpleName();
+    public static final String TAG = FollowersActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_following_list);
+        setContentView(R.layout.activity_followers);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        commonMethods = new CommonMethods(UserFollowingListActivity.this);
+        commonMethods = new CommonMethods(FollowersActivity.this);
 
-        followingListAdapter = new FollowingListAdapter(UserFollowingListActivity.this, followingList);
-        follwingListGrid = (GridView) findViewById(R.id.gridView_follewinglist);
+        followerAdapater = new FollowerAdapater(FollowersActivity.this, followingList);
+        follwingListGrid = (GridView) findViewById(R.id.gridView_follower);
         if (follwingListGrid != null) {
-            follwingListGrid.setAdapter(followingListAdapter);
+            follwingListGrid.setAdapter(followerAdapater);
         }
 
         boolean isConnected = ConnectivityReceiver.isConnected();
@@ -81,9 +83,9 @@ public class UserFollowingListActivity extends AppCompatActivity implements Conn
     }
 
     public void callFollowingList(FollowingListRequest followingListRequest) {
-        ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(UserFollowingListActivity.this);
+        ExpertiseApiClient expertiseApiClient = new ExpertiseApiClient(FollowersActivity.this);
         ExpertiseApiInterface apiInterface = ExpertiseApiClient.getRetrofitWithAuthorization().create(ExpertiseApiInterface.class);
-        Call<List<FollowingListResponse>> getPostedMessage = apiInterface.getFollowingListUser(followingListRequest);
+        Call<List<FollowingListResponse>> getPostedMessage = apiInterface.getFollowerUser(followingListRequest);
         getPostedMessage.enqueue(new Callback<List<FollowingListResponse>>() {
             @Override
             public void onResponse(@NonNull Call<List<FollowingListResponse>> call, @NonNull Response<List<FollowingListResponse>> response) {
@@ -99,7 +101,7 @@ public class UserFollowingListActivity extends AppCompatActivity implements Conn
                         //followingList.add((FollowingListResponse) response.body());
                         //recyclerView.setAdapter(followingListAdapter);
                         followingList.addAll(response.body());
-                        followingListAdapter.notifyDataSetChanged();
+                        followerAdapater.notifyDataSetChanged();
                     } else {
                         commonMethods.showLog("Response code : ", TAG + response.code());
                         commonMethods.showToast(getResources().getString(R.string.fail_addcomment_timeline));
@@ -137,11 +139,9 @@ public class UserFollowingListActivity extends AppCompatActivity implements Conn
     public void onItemClick(View view, int position) {
         commonMethods.showLog(TAG, "onItem" + position);
         int itemType = view.getId();
-        switch (itemType){
-
+        switch (itemType) {
             case R.id.follwinglist_profile_menu:
-
-                PopupMenu popupFollowingMenu= new PopupMenu(UserFollowingListActivity.this, view);
+                PopupMenu popupFollowingMenu= new PopupMenu(FollowersActivity.this, view);
                 popupFollowingMenu.setOnMenuItemClickListener(this);
                 popupFollowingMenu.inflate(R.menu.following_popup_menu);
                 popupFollowingMenu.show();
