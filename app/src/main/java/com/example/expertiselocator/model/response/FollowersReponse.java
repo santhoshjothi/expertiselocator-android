@@ -3,7 +3,7 @@ package com.example.expertiselocator.model.response;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class FollowingListResponse {
+public class FollowersReponse {
 
     @SerializedName("id")
     @Expose
@@ -14,12 +14,12 @@ public class FollowingListResponse {
     @SerializedName("expertUserID")
     @Expose
     private Integer expertUserID;
-    @SerializedName("followingsUserID")
+    @SerializedName("followerID")
     @Expose
-    private Integer followingsUserID;
-    @SerializedName("followingUserName")
+    private Integer followerID;
+    @SerializedName("followersUserName")
     @Expose
-    private String followingUserName;
+    private String followersUserName;
     @SerializedName("userName")
     @Expose
     private String userName;
@@ -32,27 +32,30 @@ public class FollowingListResponse {
     @SerializedName("department")
     @Expose
     private String department;
+    @SerializedName("email")
+    @Expose
+    private Object email;
     @SerializedName("startIndex")
     @Expose
     private Integer startIndex;
-    @SerializedName("maxCount")
-    @Expose
-    private Integer maxCount;
     @SerializedName("isFollowed")
     @Expose
     private String isFollowed;
+    @SerializedName("maxCount")
+    @Expose
+    private Integer maxCount;
     @SerializedName("createdBy")
     @Expose
-    private Object createdBy;
+    private String createdBy;
     @SerializedName("createdDate")
     @Expose
-    private Object createdDate;
+    private String createdDate;
     @SerializedName("modifiedBy")
     @Expose
-    private Object modifiedBy;
+    private String modifiedBy;
     @SerializedName("modifiedDate")
     @Expose
-    private Object modifiedDate;
+    private String modifiedDate;
     @SerializedName("flag")
     @Expose
     private Object flag;
@@ -81,20 +84,20 @@ public class FollowingListResponse {
         this.expertUserID = expertUserID;
     }
 
-    public Integer getFollowingsUserID() {
-        return followingsUserID;
+    public Integer getFollowerID() {
+        return followerID;
     }
 
-    public void setFollowingsUserID(Integer followingsUserID) {
-        this.followingsUserID = followingsUserID;
+    public void setFollowerID(Integer followerID) {
+        this.followerID = followerID;
     }
 
-    public String getFollowingUserName() {
-        return followingUserName;
+    public String getFollowersUserName() {
+        return followersUserName;
     }
 
-    public void setFollowingUserName(String followingUserName) {
-        this.followingUserName = followingUserName;
+    public void setFollowersUserName(String followersUserName) {
+        this.followersUserName = followersUserName;
     }
 
     public String getUserName() {
@@ -129,20 +132,20 @@ public class FollowingListResponse {
         this.department = department;
     }
 
+    public Object getEmail() {
+        return email;
+    }
+
+    public void setEmail(Object email) {
+        this.email = email;
+    }
+
     public Integer getStartIndex() {
         return startIndex;
     }
 
     public void setStartIndex(Integer startIndex) {
         this.startIndex = startIndex;
-    }
-
-    public Integer getMaxCount() {
-        return maxCount;
-    }
-
-    public void setMaxCount(Integer maxCount) {
-        this.maxCount = maxCount;
     }
 
     public String getIsFollowed() {
@@ -153,35 +156,43 @@ public class FollowingListResponse {
         this.isFollowed = isFollowed;
     }
 
-    public Object getCreatedBy() {
+    public Integer getMaxCount() {
+        return maxCount;
+    }
+
+    public void setMaxCount(Integer maxCount) {
+        this.maxCount = maxCount;
+    }
+
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Object createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Object getCreatedDate() {
+    public String getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Object createdDate) {
+    public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Object getModifiedBy() {
+    public String getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(Object modifiedBy) {
+    public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 
-    public Object getModifiedDate() {
+    public String getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Object modifiedDate) {
+    public void setModifiedDate(String modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 

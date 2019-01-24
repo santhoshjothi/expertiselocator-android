@@ -352,7 +352,7 @@ public class PostActivity extends AppCompatActivity {
 
                             Intent timelineActiivty = new Intent(PostActivity.this, TimelineActivity.class);
                             startActivity(timelineActiivty);
-
+                            finish();
                         } else {
 
                             commonMethods.showToast(getResources().getString(R.string.fail_addpost_post));

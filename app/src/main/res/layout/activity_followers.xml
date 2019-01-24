@@ -29,23 +29,29 @@
                 android:layout_gravity="center"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:text="@string/following_list_activity"
+                android:text="@string/follower_activity"
                 style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
-    <GridView
-        android:id="@+id/gridView_follower"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:numColumns="2"
-        android:verticalSpacing="5dp"
-        android:horizontalSpacing="5dp"
-        android:scrollbarStyle="outsideOverlay"
-        android:verticalScrollbarPosition="right"
-        android:scrollbars="vertical">
+    <!--<GridView-->
+        <!--android:id="@+id/gridView_follower"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--android:numColumns="2"-->
+        <!--android:verticalSpacing="5dp"-->
+        <!--android:horizontalSpacing="5dp"-->
+        <!--android:scrollbarStyle="outsideOverlay"-->
+        <!--android:verticalScrollbarPosition="right"-->
+        <!--android:scrollbars="vertical">-->
 
-    </GridView>
+    <!--</GridView>-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_follower"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical" />
 
 </LinearLayout>

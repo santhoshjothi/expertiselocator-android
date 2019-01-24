@@ -26,6 +26,8 @@
     <string name="end_year">End_year</string>
     <string name="college">College / University</string>
     <string name="insert_edu_msg">Enter the Education Information..</string>
+    <string name="nodata_following">There is no following</string>
+
 
 
     <!-- Navigation Menu -->
@@ -68,7 +70,9 @@
     <!--Toolbar Tittle Name-->
     <string name="user_profile">User Profile</string>
     <string name="search_activity">Search Results</string>
-    <string name="following_list_activity">Following list</string>
+    <string name="following_list_activity">Following</string>
+    <string name="follower_activity">Followers</string>
+
 
 
     <!-- Bottom Navigation -->
@@ -170,8 +174,8 @@
 
     <!--API Sucess Toast Msg-->
     <string name="success_addpost_post">Successfully Posted.</string>
-    <string name="success_edit_post_timeline">Successfully Edit Posted.</string>
-    <string name="success_delete_post_timeline">Successfully Delet Posted.</string>
+    <string name="success_edit_post_timeline">Successfully Updated</string>
+    <string name="success_delete_post_timeline">Deleted Your Post!</string>
     <string name="loading">Loading..</string>
 
 
